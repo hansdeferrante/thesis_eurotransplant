@@ -1,0 +1,43 @@
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\usepackage{placeins}
+\usepackage[numbers, compress, square, comma]{natbib}
+\bibliographystyle{IEEEtranN}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\def\Plus{\texttt{+}}
+
+\renewcommand{\topfraction}{.85}
+\renewcommand{\bottomfraction}{.7}
+\renewcommand{\textfraction}{.15}
+\renewcommand{\floatpagefraction}{.66}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{3}
+\setcounter{totalnumber}{4}
+
+% Use PT serif font.
+\usepackage{fontspec}
+\setmainfont{PT Serif}
+
+% Avoid hyphenation
+\usepackage[none]{hyphenat}
+
+% Reduce spacing between caption an dtable
+\usepackage[font=small]{caption}
+\captionsetup[table]{skip=4pt}
+\captionsetup[figure]{font=small}
+
+% Reduce spacing between list items
+\usepackage{enumitem}
+\setlist[itemize]{itemsep=3pt, topsep=4pt}
+\setlist[enumerate]{itemsep=3pt, topsep=4pt}
+
+% New commands
+\newcommand\T{{\hspace{-.25pt}\intercal}}
+
+

@@ -1,0 +1,322 @@
+
+```{r, include=FALSE}
+library(tidyverse)
+library(pander)
+library(kableExtra)
+library(purrr)
+library(readxl)
+library(glue)
+
+knitr::opts_chunk$set(results = 'show', echo = FALSE, fig.pos='ht',
+                      fig.align = 'center',
+                      message = FALSE, warning = FALSE)
+
+source('R/R_functions.R')
+
+FIG_FOLDER <- 'figures/ch1/'
+
+CH1_FIG_LIST <- list(
+  `FIG1` = 'fig1-allocation_principles',
+  `FIG2` = 'cover2_density_web'
+) |>
+  map(
+    ~ paste(FIG_FOLDER, .x, sep = '/')
+  )
+
+CH1_FIG_CAPTIONS <- list(
+  FIG1="Hypothetical scenario in which a choice has to be made between three
+  transplant candidates: candidates A, B, or C. The numbers in circles
+  are the ranks for the hypothetical candidates under urgency-based,
+  utility-based, and benefits-based allocation."
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+```
+
+# Introduction {#CHintroduction}
+`\vspace*{-1em}`{=latex}
+
+## Eurotransplant
+
+In the 1960s, it was observed that kidney transplantation outcomes were
+improved when the donor and recipient were siblings with matching leukocyte antigens.
+Anticipating that leukocyte-antigen compatibility would also improve the outcomes
+of deceased-donor kidney transplantation, the Dutch immunologist Jon van Rood 
+proposed an international collaboration he named _Eurotransplant_, in which kidneys
+from deceased-organ donors would be allocated to kidney transplant candidates on the basis of 
+leukocyte-antigen matching [@vanRoodET1967]. In 1967, the first kidney was
+transported internationally, by army helicopter from Leuven, Belgium, to Leiden,
+the Netherlands, which represents the symbolic start of Eurotransplant [@jubileumboek].
+Over the decades that followed, the scope of Eurotransplant broadened beyond the
+exchange of kidneys, starting with the allocation of livers in the 1970s, 
+followed by pancreases and hearts in the 1980s, lungs in 1988, 
+and intestines in 1999 [@Langer2012].
+
+In 2025, eight European countries participate in Eurotransplant: Austria, Belgium, 
+Croatia, Germany, Hungary, Luxembourg, the Netherlands and Slovenia. In
+the 58-year history of Eurotransplant, more than 190,000 donors have been reported
+to the organization [@etStatsLibrary3002P]. With the deceased-donor organs that
+become available, some 6,000 transplantations are performed per year [@etStatsLibrary2082P]. However,
+persistent donor shortages also mean that not all patients can be helped in time.
+In fact, more than a thousand patients die each year while waiting for a 
+transplant [@etStatsLibrary4512P].
+
+When a donor is reported, Eurotransplant is responsible for 
+the allocation of the available organs. This means that Eurotransplant has to find
+suitable recipients from the 13,500 candidates who wait for a transplant
+in the 76 transplantation programs that are active in the region [@etStatsLibrary3002P]. Ideally, Eurotransplant 
+completes the allocation procedure prior to the explantation of the available organs, which can mean that Eurotransplant has to 
+find suitable recipients within six hours of the reporting of the donor. Completing the allocation 
+within this time window can be challenging, as most donors have multiple
+organs available for transplantation, donors can be reported at any time of the day,
+and the transplant centers frequently decline the organs that are offered to
+their patients.
+
+The central problem in organ allocation is to determine to which candidates the
+available organs ought to be offered. In this thesis, we study this allocation 
+question for the allocation of the liver and the kidneys in Eurotransplant.
+Eurotransplant's daily operations currently depend on allocation systems that 
+are the product of almost sixty years of scientific, legal, and ethical discussions
+on allocation. In this first chapter, we describe the background of these systems,
+and discuss how they have been shaped by objective medical criteria and fairness
+considerations.
+
+## Objective medical criteria for organ allocation
+
+In the 1990s, the Netherlands, Belgium and Germany introduced legal frameworks 
+that govern the prioritization of candidates for transplantation. To meet the 
+new legal requirements, Eurotransplant updated its allocation systems in
+the 1990s [@HaaseKromwijk1999]. The legal frameworks required that the ranking of
+candidates for transplantation is (i) transparent and (ii) based on objective medical criteria
+[@HaaseKromwijk1999; @Persijn2006]. In the transplantation literature, a distinction is often 
+made between three objective medical criteria: medical urgency, medical utility, 
+and transplant benefit [@Schaubel2009]. Which medical criterion is used to prioritize candidates affects which
+candidates have access to transplantation, as we illustrate in Figure 
+\@ref(fig:ch1fig1) for three hypothetical candidates: candidate A, B, and C.
+For medical and historical reasons, the specific criterion that is used for
+allocation differs by organ.
+
+The first principle, medical urgency (or medical need), gives priority
+to the candidate who would be expected to die first without an organ transplantation. In our hypothetical example, an allocation based on medical urgency would prioritize candidate A, because they
+are expected to die first without a transplant. Eurotransplant uses such
+"sickest-first" allocation for the liver, with candidates ranked using
+Model for End-Stage Liver Disease (MELD) scores. These MELD scores quantify 
+a candidate's expected 90-day mortality risk based on biomarkers measurable from 
+the candidate's blood. A potential concern about sickest-first allocation is that 
+organs could be allocated to candidates whose life expectancy
+would remain short, even with a transplant. For example, allocation of the organ to 
+candidate B may seem preferable to allocation to candidate A, because candidate B would survive much longer with the transplant.
+`\newpage`{=latex}
+The second principle, which is referred to as "medical utility" in the transplant
+literature, quantifies which candidates would be expected 
+to live the longest with the transplant. Under this utilitarian principle, candidate
+C would be prioritized over candidates A and B (see Figure \@ref(fig:ch1fig1)).
+An example of utility-based allocation in Eurotransplant is leukocyte-antigen
+matching in kidney transplantation, a practice that has positive effects on the
+survival of the kidney graft and transplant recipient. A general concern about 
+the ranking of candidates based
+on medical utility is that it can lead to the transplantation of relatively healthy
+patients who have little need for a transplant. In our hypothetical example,
+it could be argued that candidate B should be prioritized over candidate C,
+since candidate B has a much greater need for transplantation.
+
+The third principle, transplant benefit, quantifies which candidate is expected 
+to benefit most from receiving the organ. Such benefit is typically defined
+as the contrast between medical utility and medical urgency. For Figure \@ref(fig:ch1fig1),
+we defined transplant benefit as the number of life years gained by transplantation.
+With this definition of benefit, a benefit-based allocation would prioritize
+candidate B who gains the most life years through transplantation. A theoretical
+advantage to this allocation is that it may prevent the transplantation of candidates
+who have a short life expectancy after transplantation (candidate A), while 
+also preventing the transplantation of candidates 
+who have little need for a transplant (candidate C). Within Eurotransplant, prioritization of candidates for lung transplantation is based on the principle of transplant benefit.
+
+```{r ch1fig1, fig.cap = chuck(CH1_FIG_CAPTIONS, 'FIG1'), out.width = "100%", fig.pos = "h"}
+FIG <- chuck(CH1_FIG_LIST, 1)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+  
+}
+```
+
+Although an allocation that is based on medical utility, medical urgency, or
+transplant benefit is conceptually straightforward, applying these principles
+for organ allocation is complex. One issue is that neither Eurotransplant nor
+the transplant centers know the lifetime a candidate would have, either with or
+without the transplant. Allocation in Eurotransplant therefore relies on statistical
+models that quantify the expected survival of candidates. 
+
+## Fairness in organ allocation
+`\vspace*{-1em}`{=latex}
+
+With candidates ranked based on their expected survival, the basis of organ allocation
+in Eurotransplant is formed by objective medical criteria. However, prioritizing 
+candidates solely based on these criteria leads to unfair or unjust 
+waiting list outcomes. To address this, Eurotransplant's 
+allocation systems also include mechanisms aimed at making allocation fair.
+
+One type of fairness mechanisms are the balancing mechanisms that regulate the
+international exchange of organs among Eurotransplant's member countries. These
+balancing mechanisms were introduced after it was observed that the kidney procurement
+and kidney transplant rates were _"totally out of balance"_ between Eurotransplant's
+member countries, which was deemed unfair to countries with high organ donation rates
+[@persijnEurotransplantKidneyAllocation2000]. Their continued importance
+is underscored by the fact that donor procurement rates still
+vary widely between the member countries. For example, Belgium reported 
+approximately 30 deceased-organ donors per million people per year over the last decade, 
+while Germany reported only 10 [@et_donor_pmp].
+It is deemed just that Belgian patients benefit from the high Belgian donation rate, 
+and Eurotransplant is even legally required under the Belgian transplantation law 
+to guarantee a "reasonable balance" in the number of organs imported to and exported
+from Belgium [@BelgischeWet1986]. The balancing mechanisms ensure such a balance.
+
+Other fairness mechanisms are aimed at giving patients an equal chance of 
+finding a transplant [@DeMeester1999]. For example, Eurotransplant's liver 
+allocation system includes ABO blood group rules which give patients access to 
+roughly the same number of potential donors, regardless of their ABO blood group. This ensures 
+that no patients are disadvantaged by their own blood group [@demeesterWhichABOmatchingRule2002]. 
+Mechanisms are also in place to facilitate access to transplantation for candidates
+for whom a suitable donor is difficult to find. For example, in kidney allocation,
+candidates with difficult-to-match leukocyte-antigen typings receive additional 
+points [@demeesterNewEurotransplantKidney1998].
+
+A separate issue is that some patient groups may be underserved by how medical 
+urgency, medical utility, or transplant benefit have been defined in 
+Eurotransplant's allocation systems. For example, several groups of liver 
+transplant candidates are not at risk of an imminent waiting list death, 
+which is what is scored by MELD. These candidates may nonetheless require access to
+transplantation, for example because of quality of life concerns, 
+or risk of disease irreversibility. 
+To help such candidates access transplantation, the liver allocation system awards exception 
+points to these patient groups. In kidney allocation, prioritization is based on
+medical utility because patients with end-stage renal disease can survive for
+prolonged periods of time on dialysis. However, some candidates may
+lose access to dialysis, and Eurotransplant has implemented rules that facilitate
+access to transplantation for such candidates.
+
+There are also patients who may deserve access to transplantation based on
+ethical grounds. In Eurotransplant, children have been given special attention. 
+Another group consists of patients who lose their graft shortly after
+an initial transplantation procedure. Special rules 
+facilitate access to a repeat transplant for these patients.
+
+Considerations of fairness are thus integral to Eurotransplant's current
+allocation systems. The importance of fairness was also underscored by the
+2007 Joint Declaration that was signed by the Ministers of Health of
+Eurotransplant's member countries, which states that maximizing equality of 
+opportunity for patients is the _"most important factor for allocation"_ [@ETMan2025].
+Nevertheless, achieving fairness in organ allocation is not a simple task; in describing
+Eurotransplant's kidney allocation system, former medical director Guido Persijn
+wrote that an allocation system in which transplantation is equally accessible 
+for all patients is _"very difficult to implement in practice"_, with the 
+implemented allocation systems merely an _"attempt"_ towards this goal [@Persijn2006].
+
+It is thus not surprising that Eurotransplant regularly identifies flaws
+in its allocation systems, and revises the systems based on the available
+evidence. A recent example of such a flaw was the "blood group O problem" in kidney 
+allocation [@glander2010], which arose because Eurotransplant allowed the
+transplantation of blood group O kidneys into non-O candidates in case of a perfect
+leukocyte-antigen match. Because of this rule, blood group O candidates -- who cannot accept non-O
+kidneys because of blood group incompatibility -- accumulated on the waiting list.
+As a result, blood group O candidates faced higher mortality rates than non-O
+candidates (13\% vs 8\%) and waited two years longer for a transplant [@glander2010]. 
+This problem was addressed in 2010 by also requiring blood 
+group identity for perfectly matched donors. 
+Since then, the gap in waiting times between the blood groups has
+shrunk, although blood group O candidates continue to experience longer waiting times
+than blood groups A and AB [@etStatsLibrary2194P].
+`\newpage`{=latex}
+The central role of fairness in allocation motivated the first goal of this thesis, which is to
+study questions related to equality of opportunity in Eurotransplant's kidney
+and liver allocation systems. Specifically,
+in Chapter \@ref(CHsexdisparity) we study why females are more likely than males 
+to have an adverse waiting list outcome in liver transplantation, and in Chapter
+\@ref(CHvpra) we study how immunization affects access to kidney
+transplantation. These chapters confirm
+that these patient groups are disadvantaged in the current allocation systems.
+
+## Challenges in improving organ allocation systems
+
+The previous sections discussed that Eurotransplant's allocation systems have
+room for improvement. The primary
+forums to discuss potential improvements to the allocation systems are 
+Eurotransplant's organ-specific advisory committees, whose members are 
+medical specialists who are affiliated with active transplantation programs in Eurotransplant. 
+These committees can submit recommendations to the
+Board of Eurotransplant and national competent authorities on how allocation
+may be improved. Before such recommendations are implemented, approval from 
+these bodies is required.
+
+Changing the allocation systems is a slow process, despite regular meetings
+of the advisory committees. One challenge is the complexity of the allocation procedure in
+Eurotransplant. When a donor becomes available, Eurotransplant runs computer
+algorithms against a central database to generate organ-specific _match lists_.
+The transplant centers register their candidates in this database, while
+donor procurement organizations register donors in this database. The candidates who are
+eligible for the organ offer appear on the match lists, and the order 
+in which they appear determines the sequence in which Eurotransplant
+offers the organs to candidates. Improving the 
+allocation system may therefore seem as simple as refining the match list order.
+
+However, discussions on the match list order are not straightforward as
+match lists behave very differently from regular queuing systems. For example,
+being highly ranked on the current match list does not guarantee that a 
+candidate will attain a similar rank on the next match list.
+The top-ranked candidate is also often not transplanted, as the transplant 
+centers regularly decline organ offers because of concerns about the quality
+of the donor, logistical reasons, or temporary non-transplantability of their
+patient.
+
+Additional challenges arise from the fact that Eurotransplant's member countries
+have different priorities and needs in allocation, in large part because of
+the international variation in organ donation rates. For example, Belgium has 
+more than twice as many organ donors per million people as Germany.
+With these varying donation rates, it is often difficult to reach consensus on which 
+patient groups deserve additional attention. Even when the interests of the 
+member countries are aligned, it is often not clear how much additional 
+support a patient group would need to realize equality of opportunity. 
+
+Due to these challenges, Eurotransplant's allocation systems evolve only slowly in
+response to developments in the field. In fact, the core components of Eurotransplant's
+liver and kidney allocation systems have changed little over the past two
+decades. For example, kidney allocation in Eurotransplant is still based on 
+a point system that was introduced in 1996 despite substantial changes in 
+the waiting list and donor pool. Liver allocation in Eurotransplant has been 
+based on MELD since 2006, while other regions have switched to different
+allocation mechanisms for the liver (e.g., [@Allen2024; @kimMELD3point0]).
+
+To advance, Eurotransplant requires tools which can give
+insight into the adequacy and unintended consequences of proposed policy changes.
+This motivated the second goal of this thesis, which is to develop
+discrete-event simulation software for this purpose. These simulators replicate the kidney and liver
+allocation procedures in Eurotransplant, and were developed in close 
+collaboration with relevant stakeholders. In Chapters \@ref(CHelassimulator)
+and \@ref(CHetkidneysimulator), we describe and validate simulators for the
+liver and kidney, respectively, and we demonstrate their usefulness through
+clinically motivated case studies.
+
+## Outline of this thesis
+
+The thesis is divided into two parts. In Part I, we focus on the allocation of the
+liver. In Chapter \@ref(CHprefaceliver), we describe the history of
+Eurotransplant's liver allocation system and identify potential areas for improvement.
+In Chapter \@ref(CHdynremeld), we propose a method that can be used
+to revise MELD more efficiently. In Chapter \@ref(CHsexdisparity), we describe
+sex disparity in liver waiting list outcomes in Eurotransplant and study the mechanisms 
+through which this disparity arises. In Chapter \@ref(CHelassimulator),
+we describe and validate the ELAS simulator, a discrete-event simulator
+tailored to Eurotransplant.
+
+In Part II, we turn to allocation of the kidneys. Chapter \@ref(CHprefacekidney)
+outlines the kidney allocation programs used by Eurotransplant, describes their historical
+development, and discusses contemporary challenges in kidney allocation. In Chapter
+\@ref(CHvpra), we examine how having a pre-existing sensitization against HLA
+antigens affects a candidate's relative transplant rate. In Chapter \@ref(CHetkidneysimulator), 
+we present the ETKidney simulator, a discrete-event simulator for kidney 
+allocation in Eurotransplant.
+
+We reflect on the findings and contributions of this thesis in Chapter 
+\@ref(CHdiscussion).

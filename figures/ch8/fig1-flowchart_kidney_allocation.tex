@@ -1,0 +1,61 @@
+\sffamily
+\usetikzlibrary{arrows.meta}
+\tikzset{
+	>={Latex[width=2mm, length=1mm]}
+}
+\tikzstyle{decision}=[diamond, draw, fill=yellow!20, aspect=2,
+text width=7em, text badly centered, node distance=2cm,
+inner sep=0pt]
+\tikzstyle{block}=[rectangle, draw, text width=8em, text badly centered, rounded corners, minimum height=2em]
+\tikzstyle{line}=[draw, line width=.7pt, color=black!75, -{Latex[width=2.5mm,length=1mm]}]
+\tikzstyle{input}=[trapezium, trapezium left angle=84, trapezium right angle=96, draw, fill=green!20, text width=8em,
+minimum height=3em]
+
+
+\begin{tikzpicture}[node distance = 4cm, auto]
+	
+	
+	% Place nodes (flipped horizontally)
+	%\node [block, text width=2cm] (donor) {Deceased kidney\\ donor};
+	\node [block, node distance = 2.5cm, text width=8em] (combo) {donors with kidney(s) available for kidney-only transplantation};
+	\node [decision, right of=combo, node distance = 5cm, xshift=-.5cm, yshift=-.4cm] (age) {donor age};
+	\node [block, below of=age, node distance=2.5cm, fill={rgb:orange,1;yellow,2;pink,5}] (esp) {ESP program (16.1\%)};
+	\node [block, above of=age, node distance=2.5cm, fill={rgb:red,4;green,2;yellow,1}] (am) {AM program (3.4\%)};
+	\node [block, right of=am, node distance=6.5cm, fill={rgb:red,4;green,2;yellow,1}] (etkas) {ETKAS (69.1\%)};
+	\node [block, right of=esp, node distance=6.5cm, fill={rgb:orange,1;yellow,2;pink,5}] (rescue) {extended or rescue \\ allocation (11.4\%)};
+	
+	% Draw edges (flowing from left to right)
+	\path [line] ([yshift=-.4cm]combo.east) |- node[above, align=center, sloped, pos=0.3] {} (age);
+	\path [line] (age) -- node[align=center, yshift=-.2cm] {$<$65 years\\(76\%)} (am);
+	\path [line] (am) -- node {not placed} (etkas);
+	\path [line, dashed] (esp) -- node[above, align=center, sloped, pos=0.6] {not placed\\(until March 2021)} (etkas);
+
+	\path [line, dashed] (esp) -- node[above, align=center, swap] {not placed\\(since March 2021)} (rescue);
+	\path [line, swap] (age) -- node[align=center, yshift=.1cm] {$\geq$65 years\\(24\%)} (esp);
+	\path [line] (etkas) -- node[right, align=center] {logistical or\\ medical\\reasons} (rescue);
+	
+	% Declare a background layer
+	\pgfdeclarelayer{background}
+	\pgfsetlayers{background,main}
+	
+	% Add the box to the background layer
+	\begin{pgfonlayer}{background}
+		\node [draw, fill=gray!20, inner xsep=25pt, inner ysep=10pt, fit=(am) (etkas) (esp) (rescue)] 
+		(kidneybox) {};
+	\end{pgfonlayer}
+	
+	\node at (kidneybox.north) [above=1.5pt] {kidney-only transplantations};
+	
+	% Legend for national / international
+	\node [block, below of=combo, node distance=2.3cm, fill={rgb:red,4;green,2;yellow,1}] (international) {international};
+	\node [block, below of=international, node distance=1cm, fill={rgb:orange,1;yellow,2;pink,5}] (national) {national, regional, or local};
+	% Add the box to the background layer
+	\begin{pgfonlayer}{background}
+		\node [inner ysep=10pt, fit=(national) (international)] 
+		(legendbox) {};
+	\end{pgfonlayer}
+	\node at (legendbox.north) [above=-10pt] {prioritization};
+	 
+	
+	
+\end{tikzpicture}

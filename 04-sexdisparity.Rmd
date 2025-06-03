@@ -1,0 +1,916 @@
+
+```{r, include=FALSE}
+library(tidyverse)
+library(pander)
+library(kableExtra)
+library(purrr)
+library(glue)
+library(readxl)
+
+knitr::opts_chunk$set(results = 'show', echo = FALSE, fig.pos='ht',
+                      fig.align = 'center',
+                      message = FALSE, warning = FALSE)
+
+source('R/R_functions.R')
+
+# create variable to resize figures depending on output
+if (knitr::is_latex_output()) {
+  out_width <- "130mm" # for latex, this should be the max width
+} else {
+  out_width <- NULL # for html, don't scale
+}
+
+CH4_FIG_LIST <- c(
+  'figures/ch4/fig1_plot_causal_models',
+  'figures/ch4/fig2_flow_diagram',
+  'figures/ch4/fig3_waittime_at_exit',
+  'figures/ch4/fig4_hr_txp',
+  'figures/ch4/fig5_size_sex_interactions',
+  'figures/ch4/fig6_hr_mrt',
+  'figures/ch4/median_labmeld_at_regular_txp',
+  'figures/ch4/supp_fig2_txp_ff',
+  SFIGOFF = 'figures/ch4/sfig_univariate',
+  SFIGSIZE = 'figures/ch4/size_distr'
+)
+
+CH4_FIG_CAPTIONS <- list(
+  FIG1 = "Directed acyclic graphs (DAGs) for mediation analyses of the effect of sex on transplantation (TXP, left) and the effect of sex on pre-transplant mortality rates (MRT, right). Squares indicate the minimal sufficient adjustment set required to identify the controlled direct effect of sex on the outcome. U1, U2, and U3 represent common causes of the mediator-outcome relations. Dotted arrows indicate that sex is allowed to affect U1, U2, and U3; their presence or absence does not impact the identification of the controlled direct effect under our identification strategy.",
+  FIG2 = "Flow diagram for how the main study cohort and the subpopulation of non-HCC candidates with cirrhosis were selected from all candidates listed between January 1, 2007 and December 31, 2019.",
+  FIG3 = "Distributions of the time spent on the waiting list until waiting list exit (transplantation, death, or delisting), by sex and year of waiting list inclusion. The top panel shows waiting times for candidates with (non-)standard exceptions, the bottom panel for candidates without exceptions. Distributions were
+  visualized with quantile dotplots, using 250 quantiles. The numbers displayed in the boxplots are the median number of days spent on the waiting list per group.",
+  FIG4 = "Estimates for the transplantation hazard ratios for female sex with 95% confidence intervals, in the full cohort (top panel) and the subpopulation of non-HCC candidates with cirrhosis (bottom panel).",
+  FIG5 = "Estimated relations between candidate height and the relative transplant rate, and candidate weight and the relative transplant rate, separately for males and females. These relations were estimated with cubic spline terms with 4 degrees of freedom.",
+  FIG6 = "Estimates for waiting list mortality hazard ratios for female sex with 95% confidence intervals, with adjustment for a lab-MELD score (UNOS-MELD, MELD-Na, ReMELD-Na or MELD 3.0) and confounders of the relation between lab-MELD and waiting list mortality.",
+  SFIGOFF = "Univariate relations between the offer acceptance rate and the difference in donor and candidate body size, quantified through height or weight. These univariate relations were estimated with logistic models, using spline terms with 8 degrees of freedom.",
+   SFIGSIZE = "Distributions of weights and heights for candidates and donors
+  who appeared on Eurotransplant match lists between December 31, 2006 and December 31, 2019."
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+
+CH4_TABLE_CAPTIONS <- c(
+  `1` = "Baseline characteristics of primary liver transplant candidates included in this study. For candidates with multiple listings only the first listing was used (n=118).",
+  `2` = "Sensitivity checks for the transplantation hazard ratio of female sex. Numbers in square brackets are 95% confidence intervals.",
+  `3` = "Sensitivity checks for the waiting list mortality analyses. Shown are the hazard ratios and 95% confidence intervals, estimated using IPCW with adjustment for MELD, and confounders of the relation between the MELD score and the transplant rate (candidate age, disease group, type exception and biweekly dialysis).",
+  `S1` = "Baseline characteristics for the subcohort of non-HCC candidates with cirrhosis."
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+
+
+```
+
+# Sex disparity in liver allocation within Eurotransplant {#CHsexdisparity}
+
+`\chaptermark{Sex disparity in liver allocation}`{=latex}
+
+
+`r if (knitr::is_latex_output()) '\\vfill'`
+
+---
+
+`\noindent`{=latex}
+An article based on this chapter has appeared in _American Journal of Transplantation_, de Ferrante, H.C., De Rosner-van Rosmalen M., Smeulders, B.M.L., Vogelaar, S., Spieksma, F.C.R., 2025, [10.1016/j.ajt.2024.06.018](https://doi.org/10.1016/j.ajt.2024.06.018) [@deFerranteSexDisparityLiver2024]
+
+`\newpage`{=latex}
+`\normalsize`{=latex}
+
+`<p><strong>Abstract</strong></p>`{=html}
+`\subsubsection*{Abstract}`{=latex}
+
+On Eurotransplant's liver waiting list, females are relatively more likely to
+die than males, and they are relatively less likely to be transplanted. With adult 
+candidates listed for liver transplantation between 2007
+and 2019 (n=21,170), we study whether such sex disparity 
+is inherent to the Model for End-Stage Liver Disease (MELD) scoring system,
+or the indirect result of a small candidate body size limiting access to 
+transplantation. We use Cox proportional hazards models to quantify (i) the 
+direct effect of sex on waiting list mortality, independent of sex's effect 
+through MELD scores, and (ii) the direct effect of sex on the transplant rate, 
+independent of the effect of sex through MELD and candidate body size. We find that 
+adjusted waiting list mortality hazard ratios for female sex are insignificant
+(HR = 1.03, 95% CI: 0.88--1.20), which means that we lack indications that MELD
+systematically underestimates the waiting list mortality rates for females.
+transplant rates are estimated to be 25% lower for females than for males in unadjusted 
+analyses (HR = 0.74, 95% CI: 0.71--0.77), but hazard ratios become insignificant
+after adjustment for mediators, most importantly candidate height
+and weight (HR = 0.98, 95% CI: 0.93--1.04). Sex disparity in Eurotransplant
+thus appears to be largely a consequence of the lower transplant rates for females,
+which are explained by differences in body size between males and females.
+
+`\newpage`{=latex}
+
+
+`\normalsize`{=latex}
+
+## Introduction
+
+Prior research has shown that females are disadvantaged
+under MELD-based liver allocation compared to males [@moylanDisparitiesLiverTransplantation2008; @mathurSexBasedDisparitiesLiver2011; @laiHeightContributesGender2010; @lockeQuantifyingSexBasedDisparities2020a].
+There are two leading
+explanations for such sex disparity in MELD-based liver allocation [@vernaTimeActionAddress2020], which we refer to as the _"GFR hypothesis"_ and the _"size mismatch hypothesis"_.
+
+The GFR hypothesis proposes that MELD is biased against female candidates because 
+MELD is based on serum creatinine instead of glomerular filtration rates (GFR).
+With the same serum creatinine level, the GFRs of females are lower than the GFRs
+of males [@cholongitasFemaleLiverTransplant2007]. MELD would therefore systematically
+underestimate the 90-day mortality risks for females. The GFR hypothesis has 
+frequently been invoked to propose alternatives to MELD which replace serum 
+creatinine with sex-specific estimates
+of the glomerular filtration rate [@rodriguezPeralvarezDevelopmentValidationGenderEquity2023; @myersGenderRenalFunction2011; @asraniMELDGRAILNaGlomerularFiltration2020]. These 
+alternatives award one to three extra points on the MELD scale to female 
+liver transplant candidates [@vernaTimeActionAddress2020; @waltercostaRevisingMELDScore2023; @cholongitasGenderDisparityMELD2011; @allenReducedAccessLiver2018].
+
+The second hypothesis relates to donor-recipient size matching in liver transplantation. 
+Such size matching is crucial in liver transplantation because
+(i) the liver must anatomically fit within the recipient's abdominal cavity, 
+and (ii) the liver has to meet the candidate's metabolic demands. The size-mismatch
+hypothesis suggests that transplant candidates with a smaller stature
+-- who are predominantly female -- are disadvantaged in MELD-based liver
+allocation because donor-recipient size mismatch would require them to turn down
+liver offers more frequently. This size mismatch hypothesis has received less
+attention in the literature than the GFR hypothesis. Empirical evidence for 
+it comes from Lai et al. (2010), who showed that the lower transplant rates 
+for females in the United States are largely
+explained by differences in candidate height [@laiHeightContributesGender2010].
+Further evidence comes from Allen et al. (2018), who showed with competing risk
+analyses that height indirectly explains most of the increased waiting list
+deaths observed in female candidates [@allenReducedAccessLiver2018]. A 2023 
+study by Sneiders et al. on retrospective data from Eurotransplant has also linked 
+a low body weight to adverse liver waiting list outcomes [@Sneiders2023].
+
+In this chapter, we use causal mediation analysis to study the GFR hypothesis and the size mismatch hypothesis. A first
+goal is to study whether there is evidence of a direct effect of sex on the
+waiting list mortality rate, independently from MELD, as is implied by the
+GFR hypothesis. A second goal is to quantify sex disparities in transplantation
+rates, and to assess whether such disparities are mediated by 
+candidate body size -- as is implied by the size mismatch hypothesis. To address
+these research questions, we use retrospective data from Eurotransplant.
+
+`\FloatBarrier`{=latex}
+`\newpage`{=latex}
+
+## Materials and methods
+
+###	Study population
+
+Candidates who were activated on the liver waiting list
+between January 1, 2007 and December 31, 2019, were considered for inclusion. 
+We study sex disparity in two subpopulations. The first subpopulation consists 
+of candidates with common chronic indications for liver
+transplantation. This population was obtained by excluding pediatric candidates 
+(\textless 16 years), candidates with rare metabolic diseases or rare exceptions 
+(awarded \textless 15 times per year), those with acute liver failure, and
+those waiting for a living donor transplantation, a repeat liver transplantation, 
+or a multi-organ transplantation. The second subpopulation consists of candidates
+with cirrhosis who did not have HCC, which is the patient group
+for which MELD was originally developed and validated [@kamathModelPredictSurvival2001].
+This population was obtained by additionally excluding patients with exception points, 
+cholestatic liver disease, polycystic liver disease, and hepatocellular carcinoma.
+We refer to this second population as "non-HCC candidates with cirrhosis".
+
+###	MELD scores
+
+Liver allocation in Eurotransplant is based on match-MELD scores, i.e., the
+maximum of a candidate's lab-MELD score (UNOS-MELD) and their exception scores.
+Exception scores can be obtained for candidates with specific indications 
+who meet predefined eligibility criteria (standardized exceptions, SEs), or
+through case-by-case review from national audit groups (non-standardized 
+exceptions, NSEs). Granted exceptions award an initial 90-day mortality 
+equivalent. The awarded mortality equivalents increase with every 90 days
+of waiting time for most exceptions. For this study, candidates
+with five types of exceptions were included: hepatocellular carcinoma (HCC), 
+polycystic liver disease, biliary sepsis, primary sclerosing cholangitis, 
+and NSEs. Other exceptions were excluded and are awarded, on average, less
+than 15 times per year. The amount of points awarded for these exceptions varies by 
+country, and they can be found in the Eurotransplant liver manual [@ETLiverMan2025].
+
+Several alternatives to UNOS-MELD have been proposed, which include MELD-Na, 
+ReMELD-Na and MELD 3.0. MELD 3.0 adds serum sodium, and was used for 
+liver allocation by UNOS from January 2016 to July 2023. ReMELD-Na 
+is a revision of MELD-Na on Eurotransplant registry data [@goudsmitRefittingModelEndstage2020]. 
+MELD 3.0 adds serum sodium, serum albumin and female sex to the MELD formula, 
+and was adopted for liver allocation by UNOS in July 2023. There are indications that
+MELD-Na has exacerbated sex disparity [@allenReducedAccessLiver2018], while MELD 
+3.0 aims to rectify sex disparity by explicitly awarding points for female sex 
+[@kimMELD3point0]. This motivated us to also quantify sex disparity in mortality rates
+for these three alternative scores.
+
+Serum sodium and serum albumin are required to calculate these three MELD
+alternatives. A problem is that values for these biomarkers are missing for
+most candidates, as they were voluntarily reportable in Eurotransplant in the
+study period. In this
+chapter, main analyses for MELD-Na, ReMELD-Na and MELD 3.0 are done on subgroups
+for whom the required biomarkers were available at listing (i.e., complete case analysis). 
+We compare this with multiple imputation (MI) as a sensitivity check.
+
+### Statistical analyses
+
+Mediation analysis is used to (i) quantify the total and the controlled direct 
+effect of sex on transplant rates (Section \@ref(CHmediationtxp)), 
+and (ii) to quantify the controlled direct effect of candidate sex on the 
+waiting list mortality rate, independent of MELD (Section \@ref(CHmediationmrt)).
+For both analyses, directed acyclic graphs (DAGs) were constructed to guide 
+our modeling strategy and communicate visually our causal assumptions
+[@lipskyCausalDirectedAcyclic2022]. 
+
+#### Mediation analysis for the transplant rate {#CHmediationtxp}
+
+The left-hand side of Figure \@ref(fig:ch4fig1) shows the DAG for transplantation
+analyses. In this model, sex is the exposure and 
+transplantation (TXP) is the outcome. The candidate's MELD score and body size
+(height or weight) both represent mediators of the relation between sex and transplantation. 
+MELD acts as a mediator because sex affects MELD through differences in serum creatinine
+(as proposed by the GFR hypothesis), and MELD is used to prioritize candidates for
+liver transplantation. Body size acts as a mediator, because sex influences height
+and weight, and because having a smaller stature limits a candidate's access
+to transplantation due to size mismatch (the size mismatch hypothesis).
+
+To identify the controlled direct effect of sex on transplantation, all back-door
+paths from sex to transplantation must be blocked. Adjusting
+for MELD and body size is not sufficient for this, because doing so can open 
+back-door paths via common causes of the mediators (MELD / body size)
+and the outcome (transplantation). U1-type variables (see Figure \@ref(fig:ch4fig1))
+represent common causes of MELD and the transplant rate. These include
+whether the candidate receives biweekly dialysis, their exception score, their age, and
+their disease group, which affect both a candidate's MELD score and their center's
+willingness to accept and transplant a liver offer. U2-type variables represent
+common causes of a candidate's body size and their transplant rate. Two 
+important U2-type variables are frailty (which is associated with a lower weight,
+and a possible contraindication for liver transplant) and diabetes (which is
+associated with a higher weight, and a possible contraindication).
+
+```{r ch4fig1, fig.cap = CH4_FIG_CAPTIONS$FIG1, out.width = "100%", fig.pos='ht'}
+FIG <- pluck(CH4_FIG_LIST, 1)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+In principle, adjusting for MELD, body size, U1-type variables, and U2-type variables would
+be sufficient to close all back-door paths. Unfortunately, frailty and diabetes (U2-type
+variables) are not reported to Eurotransplant, which makes this adjustment strategy
+infeasible. We instead assume that U2-type variables only affect the transplantation
+rate through candidate eligibility (ELIG) for transplantation. Under this assumption,
+we can alternatively identify the controlled direct effect of sex on transplantation
+by adjusting for U1, MELD, size, and ELIG (time-varying variable). 
+
+We consider this assumption plausible for two reasons. Firstly, our patient 
+cohort is restricted to candidates who were actually activated
+on the liver waiting list. Such waiting list activation represents a strong signal
+that the candidate is deemed fit enough for transplantation by their center, 
+as frail or overweight candidates would be required to improve their health status
+before waiting list activation (for example in consultation with a dietitian). 
+Secondly, in our experience, centers tend to report candidates who are temporarily
+unavailable for transplantation because of a poor health status as non-transplantable
+to Eurotransplant. Temporary non-transplantability (ELIG) is thus a strong proxy
+for U2-type variables that is observed by Eurotransplant, and can be adjusted 
+for in our analysis.
+
+`\newpage`{=latex}
+
+To estimate the effects of sex on transplant rates, we use Cox proportional
+hazards models which use time since waiting list activation as the timescale. 
+For quantification of the direct effect of sex on the transplant rate, we adjust 
+match-MELD, body size (height, weight, or both), and U1-type variables 
+(dialysis, type exception received, candidate age, and disease group / cirrhosis 
+etiology through stratification). Transplantation eligibility is explicitly controlled for
+by adjusting for whether a candidate is temporarily non-transplantable 
+(NT), and implicitly controlled for by only including actively waiting listed 
+candidates in the analysis (which signals that the candidate is deemed eligible
+for liver transplantation by the transplant center). In our analyses, we further 
+adjust for pure predictors of the transplantation
+rate (country of listing through stratification, blood group, time spent non-transplantable). 
+The following variables are time-varying: primary disease group,
+non-transplantable (NT) status, time spent NT (separately for too good / too bad / other), the match 
+MELD, type of exception, and receival of dialysis twice within a week before the last
+reported lab-MELD score. Continuous variables are adjusted for with natural 
+cubic spline transformations with 4 degrees of freedom.
+
+Three sensitivity checks are done. The first is to examine whether
+there are sex-height and sex-weight interactions. This sensitivity check is motivated by
+findings by Allen et al., who reported that the relation between candidate
+height and the relative transplant rate differs significantly by candidate sex
+in the United States [@allenReducedAccessLiver2018]. The other sensitivity
+checks are related to Eurotransplant-specific allocation mechanisms that give physicians freedom to
+choose candidates for transplantation. Two such mechanisms are allocation 
+through extended allocation (15% of placements) and competitive rescue 
+allocation (10% of placements), which Eurotransplant jointly refers to as *non-standard* 
+allocation mechanisms. To rule out that sex disparities 
+are the result of physician preferences in non-standard allocation, we
+repeat analyses with transplantation through standard allocation as 
+the outcome (our second sensitivity check). Another mechanism that
+allows centers to freely choose a living waiting list candidate for transplantation
+are center offers. As the third sensitivity check, we repeat the analysis on candidates listed in
+countries without center offers (Germany and the Netherlands).
+
+#### Mediation analyses for the waiting list mortality rate {#CHmediationmrt}
+
+The right-hand side of Figure \@ref(fig:ch4fig1) shows the DAG for mortality analyses.
+Sex is the exposure, and waiting list mortality is the outcome. We are interested in the
+controlled direct effect of sex on the mortality rate, not mediated by lab-MELD.
+This requires control for sex, lab-MELD, and confounders of the relation between 
+lab-MELD and mortality (U3-type variables).
+We estimate this direct effect of sex on mortality rates with Cox proportional
+hazards models, with
+adjustment for lab-MELD at listing (UNOS-MELD, MELD-Na, ReMELD-Na, or MELD 3.0) and 
+U3-type variables (disease group through
+stratification, biweekly dialysis, candidate age, and type exception). Models are 
+additionally stratified by the candidate's country of listing. Waiting list death is used as the outcome.
+Candidates who died within 90 days of delisting are treated as a waiting list death.
+Candidates still waiting 90 days after waiting list activation are censored, 
+as are candidates who were transplanted or delisted within 90 days of listing.
+
+Several sensitivity checks are conducted. Firstly, we repeat the analyses in datasets
+where serum sodium and albumin at listing were imputed with multiple imputation (MI).
+Secondly, we compare to using death / removed unfit as a combined outcome. 
+Thirdly, Lai et al. reported that sex 
+disparity increased with renal dysfunction [@laiHeightContributesGender2010], 
+motivating us to repeat the analyses 
+in candidates with high MELD scores (MELD ≥18, 31% of candidates) and
+elevated creatinine (≥1.0 mg/dl, 39% of candidates). Finally, to exclude 
+that impending waiting list deaths are prevented with center offers, 
+we repeat the analysis in Dutch and German candidates only. 
+
+####	Correction for dependent censoring in mortality analyses
+
+The standard Cox PH model assumes that censoring is non-informative, which means
+that conditional on covariates, censored candidates have similar expected
+survival as non-censored candidates. In mortality analyses, candidates are censored 
+at transplantation while adjustment is for the MELD score reported at listing. 
+The non-informative censoring assumption then entails that transplanted candidates 
+and not (yet) transplanted candidates with the same MELD score at listing would face 
+similar mortality risks if they had remained on the waiting list.
+`\newpage`{=latex}
+This assumption is implausible for the Eurotransplant liver waiting list, as 
+Eurotransplant ranks candidates by their last reported MELD score and 
+not MELD at listing. Of the two candidates with the same 
+MELD score at listing, the candidate with a higher last reported MELD score would 
+thus face a higher mortality and higher transplant rate. In expectation, 
+transplanted candidates therefore have lower without-transplant survival than 
+non-transplanted candidates, which violates the non-informative censoring 
+assumption.
+
+One can correct for this bias with inverse probability censoring weighting (IPCW),
+as was previously applied in studying sex disparity by Wood et al. [@woodCorrectingSexDisparity2021]. In this chapter, we use statistical methodology 
+developed by Gong and Schaubel to account for selection bias by transplantation [@gongEstimatingAverageTreatment2017]. Details on this procedure are included 
+in Appendix \@ref(APPipcw). A sensitivity check is included to assess how IPCW 
+affects estimates of the direct effects of sex.
+
+#### Multiple imputation
+
+Multiple imputation is used as a sensitivity check in quantifying the direct
+effect of sex on the waiting list mortality rate. For this, we used multiple 
+imputation with chained equations (MICE) to impute serum sodium and serum albumin values at
+listing using predictive mean matching, constructing M=10 completed datasets.
+After imputing serum sodium and albumin, MELD-Na, MELD 3.0, and ReMELD-Na were
+calculated using the imputed values. We included the event indicator 
+and estimated baseline cumulative hazard in the imputation procedure, as 
+recommended by White et al. [@whiteMultipleImputationUsing2011].
+MICE yields unbiased estimation of regression coefficients under a missing at 
+random (MAR) assumption. This assumption would be violated if a candidate's actual serum sodium or albumin value influenced whether that value was available at Eurotransplant. Such a violation is implausible in our setting, as missingness arises almost entirely from center-level policies: some centers always report serum sodium and albumin to Eurotransplant, while other centers never report these biomarkers. The availability of these laboratory values is not determined by the candidate’s true biomarker level, but exclusively by their center's reporting policy for serum sodium and albumin.
+
+## Results
+
+This study considered 31,756 candidate listings for inclusion 
+(see Figure \@ref(fig:ch4fig2)). From these registrations, we excluded pediatric candidates (n=1,652), listings for repeat liver transplantation (n=3,865) or multi-organ transplantation (n=1,523), 
+candidates with acute liver failure or a High Urgency (HU) status (n=1,753), and candidates 
+with rare metabolic diseases or rare exceptions (n=755). The main cohort 
+consisted of 21,188 listings belonging to 21,170 candidates.
+
+```{r ch4fig2, fig.cap = CH4_FIG_CAPTIONS$FIG2, out.width = "95%", fig.pos='ht'}
+FIG <- pluck(CH4_FIG_LIST, 2)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+`\FloatBarrier`{=latex}
+
+Table \@ref(tab:ch4tab1) describes the baseline characteristics of candidates included in the
+main cohort, of which 6,597 (31%) are female and 14,573 (69%) are male. We 
+use standardized mean differences (SMD) to compare the distributions of baseline 
+variables across sexes, with SMD greater than 0.10 interpreted as meaningful imbalance. 
+On average, females are 2 years younger (SMD: 0.19), 
+12 cm shorter (SMD: 1.8) and 15 kg lighter (SMD: 1.0) than males. Females also
+have on average 0.13 mg/dl lower serum creatinine at listing (SMD: 0.20) and
+0.6 mg/dl higher bilirubin (SMD: 0.08). Despite these
+differences, the calculated UNOS-MELD scores are similar
+between the sexes (SMD: 0.00). 
+There is sex imbalance in etiologies of end-stage liver disease (SMD: 0.49), with 
+notably fewer females listed with HCC (11.8% of females compared to 21% of males). Relatively fewer females receive 
+exception points (SMD: 0.32).
+
+`\begingroup`{=latex}
+`\setlength{\aboverulesep}{0.2ex}`{=latex}
+`\setlength{\belowrulesep}{0.3ex}`{=latex}
+
+```{r ch4tab1, results='asis'}
+df_tab <- read_excel('raw_tables/ch4/Table1_data.xlsx') |>
+  mutate(Variable = zoo::na.locf(Variable, na.rm=FALSE)) |>
+  mutate_all(replace_na, '') |>
+  mutate(
+    Variable = recode(
+    Variable, 
+    `UNOS-MELD score` = 'lab-MELD'
+    ),
+    Level = recode(
+      Level,
+    `Benign liver tumors / polycystic disease` = 'Benign tumor or PLD',
+    `Polycystic liver disease` = 'PLD',
+    `Non-standard exception` = 'NSE',
+    `Censored administratively` = 'Censored',
+    `Cholestatic disease` = 'Cholestatic'
+    ),
+    Variable = str_replace(Variable, 'delisting', 'exit')
+)
+
+df_tab$Level <- firstlow(df_tab$Level)
+names(df_tab) <- firstlow(names(df_tab))
+
+FOOTNOTE_TEXT <- "\\textbf{Abbreviations: } PLD, polycystic liver disease; HCC, hepatocellular carcinoma; MELD, model for end-stage liver disease; MELD-Na, model for end-stage liver disease sodium; NSE, non-standard exception; ReMELD-Na, refitted MELD-Na for Eurotransplant; SMD, standardized mean difference."
+
+FOOTNOTE_TEXT_HTML <- "Abbreviations: </br>PLD, polycystic liver disease; HCC, hepatocellular carcinoma; MELD, model for end-stage liver disease; MELD-Na, model for end-stage liver disease sodium; NSE, non-standard exception; ReMELD-Na, refitted MELD-Na for Eurotransplant; SMD, standardized mean difference."
+
+if (knitr::is_html_output()) {
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws() |>
+    str_replace('\\s', '<br>')
+  #df_tab$level <- recode(df_tab$level, `mean [Q1-Q3]` = 'mean<br>[Q1-Q3]')
+  
+  df_tab |> filter(row_number() != 1) |>
+    kable(format='html', caption=CH4_TABLE_CAPTIONS[[1]], escape=FALSE, align='llccl') |>
+    collapse_rows(columns = 1, valign = "middle") |>
+    add_footnote(
+      FOOTNOTE_TEXT_HTML, notation='none', escape=FALSE
+      )
+} else if (knitr::is_latex_output()) {
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, .x, sep=' ')) |> trimws()
+  
+  df_tab |>
+    filter(row_number() != 1) |>
+    #filter(variable != 'exit reason (1 year)') |>
+    kable(format='latex', caption=CH4_TABLE_CAPTIONS[[1]], booktabs=TRUE, align='llccl') |>
+    kable_styling(
+      latex_options = c("scale_down", "hold_position"), font_size=10
+    ) |>
+    collapse_rows(columns = 1, valign = "middle", ) |>
+    insert_footnote_manually(
+      .text = FOOTNOTE_TEXT
+    ) |>
+    cat()
+  }
+```
+
+`\endgroup`{=latex}
+
+`\FloatBarrier`{=latex}
+
+In terms of outcomes, Table \@ref(tab:ch4tab1) shows that relatively fewer females
+than males are transplanted 90 days after listing (22% vs. 29%), and relatively 
+more females die within 90 days of listing (7.8% vs. 6.7%). This sex disparity 
+has increased one year after listing, with only 41.9% of females transplanted compared to
+53.8% of males, and 13.7% of female candidates having died on the waiting list
+compared to 12.0% of males.
+
+The cohort of non-HCC candidates with cirrhosis (n=11,342) was obtained by excluding
+candidates with HCC (n=6,388), non-cirrhotic indications for liver 
+transplantation (n=3,426) or NSEs (n=96)
+(see Figure \@ref(fig:ch4fig2)). Baseline characteristics of this subpopulation 
+are reported in Table \@ref(tab:ch4tab1cirrhotic). Also among
+this group, relatively fewer females are transplanted (26% vs. 32% of males) and 
+relatively more females die (10.5% vs. 9.8%) within 90 days of listing.
+
+Figure \@ref(fig:ch4fig3) shows the distributions of the time spent by candidates on the waiting list
+until waiting list exit (death, delisting, or transplantation), separately for exception
+and non-exception patients. Whether or not they receive exception points, females
+spend approximately 75 more days on the waiting list than males.
+
+```{r ch4fig3, fig.cap = CH4_FIG_CAPTIONS$FIG3, out.width = "100%"}
+FIG <- pluck(CH4_FIG_LIST, 3)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+`\FloatBarrier`{=latex}
+`\newpage`{=latex}
+`\begingroup`{=latex}
+`\setlength{\aboverulesep}{0.2ex}`{=latex}
+`\setlength{\belowrulesep}{0.3ex}`{=latex}
+
+```{r ch4tab1cirrhotic, results='asis'}
+df_tab <- read_excel('raw_tables/ch4/SuppTable1_data.xlsx') |>
+  mutate(Variable = zoo::na.locf(Variable, na.rm=FALSE)) |>
+  mutate_all(replace_na, '') |>
+  mutate(
+    Variable = recode(
+    Variable, 
+    `UNOS-MELD score` = 'lab-MELD'
+    ),
+    Level = recode(
+      Level,
+    `Benign liver tumors / polycystic disease` = 'Benign tumor or PLD',
+    `Polycystic liver disease` = 'PLD',
+    `Non-standard exception` = 'NSE',
+    `Censored administratively` = 'Censored',
+    `Cholestatic disease` = 'Cholestatic',
+    `metabolic/unknown/other` = 'Metabolic or other or unknown'
+    ),
+    Variable = str_replace(Variable, 'delisting', 'exit')
+)
+
+
+df_tab$Level <- firstlow(df_tab$Level)
+names(df_tab) <- firstlow(names(df_tab))
+
+FOOTNOTE_TEXT <- "$^a$Many candidates with NAFLD have likely been registered under the autoimmune/cryptogenic disease code, as NAFLD could only be reported via free text during the study period.\n
+\\textbf{Abbreviations: } NAFLD, non-alcoholic fatty liver disease; MELD, model for end-stage liver disease; MELD-Na, model for end-stage liver disease sodium; ReMELD-Na, refitted MELD-Na for Eurotransplant; SMD, standardized mean difference."
+
+FOOTNOTE_TEXT_HTML <- "<sup>a</sup>Many candidates with NAFLD have likely been registered under the autoimmune/cryptogenic disease code, as NAFLD could only be reported via free text during the study period.<br><b>Abbreviations:</b> NAFLD, non-alcoholic fatty liver disease; MELD, model for end-stage liver disease; MELD-Na, model for end-stage liver disease sodium; ReMELD-Na, refitted MELD-Na for Eurotransplant; SMD, standardized mean difference."
+
+
+
+if (knitr::is_html_output()) {
+  df_tab$level <- recode(df_tab$level, `NAFLD` = 'NAFLD<sup>a</sup>')
+  #df_tab$level <- recode(df_tab$level, `mean [Q1-Q3]` = 'mean<br>[Q1-Q3]')
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep='<br>')) |> trimws()
+  
+  df_tab |> filter(row_number() != 1) |>
+    kable(format='html', escape=FALSE,caption=CH4_TABLE_CAPTIONS[['S1']], align='llccc') |>
+    collapse_rows(columns = 1, valign = "middle") |>
+    add_footnote(
+      FOOTNOTE_TEXT_HTML, notation='none', escape=FALSE
+      )
+} else if (knitr::is_latex_output()) {
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, .x, sep=' ')) |> trimws()
+  
+  df_tab$level <- recode(df_tab$level, `NAFLD` = 'NAFLDfootnotemarker')
+  df_tab |>
+    filter(row_number() != 1) |>
+    #filter(variable != 'exit reason (1 year)') |>
+    kable(format='latex', caption=CH4_TABLE_CAPTIONS[['S1']], booktabs=TRUE, align='llccl') |>
+    kable_styling(
+      latex_options = c("scale_down", "hold_position"), font_size=10
+    ) |>
+    collapse_rows(columns = 1, valign = "middle") |>
+    insert_footnote_manually(
+      .text = FOOTNOTE_TEXT
+    ) |>
+    str_replace_all('footnotemarker', '$^a$') |>
+    cat()
+  }
+```
+
+`\endgroup`{=latex}
+`\newpage`{=latex}
+
+### Transplantation analyses {#CHrsltsmediationtxp}
+
+Figure \@ref(fig:ch4fig4) shows the estimated transplantation hazard ratios (HRs) 
+for female sex. The unadjusted effect of sex in the full cohort (top panel) suggest that the 
+transplant rates are approximately 25% lower for females 
+(HR = 0.74, 95% CI: 0.71--0.76). When 
+adjusting for candidate body size (weight + height) plus confounders of the
+mediator-outcome relations, no sex difference in transplant rates is 
+found (HR = 0.98, 95% CI: 0.93--1.04). Similar results are found in non-HCC
+candidates with cirrhosis (bottom panel), with 22% lower transplant rates for females in total (HR = 0.78, 95% CI: 0.74--0.82) but no sex 
+difference in transplant rates when adjusting for body size, 
+MELD, and confounders of both mediator-outcome relations (HR = 1.00, 95% CI: 0.93--1.07). 
+
+```{r ch4fig4, fig.cap = CH4_FIG_CAPTIONS$FIG4, out.width = "100%"}
+FIG <- pluck(CH4_FIG_LIST, 4)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+`\newpage`{=latex}
+
+Table \@ref(tab:ch4tab2) shows the results of sensitivity checks for this analysis.
+The results are qualitatively similar when using transplantation through standard
+allocation as the outcome (first row), and when estimating transplantation hazard
+ratios in the countries without center offers (second row); in both cases, 
+the estimated hazard ratios are non-significant after 
+adjustment for mediators and confounders of the mediator-outcome relation.
+Figure \@ref(fig:ch4fig5) shows 
+estimated spline terms for the relation between the relative transplantation 
+rate and height or weight, separately for males and females. For both sexes, 
+a lower height or weight is associated with a reduced transplant rate.
+Height-sex (p=0.48) and weight-sex (p=0.11) interactions are insignificant in 
+ANOVA tests.
+
+
+```{r ch4tab2, results='asis'}
+df_tab <- read_excel('raw_tables/ch4/Table2.xlsx') 
+
+names(df_tab) <- firstlow(names(df_tab))
+df_tab[[1]] <- firstlow(df_tab[[1]])
+
+FOOTNOTE_TEXT <- "Variables adjusted for are the following: match-MELD, disease group, biweekly dialysis, type of (non) standardized exception received, candidate blood group, candidate age, and time spent non-transplantable."
+
+if (knitr::is_html_output()) {
+  df_tab |>
+    dplyr::rename_with(function(.x) str_replace(.x, fixed('for (*)'), '$^a$')) |>
+    kable(format='html', caption=CH4_TABLE_CAPTIONS[[2]]) |>
+    kableExtra::kable_styling('striped') |>
+    add_footnote(
+      FOOTNOTE_TEXT
+      )
+} else if (knitr::is_latex_output()) {
+  df_tab |>
+    dplyr::rename_with(function(.x) str_replace(.x, fixed('for (*)'), '$^a$')) |>
+    kable(format='latex', caption=CH4_TABLE_CAPTIONS[[2]], booktabs=TRUE, escape=FALSE) |>
+    kable_styling(
+      latex_options = c("striped", "hold_position"),
+      font_size=10,
+      full_width=TRUE
+    ) |>
+    column_spec(
+      1, width='5.2cm'
+    ) |>
+    row_spec(1, extra_latex_after = "\\addlinespace[0.5em]") |>
+    insert_footnote_manually(
+      .text = FOOTNOTE_TEXT,
+      .label = 'a'
+    ) |>
+    cat()
+}
+```
+
+```{r ch4fig5, fig.cap = CH4_FIG_CAPTIONS$FIG5, out.width = "100%"}
+FIG <- pluck(CH4_FIG_LIST, 5)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+### Waiting list mortality analyses {#CHrsltsmediationmrt}
+
+Figure \@ref(fig:ch4fig6) shows estimates of the mortality hazard ratios for 
+female sex, adjusting for the lab-MELD score and confounders of the relation
+between lab-MELD and the waiting list mortality rate. The waiting list mortality
+hazard ratios include unity when adjusting for UNOS-MELD, both in the entire 
+cohort (HR = 1.03, 95% CI: 0.88--1.20) and in non-HCC candidates with cirrhosis 
+(HR 0.94, 95% CI: 0.80--1.11). Point estimates appear slightly increased for 
+MELD-Na and ReMELD-Na and decreased for MELD 3.0 (but confidence intervals include the null).
+
+Table \@ref(tab:ch4tab3) reports sensitivity checks for these results. With multiple imputation (MI), point estimates for MELD-Na, ReMELD-Na and MELD 3.0 are closer to the null. For MELD 3.0, the estimated hazard ratios become statistically significant, both in the full cohort (HR = 0.83, 95% CI: 0.71--0.97) and in non-HCC candidates with cirrhosis (HR = 0.77, 95% CI: 0.66--0.91). Results are similar when using waiting list death / removed unfit as a joint outcome (third row). Point estimates are slightly increased in candidates with high UNOS-MELD scores or
+elevated creatinine, but remain statistically insignificant (except for ReMELD-Na in high-MELD candidates, 95% CI: 1.02--1.59, fourth row). Results change little when estimated in Germany and the Netherlands, the Eurotransplant member countries without center offers (sixth row). Not correcting for dependent censoring with IPCW also appears to slightly increase point estimates.
+
+
+```{r ch4fig6, fig.cap = CH4_FIG_CAPTIONS$FIG6, out.width = "100%"}
+FIG <- pluck(CH4_FIG_LIST, 6)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+`\begingroup`{=latex}
+`\setlength{\aboverulesep}{0.2ex}`{=latex}
+`\setlength{\belowrulesep}{0.3ex}`{=latex}
+
+```{r ch4tab3, results='asis'}
+df_tab <- read_excel('raw_tables/ch4/Table3.xlsx') |>
+  janitor::remove_empty(which='rows') |>
+  mutate(
+    across(1, str_replace_all, fixed('>='), '$\\geq$'),
+    across(1, str_replace_all, fixed('multiple imputation'), 'MI')
+  )
+
+names(df_tab) <- firstlow(names(df_tab))
+df_tab[[1]] <- firstlow(df_tab[[1]])
+
+FOOTNOTE_TEXT_HTML <- "Abbreviations: </br>HCC, hepatocellular carcinoma; IPCW, inverse probability censoring weighting; MELD, model for end-stage liver disease; MELD-Na, model for end-stage liver disease sodium; MI, multiple imputation; ReMELD-Na, refitted MELD-Na for Eurotransplant; UNOS, United Network for Organ Sharing."
+
+
+FOOTNOTE_TEXT <- "\\textbf{Abbreviations:} HCC, hepatocellular carcinoma; IPCW, inverse probability censoring weighting; MELD, model for end-stage liver disease; MELD-Na, model for end-stage liver disease sodium; MI, multiple imputation; ReMELD-Na, refitted MELD-Na for Eurotransplant; UNOS, United Network for Organ Sharing."
+
+if (knitr::is_html_output()) {
+    df_tab$`sensitivity check` <- str_replace_all(df_tab$`sensitivity check`, 'creatinine', 'creatinine<br>')
+  df_tab |>
+    mutate(across(where(is.character), str_replace, fixed('(*)'), '$^a$')) |>
+    kable(format='html', caption=CH4_TABLE_CAPTIONS[[3]], align='lcccc', escape=FALSE) |>
+    kableExtra::kable_styling('striped') |>
+    add_footnote(
+      FOOTNOTE_TEXT_HTML, escape=FALSE, notation = 'none'
+      ) |>
+    knitr::asis_output()
+} else if (knitr::is_latex_output()) {
+  
+  df_tab |>
+    kable(format='latex', caption=CH4_TABLE_CAPTIONS[[3]], booktabs=TRUE, escape=FALSE, align='lcccc') |>
+    kable_styling(
+      latex_options = c("striped", 'scale_down'),
+      font_size=9,
+      full_width=TRUE
+    ) |>
+    column_spec(
+      1, width='3.7cm'
+    ) |>
+    row_spec(1:nrow(df_tab), extra_latex_after = "\\addlinespace[5pt]") |>
+    row_spec(seq(1, nrow(df_tab), 2), background = "#F7F7F7") |>
+    insert_footnote_manually(
+      .text = FOOTNOTE_TEXT
+    ) |>
+    cat()
+}
+```
+
+`\endgroup`{=latex}
+
+`\FloatBarrier`{=latex}
+
+### Liver offer acceptance behavior
+
+To explore potential explanations for the reduced transplant rates among candidates
+with a small stature, match lists generated between December 31, 2006
+and December 31, 2019, were exported from the Eurotransplant database. Figure 
+\@ref(fig:ch4sfigsize)
+shows the distributions of weights and heights for these match lists,
+separately for candidates and donors. The plot shows that candidates and donors have broadly similar height and weight distributions, with considerable overlap. Figure \@ref(fig:ch4sfigoff) shows univariate 
+associations between graft offer acceptance and donor-candidate body size differences. The figure suggests
+that size mismatch is indeed associated with declining
+an organ offer. These associations are stronger if the
+candidate weighs substantially lighter than the donor, or if the candidate is substantially
+shorter.
+`\newpage`{=latex}
+
+```{r ch4sfigsize, fig.cap = CH4_FIG_CAPTIONS$SFIGSIZE, out.width = "75%"}
+FIG <- chuck(CH4_FIG_LIST, "SFIGSIZE")
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+```{r ch4sfigoff, fig.cap = CH4_FIG_CAPTIONS$SFIGOFF, out.width = "90%"}
+FIG <- chuck(CH4_FIG_LIST, "SFIGOFF")
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+`\FloatBarrier`{=latex}
+`\newpage`{=latex}
+
+## Discussion
+
+This chapter reports on sex disparity in liver waiting list outcomes in Eurotransplant. 
+Despite being listed at similar UNOS-MELD scores as males, relatively fewer females 
+are transplanted, and relatively more females die within 90 days of listing. 
+Similar results have been described in other geographic regions [@moylanDisparitiesLiverTransplantation2008; @mathurSexBasedDisparitiesLiver2011; @laiHeightContributesGender2010; @lockeQuantifyingSexBasedDisparities2020a].
+
+We find that the transplant rates of females are approximately 25%
+lower than those of males in Eurotransplant, both in the full cohort 
+and among non-HCC candidates with cirrhosis. 
+This disparity disappears when adjusting for candidate height and weight, with 
+the estimated 95% confidence intervals for the transplantation hazard ratio of
+0.93--1.04 in the full cohort, and 0.93--1.07 in non-HCC candidates 
+with cirrhosis. Interactions of body 
+size with candidate sex are also insignificant, which suggests that small body 
+sizes are equally disadvantageous to males and females. We interpret these findings
+as evidence for the size mismatch hypothesis: the smaller stature of female
+candidates limits their chances of finding a suitable liver transplant, which results in sex disparity
+in liver waiting list outcomes.
+
+A potential explanation for the size mismatch hypothesis comes from the analysis
+of the offer acceptance behavior of transplant centers: while weights and heights are similarly distributed in the donor
+and patient populations, univariate analyses of offer acceptance 
+rates suggest that offers are more likely to be accepted for transplantation 
+when the donor has a similar or smaller body size than the patient. As a result,
+there is high demand
+for small organs, which disadvantages the small-statured patients who depend on
+such offers for transplantation. Because these small-statured patients are predominantly
+female, this also results in sex disparity.
+
+Existing analyses from the United States have reported that females remain
+disadvantaged after adjustment for age, height and weight, while our analyses
+suggest that height and weight fully mediate the effect of sex on the transplantation
+rate. This discrepancy could be explained by the fact that these existing
+studies have adjusted for continuous variables either linearly 
+[@mathurSexBasedDisparitiesLiver2011; @lockeQuantifyingSexBasedDisparities2020a] or with quantiles [@laiHeightContributesGender2010; @nephewExceptionPointsBody2017], 
+instead of with non-linear spline transformations. We find that such 
+adjustment strategies bias hazard ratios downwards (results not shown).
+
+Regarding waiting list mortality rates, we find that the hazard ratios for female 
+sex include the null when adjusting for UNOS-MELD and relevant confounders,
+both in the full cohort and in non-HCC candidates with cirrhosis. We thus find
+no evidence that females face higher waiting list mortality rates than males when
+at the same UNOS-MELD score. In other words, we find no evidence for the 
+GFR hypothesis in our main analyses.
+`\newpage`{=latex}
+
+Studies from the United States have reported higher waiting list 
+mortality rates for females when adjusting for MELD or its biomarkers. For example, Moylan 
+et al. (2008) report a statistically significant hazard ratio of 1.09 for
+female sex when adjusting for UNOS-MELD [@moylanDisparitiesLiverTransplantation2008],
+Wood et al. (2021) report that without-transplant survival is 0 to 5 
+percentage lower for females with MELD-Na [@woodCorrectingSexDisparity2021], and 
+Kim et al. (2021) find a hazard ratio of 1.23 in developing MELD 3.0 [@kimMELD3point0]. 
+Compared to these estimates, the point estimates we obtained in the main analyses
+with adjustment for UNOS-MELD are low (1.03 in the full cohort, and 0.94 in non-HCC candidates with cirrhosis).
+
+Our sensitivity checks lead to several potential explanations for this discrepancy.
+Firstly, candidates in the United States are sicker than
+candidates in Eurotransplant, 
+with median MELD-Na scores at transplantation of 27 in OPTN [@kwongOPTNSRTR20202022] 
+compared to 21 in Eurotransplant. We find that re-estimation of the mortality hazard
+ratios in subgroups with higher MELD scores increases the estimated hazard ratio
+for female sex slightly. 
+Secondly, 61% of our cohort has low creatinine (\textless 1.0 mg/dl). For these 
+candidates, a systematically lower creatinine for females would not translate into
+lower MELD scores, because MELD scores are calculated with a lower limit of 1.0
+mg/dl for creatinine. When we re-estimate waiting list mortality hazard ratios
+in the 39% of candidates with elevated creatinine (≥1.0 mg/dl), the point 
+estimate increases to 1.12, which is more in line with existing literature
+(although it remains statistically insignificant). We also find that not 
+correcting for dependent censoring by transplantation increases the point 
+estimates slightly.
+
+A final difference is that our main results pertain to UNOS-MELD, whereas recent
+studies adjust for scores which prioritize additionally on serum sodium (MELD-Na)
+or serum sodium and serum albumin (MELD 3.0). With adjustment for 
+MELD-Na or ReMELD-Na instead of UNOS-MELD, our point estimates 
+of the waiting list mortality hazard ratio also increase to ±1.10 for MELD-Na 
+and ±1.20 for ReMELD-Na. They even become statistically significant in some 
+sensitivity checks for ReMELD-Na. These point estimates suggest
+that the mortality rate of females is underestimated by 0.5 to 1 points on the MELD scale. When 
+adjusting for MELD 3.0 instead of UNOS-MELD, the point estimates for the mortality
+hazard ratio are below 1. This suggests that the 
+1.33 extra points awarded to females in MELD 3.0 may overestimate the mortality
+rates for females in Eurotransplant.
+
+A clinical implication of our findings is that transplant centers should be aware of the 
+disadvantaged position of small-statured candidates when deciding whether to accept
+a liver offer. Eurotransplant should also strive to rectify the sex disparity
+that results from its current liver allocation algorithm. In the literature, the GFR hypothesis is frequently invoked 
+to motivate awarding points for female sex, either explicitly 
+[@kimMELD3point0] or indirectly by replacing creatinine in MELD by sex-specific 
+estimates of the GFR [@rodriguezPeralvarezDevelopmentValidationGenderEquity2023;
+@myersGenderRenalFunction2011; @asraniMELDGRAILNaGlomerularFiltration2020]. 
+By awarding points to females, such scores reduce sex disparity. However,
+they do not target a smaller stature, which represents the root cause of sex disparity 
+according to our analysis.
+`\newpage`{=latex}
+
+A more efficient way of addressing sex disparity could involve giving extra priority
+to small-statured candidates, regardless of their sex. We point out that such an 
+allocation score cannot be developed solely based on a Cox proportional hazards 
+model which uses waiting list death as the outcome and which adjusts for MELD biomarkers
+and candidate height. The reason for this is that body size only indirectly results in waiting list 
+deaths by limiting the transplant rate of small-statured candidates. This
+indirect mechanism is not captured when modeling the waiting
+list mortality with Cox PH models; rectifying sex disparity due to the size 
+mismatch hypothesis will require a different approach.
+
+One such approach could be to develop allocation scores with simulation, as is done 
+by Wood et al. [@woodCorrectingSexDisparity2021]. A relevant proposal in this regard is a study by
+Bernards et al., who assessed the effects of explicitly awarding points 
+to short candidates with Liver Simulation Allocation Model (LSAM) simulations 
+[@bernardsAwardingAdditionalMELD2022]. They report that awarding 1 extra MELD point
+to the 8% shortest waiting list candidates (\textless 156cm) is sufficient to result
+in equalized outcomes across height groups in the United States. A similar 
+simulation study should be conducted for Eurotransplant, to assess how sex 
+disparity on the liver waiting list can be rectified.
+
+Our study also has several limitations. Firstly, validity of the mediation analyses
+depends on two unverifiable assumptions: no unmeasured confounding of mediator-outcome 
+relations, and the assumption that confounders of the body size-transplantation 
+rate act through candidate eligibility. Secondly, we rely on accuracy of 
+information in the Eurotransplant database. Thirdly, our quantifications of the direct 
+effect of sex on mortality are potentially underpowered when adjusting for 
+sodium-based MELD scores, as serum sodium is missing for most candidates in Eurotransplant registry
+data. Fourthly, serum urea is not available in the Eurotransplant database such that 
+comparison to allocation scores which replace creatinine with estimated GFRs 
+was not possible.
+
+In conclusion, this chapter has described sex disparities in liver waiting list
+outcomes in Eurotransplant. In contrast to the existing literature, we lack 
+evidence that UNOS-MELD systematically underestimates pre-transplant 
+mortality rates in females. Our analysis instead suggests that transplantation 
+rates are lower in females because of their smaller stature. In addition to 
+externally validating MELD 3.0 and GEMA-Na, Eurotransplant should consider
+prioritizing small-statured candidates to rectify sex disparity. 

@@ -1,0 +1,409 @@
+
+`\part{Allocation of the kidney}`{=latex}
+
+# Kidney allocation in Eurotransplant {#CHprefacekidney}
+
+Up to 100 million Europeans have Chronic Kidney Disease (CKD) [@Vanholder2021].
+CKD is characterized by the progressive loss of kidney function, and its causes
+include diabetes, hypertension, and glomerulonephritis. Patients with CKD
+can eventually progress to End-Stage Renal Disease (ESRD), which means that they
+become dependent on renal replacement therapies (RRTs) such as dialysis or 
+kidney transplantation. Whereas other forms of end-stage organ failure cannot
+be managed with therapy, end-stage kidney failure can be managed for extended
+periods with dialysis [@HaaseKromwijk1999].
+However, kidney transplantation is the preferred treatment option for most 
+patients with ESRD because it is associated with a reduction in patient mortality 
+and improves the patient's quality of life [@Tonelli2011].
+
+Kidney transplantation became the preferred treatment option for patients with
+ESRD in the 1980s, when substantial improvements were observed in post-transplant
+outcomes [@HaaseKromwijk1999]. As a result, the kidney waiting list in Eurotransplant 
+expanded from less than 2,000 patients in 1980 
+to approximately 10,500 patients in 1994 [@eurotransplantAR2005]. Since then, the number of patients awaiting kidney transplantation has remained stable in
+Eurotransplant with approximately 10,000 patients currently waiting for a kidney transplant.
+
+Eurotransplant allocates kidneys from deceased-organ donors to these waiting patients. 
+When Eurotransplant was initiated, candidates were prioritized solely based
+on Human Leucocyte Antigen (HLA) matching. Currently, 
+Eurotransplant uses an allocation system which tries to balance HLA matching 
+with fairness considerations. In this chapter, we describe the history of this 
+system and some contemporary challenges in the allocation of deceased-donor kidneys.
+We also briefly describe the work included in this thesis that can inform
+discussions on addressing these challenges.
+
+## HLA matching versus fairness 
+
+In the late 1960s, immunologists observed that the best outcomes after kidney 
+transplantation were observed in pairs of siblings who had compatible ABO blood groups
+and matching leukocyte antigen groups [@vanDorp2001]. Anticipating that 
+such a matching effect also existed when transplanting kidneys from deceased donors,
+Jon van Rood proposed Eurotransplant, a program in which a central office
+would use a computer to locate the best-matching candidate for the kidneys that
+became available from deceased donors [@vanRoodET1967].
+Shortly after Eurotransplant was initiated in 1967, similar organizations were
+established in other geographic regions, motivated by the idea that outcomes after
+deceased-donor transplantation could only be improved through collaboration [@bakJensenShareNotShare2008].
+
+Already in 1970, this idea became controversial with a strong debate emerging between 
+immunologists and clinicians on the actual importance of leukocyte-antigen 
+matching in deceased-donor kidney transplantation [@daussetHLAStory1995; @vanRood2004].
+The commitment of immunologists to HLA matching was strengthened in the 1970s
+and 1980s, as they unraveled many complexities of what became known
+as the Human Leucocyte Antigen (HLA) system. The discovery of HLA-DR antigens in 1977 
+was particularly important, as these antigens were shown to have a stronger effect
+on prognosis after kidney transplantation than the earlier discovered HLA-A
+and HLA-B antigens [@Persijn1978; @Persijn1981; @bakJensenShareNotShare2008]. 
+
+At the same time, it was recognized that HLA matching was far from a magic bullet;
+many patients with poorly matched kidneys had good outcomes after
+transplantation [@terasaki1990history; @vanRood2004]. Based on such observations,
+clinicians questioned whether HLA matching was worth the effort, especially because 
+the practice resulted in disparities in access to transplantation [@Kjellstrand1988]. 
+For example, in the United States, it was observed that black patients were waiting
+three times longer than white patients for a kidney transplant.
+Thomas Starzl, who is known as "the father of modern transplantation", criticized the blind focus
+on HLA matching in kidney allocation, referring to it as _"the institutional 
+organization of racial bias"_ [@vanDorp2001, p.159]. To reduce such disparities,
+Starzl's transplant center instead used a point system to prioritize candidates
+for transplantation, in which tissue matching played a role that was 
+_"significant but far from overriding"_ [@starzlMultifactorialSystemEquitable1987].
+
+This criticism of HLA matching intensified in the 1980s with the advent of cyclosporine
+A. This immunosuppressant strongly reduced the incidence of acute rejection of kidney
+transplants, and was responsible for the major improvements in kidney transplant
+outcomes that were observed in the 1980s. Shortly after the introduction of 
+cyclosporine A, several single-center studies
+suggested that this immunosuppressant had made HLA matching in kidney transplantation 
+redundant [@greensteinEvidenceThatZero1990; @harfmannRenalTransplantationUsing1989]. 
+These early findings have since been contradicted by multi-center and
+registry-based studies, which showed that HLA matching continues to be strongly 
+associated with graft and patient survival [@opelzCORRELATIONHLAMATCHING1985; @Opelz2007].
+`\newpage`{=latex}
+Based on these later studies, consensus has arisen that the best outcomes are observed 
+in patients who receive transplants with zero mismatches on the HLA-A, HLA-B,
+and HLA-DR loci [@opelzCORRELATIONHLAMATCHING1985; @morrisAnalysisFactorsThat1999]. However, 
+the extensive polymorphism of the HLA system means that perfectly matched kidneys
+are not available for most candidates. In fact, it was already known in the 1980s
+that only about one in five patients can receive a perfectly matched kidney
+with a waiting list of 10,000 patients [@CICCIARELLI1987]. Most patients
+thus have to settle for a kidney with HLA mismatches. In that case, consensus is
+that HLA-DR matching is more important than HLA-B matching, which in turn is more
+important than HLA-A matching [@Ting1985; @joyseyTissueTypingPolicy1989; @thorogood1990].
+
+Because of the role of HLA matching was contended, kidney allocation first
+became more decentralized in the 1980s [@bakJensenShareNotShare2008]. For example,
+in 1988 Eurotransplant introduced a kidney allocation system that mandated 
+exchange of kidneys between centers only for (a) patients who had zero HLA mismatches 
+with the kidney and (b) the so-called "*hyper-immunized patients*" (see Section \@ref(sec:introam))
+[@HaaseKromwijk1999]. Otherwise, the center responsible for procurement of the kidneys 
+could choose patients from their own waiting list for transplantation, subject to blood group 
+compatibility rules and minimum HLA match criteria (defined as 2 DR matches, or 
+1 B + 1 DR match) [@HaaseKromwijk1999]. Procurement centers also had the option to
+voluntarily offer the kidneys to the Eurotransplant pool. Candidates would then be prioritized by
+compatibility at the HLA-DR locus, followed by compatibility at the HLA-B locus, 
+and finally compatibility at the HLA-A locus [@HaaseKromwijk1999].
+
+When Eurotransplant evaluated this system in the 1990s, concerns were raised
+over the fact that (i) 10 percent of patients consistently waited more than five years
+for kidney transplantation, (ii) transplant rates were low for candidates with
+rare HLA types or homozygosity at any of the HLA loci, and (iii) procurement
+and transplant rates were imbalanced between the centers and countries 
+[@DeMeester1998_booksection]. These fairness concerns 
+eventually led to the adoption of the Eurotransplant Kidney Allocation System 
+(ETKAS) in 1996, which was based on a point system that had been proposed by
+Wujciak and Opelz in the years before. Besides this program, Eurotransplant
+has used two other programs to allocate deceased-donor kidneys since the 1990s:
+the Acceptable Mismatch (AM) program for the allocation of kidneys to hyper-immunized candidates (Section
+\@ref(sec:introam)), and the Eurotransplant Senior Program (ESP) for the allocation
+of kidneys from donors aged 65 years or older (Section \@ref(sec:introesp)).
+
+`\newpage`{=latex}
+
+## Kidney allocation programs in Eurotransplant
+
+### The Eurotransplant Kidney Allocation System (ETKAS)
+
+Wujciak and Opelz tried to address the dilemma between HLA
+matching and fairness by using computer simulations to develop a point system
+for kidney allocation [@wujciakProposalImprovedCadaver1993a; @Opelz1998]. This
+system awarded points for the absence of HLA mismatches, but also points for
+a candidate's waiting time to ensure that no candidate would be left behind.
+Additionally, to avoid extreme waiting times for difficult-to-match patients, 
+the system awarded points for the _"mismatch probability"_, a quantification of 
+how common favorably matched kidneys are for the patient.
+
+Eurotransplant implemented a modified version of this point system for kidney
+allocation in 1996, and the resulting program has become known as the 
+Eurotransplant Kidney Allocation System (ETKAS) program. The modifications made
+included that ETKAS awards extra priority to pediatric candidates, and implements
+a mechanism to balance the international transfer of kidneys [@Opelz1998]. 
+
+One year after the introduction of ETKAS, in 1997, it was concluded that ETKAS
+successfully achieved its primary goals; the system had increased the number of transplantations
+among pediatric and long-waiting candidates and it had corrected imbalances in 
+the international exchange of kidneys [@demeesterNewEurotransplantKidney1998; @Persijn2006].
+Despite this apparent success, it was also pointed out by Wujciak and Opelz that
+ETKAS _"could not be considered a final and unalterable product"_, which instead 
+would require _"continued fine-tuning depending on new developments"_ [@Opelz1998]. 
+
+In light of these comments, it is not surprising that several refinements have 
+been made to ETKAS since 1996. One refinement concerns the definition of
+waiting time. When ETKAS was initiated, waiting time was defined as the number of days 
+a candidate had spent on the waiting list, which conferred an advantage to patients
+who were referred early to the kidney waiting list. To address this, Eurotransplant
+redefined waiting time to the number of days a candidate had received dialysis
+in January 2000 [@DeMeester2000]. A second issue was that ABO
+blood group O kidneys could be transplanted in non-O candidates in case of 
+a zero mismatch, which led to an increased waiting list mortality and longer 
+waiting times for blood group O patients [@glander2010]. In June 2010, this 
+issue was addressed by always requiring candidates and donors to have identical
+ABO blood groups in ETKAS.
+
+Shortcomings of ETKAS have also been identified for which an adequate solution
+has remained elusive. A notable example is that the ETKAS point system places
+equal emphasis on the HLA-A, HLA-B and HLA-DR loci, which has been described to lead to 
+additional mismatches on the HLA-DR locus 
+[@demeesterNewEurotransplantKidney1998; @vereerstraetenExperienceWujciakOpelzAllocation1998]. 
+Several proposals have
+been made to instead emphasize HLA-DR matching in ETKAS (e.g., Doxiadis et al.  [@doxiadisSimplerEquitableAllocation2007])
+which have been rejected by national competent authorities (e.g., Heemskerk et al.  [@heemskerkRegionalKidneyAllocation2009]). 
+As a result, ETKAS still places equal emphasis on HLA matching at the A locus
+as on matching at the DR locus.
+
+Another example of such a shortcoming are the mismatch
+probability points (MMPPs), which are used to facilitate access to transplantation for
+difficult-to-match candidates. One issue is that MMPPs are calculated using a
+formula that disregards HLA haplotype linkage disequilibrium [@Wujciak1997]. 
+A second issue is that at most 100 MMPPs are awarded in ETKAS, which may be
+insufficient to provide immunized patients with equality of opportunity
+[@susal2015; @ziemannUnacceptableHumanLeucocyte2017; @zecherImpactSensitizationWaiting2022a].
+
+### Immunized candidates \& the Acceptable Mismatch (AM) program {#sec:introam}
+
+Many kidney transplant candidates have developed
+antibodies against donor HLA antigens before they are listed for a kidney transplant,
+for instance because of a prior blood transfusion, a pregnancy,
+or a previous transplantation. If a donor carries the HLA antigens against which the candidate
+has developed such donor-specific antibodies (DSAs), transplantation can be
+contraindicated because it is likely to result in antibody-mediated rejection 
+of the kidney. 
+
+In Eurotransplant, transplant centers have historically been required to conduct
+a complement-dependent cytotoxicity (CDC) crossmatch before transplantation, 
+in which the serum of the patient is mixed with lymphocytes isolated from the donor. If such a crossmatch
+leads to the cell death of the lymphocytes, transplantation is strongly contraindicated
+[@patelSignificancePositiveCrossmatch1969], and even prohibited in Germany.
+In the past, transplantation 
+centers were also required to regularly test the sera of their patients against 
+a representative panel of donors to determine their candidates' panel-reactive antibody (PRA) levels.
+Such tests are known as the CDC-PRA tests and the obtained PRA levels quantify
+the percentage of the donor pool against which the candidate has a positive
+crossmatch. CDC testing could also be used to derive
+against which antigens a candidate had developed DSAs, albeit at limited resolution.
+Since the 1980s, centers have been able to report such antigens to Eurotransplant
+as _unacceptable antigens_,
+which ensures that there candidates would not be offered kidneys that carry those
+antigens.
+
+Having a pre-existing immunization can thus prevent a candidate from receiving a
+kidney transplant, in particular for candidates with high PRA levels.
+This can lead to an accumulation of immunized patients on the waiting list, which
+was indeed observed in the late 1980s. In 1988, Frans Claas and Jon van Rood proposed to 
+strategically select donors for the _"hyper-immunized"_ candidates based on _"acceptable antigens"_
+[@Claas1988], which formed the basis of the Acceptable Mismatch (AM) program that
+was initiated in 1989. These acceptable antigens were defined as antigens against which
+an immunized patient had not developed DSAs, and could be identified by crossmatching the candidate's
+serum against panels of HLA-typed blood donors that carried exactly one antigen
+mismatch with the patient [@Claas1988; @Heidt2015]. In the
+AM program, highly immunized candidates (PRA >85%) are given priority
+to donors who carried HLA antigens that were either matching with or acceptable to the
+candidate. Since its initiation, the AM program has continually been updated by
+the Eurotransplant Reference Laboratory (ETRL). For example,
+acceptable antigens were initially only defined for HLA-A and HLA-B, while currently 
+five HLA loci are used for AM allocation [@ETHist2025].
+
+CDC-PRA assays, in which a candidate's sera is tested against a panel of donor
+lymphocytes, has thus had an important role in determining a candidate's degree
+of immunization. In recent years this technology has largely been replaced by solid-phase assays,
+in which the patient's serum is directly tested against isolated HLA antigens [@Mamode2022].
+Centers regularly screen the sera of their candidates with these solid-phase assays and
+report the donor-specific antibodies that are identified using solid-phase assays as unacceptable to 
+Eurotransplant. Notable is that these solid-phase assays are more sensitive
+than CDC-PRA assays, which means that DSAs can be identified that lack
+CDC-reactivity. Transplantation in the presence of such DSAs is also associated
+with inferior outcomes [@Amico2009], but not an absolute contraindication [@Mulley2011]. 
+Instead, European guidelines recommend that the decision to transplant in the
+presence of such a DSA should be based on an individualized risk assessment. 
+This risk assessment should critically evaluate the DSA in light of potential 
+sensitization events and should assess the impact of designating it as unacceptable 
+on the likelihood of finding an HLA-compatible kidney [@Mamode2022].
+
+Since 2016, Eurotransplant calculates a _virtual_ PRA (vPRA) for each candidate
+based on their reported unacceptable antigens. This vPRA is defined
+as the percentage of donors that carry the unacceptable antigens in a database
+of 10,000 donors that is maintained by the ETRL. Advantages of the 
+vPRA compared to the PRA are (i) that measurement variability associated with the
+PRA can be avoided, and (ii) that the vPRA is directly based on unacceptable antigens,
+which makes it a better measure of the relative restriction in the 
+donor pool faced by immunized candidates. In 2020, the vPRA completely replaced the PRA in
+kidney allocation in Eurotransplant. For example, mismatch probability points have
+been awarded since 2020 based on the vPRA instead of the PRA, and candidates 
+with a PRA below 85% but a vPRA exceeding 85% can enter the AM program under specific conditions 
+[@Heidt2015].^[For the AM program, 
+unacceptable antigens either require CDC
+reactivity, or documentation that links the DSA to a sensitizing event.]
+
+```{=latex}
+\vfill
+\newpage
+\subsection[Eurotransplant Senior Program]{The Eurotransplant Senior Program}
+\label{sec:introesp}
+```
+
+```{r, results='asis'}
+if (knitr::is_html_output()) {
+  cat(
+    "### The Eurotransplant Senior Program (ESP) {#sec:introesp}"
+  )
+}
+
+```
+
+
+In 1999, Eurotransplant initiated the Eurotransplant Senior Program (ESP), which
+is used to offer kidneys from donors 65 years or older with priority to candidates
+65 years or older. The aim of ESP was (i) to promote the usage of kidneys from
+older donors and (ii) to reduce waiting times for candidates 65 years or older [@smitsEvaluationEurotransplantSenior2002]. These aims were achieved by 
+prioritizing candidates solely based on their accrued dialysis time and by offering kidneys
+only to candidates located in the vicinity of the donor [@Frei2008]. HLA typing
+of ESP donors was not performed in order to maximally reduce cold ischemia times.
+This meant that transplantations within ESP were done
+without consideration of HLA match quality. Because the donor's HLA typing was 
+unknown at the time of allocation, immunized candidates were not allowed
+to participate in ESP.
+
+Currently, all countries require the HLA typing of ESP donors to be available
+before allocation, which has enabled immunized candidates to participate in
+ESP. A Eurotransplant paired kidney donation study has demonstrated
+that outcomes for patients 65 years or older also improve with HLA-DR matching [@deFijter2023].
+Based on these findings, proposals to prioritize HLA-DR matching in ESP have
+been made which are scheduled for implementation in 2025. 
+
+## Contemporary challenges in kidney allocation 
+
+Since the introduction of ETKAS and ESP in the 1990s, the landscape of kidney
+transplantation has changed substantially. For example, Eurotransplant's donor and patient
+populations have aged due to demographic developments, and the immunological
+evaluation of transplant candidates has changed with the introduction of
+solid-phase assays. Despite this changing landscape,
+the core principles of Eurotransplant's kidney allocation systems have remained
+largely unchanged. This raises the question of whether these systems adequately
+address contemporary challenges in kidney transplantation.
+
+One such challenge concerns the immunized candidates who depend on ETKAS for
+access to transplantation. Transplant professionals from Eurotransplant's kidney transplantation 
+centers have regularly expressed concerns that this patient group is disadvantaged 
+in ETKAS. Empirical evidence for such a disadvantage comes from Germany where retrospective analyses have
+shown that patients with vPRAs exceeding 85% are disadvantaged 
+[@ziemannUnacceptableHumanLeucocyte2017; @zecherImpactSensitizationWaiting2022a]. 
+In Chapter \@ref(CHvpra), we examine the relation between the vPRA and the
+transplant rate using retrospective data from all Eurotransplant member
+countries. We indeed find that immunized candidates face reduced access to 
+transplantation in ETKAS. European guidelines already recommend that this disparity should be addressed 
+by directly awarding points for the vPRA using a sliding scale [@Mamode2022].
+In Chapter \@ref(CHetkidneysimulator), we design such a sliding scale for ETKAS.
+
+A second challenge comes from the changing patient and donor demographics. 
+Since the Eurotransplant Senior Program (ESP) was introduced in 1999, the
+percentage of patients aged 65 years or older at listing has increased from 6% 
+in 1999 to 22% in 2024, and the percentage of donors aged 65 years or older has increased
+from 11% to 24%. With this changing demographic, concerns have been voiced over the fairness of
+ESP. For example, in Germany, the median dialysis time at transplantation 
+currently differs by more than four years between candidates aged over 65 and
+those under 65 [@Kolbrink2024]. This means that a German candidate who starts
+dialysis at age 60 is unlikely to receive a kidney transplant until their 65th
+birthday, and is expected to be transplanted shortly thereafter.
+
+Eurotransplant also has not implemented any form of candidate-donor age matching
+within ETKAS, with the exception of pediatric candidates, who have priority to
+kidneys procured from pediatric donors. Organ allocation organizations in France, 
+the U.K. and the U.S. have all implemented mechanisms which direct kidneys from 
+young donors to young patients [@Audry2022; @watson2020overview; @israniNewNationalAllocation2014]. 
+Calls have been made in the recent literature to also introduce
+such continuous candidate-donor age matching in Eurotransplant [@vonsamson-himmelstjernaContinuousDonorrecipientAge2024].
+In Chapter \@ref(CHetkidneysimulator), we evaluate a form of continuous-donor
+age matching for ETKAS.
+
+A third challenge is that ETKAS has continued to place equal emphasis on HLA-A, 
+HLA-B, and HLA-DR matching, while virtually all other organ exchange organizations
+emphasize matching at the HLA-DR locus, or matching at both the HLA-B and HLA-DR loci
+[@Wu2017]. In Chapter \@ref(CHetkidneysimulator), we examine how waiting list
+outcomes are affected if more priority is given to matching at the HLA-B
+and HLA-DR loci.
+
+This thesis explores several directions in which kidney allocation in
+Eurotransplant could be improved. Instrumental to studying the impact of
+these policy changes is
+the ETKidney simulator, a discrete-event simulator that mimics ETKAS and
+ESP allocation based on data from the Eurotransplant database. We describe and validate this simulator
+in Chapter \@ref(CHetkidneysimulator).
+
+```{r eval=FALSE, include=FALSE}
+
+## Miscellaneous
+
+
+
+@DeMeester2000: invited comment on issues with ETKAS.
+
+
+Opelz and Wujciak: What to expect from a good allocation system
+
+- "The new allocation system cannot be considered a final and unalterable
+product. Rather, it will require continued fine-tuning depending on new
+developments, or the emergence of inequalities that have gone undetected
+during the first 2 years"
+
+- An issue that cannot be resolved by computer simulations is the weight of
+priorities that should be assigned to various conditions. (...) Organ transplantation is undergoing continuous development, and the significance of risk factors may change in the future, just as it has in the past. Past exclusion criteria were different from the present; and they are likely to change
+again in the future. It will be the task of expert committees (including not only
+transplant doctors but also representatives of patient associations, ethicists,
+social workers, etc.) to determine the importance that should be attached to
+these factors in the organ allocation procedure.
+
+
+
+What to expect from a good kidney allocation system
+
+- de Meester 1998:
+
+ It should be stressed that any introduction of a change must be preceded by a computer simulation study, to test whether the modification will attain the desired effect and which immediate impact it will have on the other patients on the waiting list-because there is a fixed supply-and thus which alternative is the better one
+
+- Wujciak-Opelz: 
+
+If the highest success rate were the ultimate goal, patients with
+serious complicating health conditions (e.g. diabetics), those acutely in need of
+transplantation because of rapidly deteriorating health conditions, or highly
+sensitized patients would be excluded because experience shows that one cannot
+expect an optimal success rate in these patients. Likewise, small children or
+patients of advanced age would not be selected because relatively high graft
+failure rates have been reported. If, on the other hand, the principle of equitable
+access were followed as the sole guideline, patients might receive organs that
+are unsuitable for them, e.g. a kidney might be completely histoincompatible
+or even crossmatch-positive. It follows that compromises have to be reached,
+and that rules have to be established that can be applied uniformly.
+
+
+Gjertson: proposal on HLA matching for U.S. https://www.nejm.org/doi/full/10.1056/NEJM199104113241505
+
+Cecka. Review on HLA matching: https://onlinelibrary.wiley.com/doi/10.1111/j.1744-313X.2010.00957.x
+
+Since 2023, transplant centers 
+can report unacceptable antigens on 11 HLA loci, and donor procurement centers 
+are required to support HLA typings electronically to Eurotransplant for these 
+11 loci. This has made it possible to implement a virtual crossmatch in
+kidney allocation in 2023 [@Heidt2024]. Centers are currently still required to
+conduct a physical crossmatch for all kidney transplantations, which may be done
+retrospectively for non-immunized candidates [@ETHist2025].
+
+```

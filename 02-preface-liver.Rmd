@@ -1,0 +1,297 @@
+
+
+`\part{Allocation of the liver}`{=latex}
+
+# Liver allocation in Eurotransplant {#CHprefaceliver}
+
+Liver transplantation is the only curative therapy for patients with acute liver
+failure or end-stage liver disease (ESLD), and is the preferred treatment option for
+several other liver conditions. The majority of candidates who wait for a liver 
+transplant have cirrhosis, a chronic liver condition in which inflammation leads
+to scarring of the liver. Cirrhosis can be caused by hepatitis B, hepatitis C,
+alcohol abuse, metabolic disorders, or a combination thereof [@olearyIndicationsLiverTransplantation2008]. 
+By itself, cirrhosis is not an indication for a liver
+transplantation. However, cirrhosis may progress to a stage where the patient 
+develops clinical symptoms, such as ascites, encephalopathy, or variceal bleeding [@olearyIndicationsLiverTransplantation2008]. 
+With such "decompensating" symptoms, liver transplantation can be indicated. 
+Eventually, decompensated cirrhosis may progress into multiple organ failure
+-- a syndrome now recognized as acute-on-chronic liver failure (ACLF),
+which is associated with a high short-term mortality risk [@Arroyo2020].
+
+Cirrhosis is also a risk factor for developing hepatocellular carcinoma (HCC),
+the most common form of liver cancer. While most patients with HCC have cirrhosis,
+they typically have a well-preserved liver function [@olearyIndicationsLiverTransplantation2008].
+Despite not having progressed to ESLD, these candidates may require a
+liver transplantation to prevent tumor progression and to reduce the risk of
+tumor recurrence after transplantation. For patients with HCC who meet the internationally 
+accepted Milan criteria, liver transplantation is internationally recognized as
+the most effective surgical therapy [@Galle2018].
+
+Besides cirrhosis, there are many other conditions that can be an indication
+for liver transplantation. One group of patients who urgently require access 
+to transplantation consists of patients with acute liver failure (ALF). 
+Acute liver failure is characterized
+by an unexpected and abrupt loss of liver function, which can be triggered by 
+among others acute viral hepatitis, mushroom poisoning, or paracetamol intoxication. Without 
+transplantation, patients with ALF are expected to die within days [@stravitzAcuteLiverFailure2019]. 
+Examples of chronic, non-cirrhotic indications are polycystic liver disease and cholestatic
+liver disease. Polycystic liver disease is a genetic
+disorder that causes cysts to grow in the liver and predominantly affects females.
+Although polycystic liver disease is not life-threatening, the condition can
+cause debilitating symptoms that may justify liver transplantation.
+One type of cholestatic liver disease is primary sclerosing cholangitis (PSC),
+which has a higher incidence in males. PSC is characterized by inflammation of the bile ducts
+which leads to scarring. If PSC is recurrent, liver transplantation may be indicated
+because it is a pre-stage for cholangiocarcinoma and associated with a
+reduced quality of life [@olearyIndicationsLiverTransplantation2008].
+
+This far-from-exhaustive overview of indications for liver transplantation 
+shows that the liver waiting list consists of heterogeneous groups of patients, who require access to liver transplantation for different reasons. Designing a
+liver allocation system that adequately serves these heterogeneous patient
+groups is a difficult task. In this chapter, we describe how Eurotransplant
+has tried to balance the interests of these patient groups.
+
+## Liver allocation prior to MELD 
+
+In the 1990s, Eurotransplant had limited involvement in the allocation of livers. 
+In fact, the exchange of livers was mandatory only 
+for candidates who had a High Urgency
+(HU) status [@HaaseKromwijk1999]. Candidates with acute liver failure or other
+_de novo_ life-threatening conditions were eligible for this status. If 
+no such candidates were available for transplantation, the transplantation 
+center responsible for procurement of the liver could freely select a candidate
+from their own waiting list for transplantation (subject to blood group rules) [@demeesterWhichABOmatchingRule2002]. If the procurement center did not have
+suitable candidates available, Eurotransplant used a rotation system to
+offer the liver to other centers. Contacted centers could again freely select
+a candidate from their waiting list for transplantation [@Jost1997; @Chapman1997]. 
+How candidates were prioritized was thus mostly left to the discretion of 
+the transplant centers.
+
+In July 2000, Eurotransplant introduced a patient-oriented allocation system
+for the liver [@Strassburg2004], as was required under the Dutch and
+German transplantation laws that were introduced in the 1990s [@HaaseKromwijk1999]. In this system, candidates for liver 
+transplantation were categorized into four medical urgency groups: high urgency
+(T1), chronic disease with acute decompensation (T2), chronic disease with
+complications (T3), or chronic disease without complications (T4). Candidates 
+with a T1 status received international priority, while elective candidates (T2-T4) were prioritized
+using a point system that awarded points for the candidate's medical urgency (T2-T4), their waiting time, and their location relative to the donor [@minutesELIACMeeting2002]. 
+Candidates were categorized into a T2, T3, or T4 status based on their Child-Pugh
+score, which can be used to assess the prognosis of candidates with cirrhosis [@Strassburg2004; @Jung2008].
+
+The most important disadvantage of this patient-oriented system was that waiting
+time had a dominant role [@Strassburg2004; @Jung2008], which incentivized the
+transplant centers to refer their candidates early for transplantation. In Eurotransplant, 
+this contributed to a tenfold increase in the number of candidates who
+waited for liver transplantation between 1991 and 2006 [@Jung2008]. As a result, 
+waiting times in Germany exceeded 200 days even for candidates with a T2 status,
+who by definition have acute decompensation [@Strassburg2004]. With
+these waiting times, it was observed that the candidates with the shortest
+waiting times faced an increased risk of dying [@minutesELIACMeeting2002]. This 
+indicated that the allocation system failed to adequately rank candidates on
+medical urgency.
+
+Classifying medical urgency based on the Child-Pugh score was also contentious
+because these scores are partially based on a subjective assessment of the candidate's
+encephalopathy grade and ascites grade [@Jung2008; @wiesnerModelEndstageLiver2003].
+Concerns were voiced in the Eurotransplant Liver and Intestine Committee (ELIAC) 
+that centers abused these subjective criteria, and _"tried to push their candidates into 
+a T2 status"_ [@minutesELIACMeeting2006]. Moreover, ascites and encephalopathy
+are also specifically linked to cirrhosis, such that candidates with
+other liver conditions were typically assigned a T4 status [@Strassburg2004].
+Consensus in ELIAC was that this was unfair to candidates with hepatocellular
+carcinoma or metabolic disorders [@minutesELIACMeeting2001].
+
+## MELD-based liver allocation in the United States 
+
+In the United States, a similar liver allocation system had been in use since 1998.
+This system also prioritized candidates using four medical urgency categories 
+that were based on the Child-Pugh score. Freeman et al. (2004) reported that 
+under this system there was _"virtually no relation between waiting time and 
+mortality for each medical urgency status"_. This finding -- reported on behalf 
+of UNOS, the organ allocation organization of the United States -- motivated a
+search for an alternative disease severity score that could be used to prioritize
+candidates for liver transplantation. This disease severity score would become
+the Model for End-stage Liver Disease (MELD) score, which was implemented in 2002.
+
+Notably, this MELD score was not originally developed to predict survival on the
+liver transplantation waiting list. Instead, MELD was developed by Malinchoc et al. (2000)
+to predict 90-day survival after an elective transjugular intrahepatic porto-systemic 
+shunt (TIPS) procedure [@malinchocModelPredictPoor2000]. These procedures are
+indicated in cirrhotic patients with acute decompensation to prevent variceal
+rebleeding, or to treat refractory ascites. Malinchoc et al. demonstrated that 
+this model outperformed the Child-Pugh score in predicting 90-day survival after TIPS.
+`\newpage`{=latex}
+Whether this scoring system could also be used to rank candidates for liver
+transplantation was first studied by Kamath et al.,
+who showed that MELD could also predict the 90-day mortality of three
+other cirrhotic patient groups: hospitalized cirrhotic
+patients who did not undergo a TIPS procedure, ambulatory patients with cirrhosis, 
+and patients with biliary cirrhosis [@kamathModelPredictSurvival2001]. 
+Furthermore, Kamath et al. showed that 
+including clinical symptoms or disease etiology only minimally improved the model's
+predictive performance, which meant that survival could be 
+adequately predicted based on blood-based biomarkers alone. Candidates for
+liver transplantation could thereby be prioritized solely based on objective
+medical criteria, which was considered advantageous. Subsequent external validations have 
+demonstrated that MELD is indeed superior to the Child-Pugh score for predicting 
+90-day survival on the liver waiting list
+[@wiesnerModelEndstageLiver2003].
+
+Based on these findings, a policy to prioritize patients using MELD was approved 
+in the United States in November 2001. Under this system, which was implemented
+in February 2002, MELD scores are calculated based on measurements of 
+serum bilirubin (mg/dl),
+serum creatinine (mg/dl) and the International Normalized Ratio (INR)
+of prothrombin time, using the following formula:
+
+$$6.43\  + 3.78\ln\left( \text{bilirubin} \right) + 9.57\ln\left( \text{creatinine} \right) + 11.20\ln\left(\text{INR}\right).$$
+
+In calculating MELD scores, the laboratory measurements for biomarkers are set to
+a minimum of 1 to prevent negative scores. UNOS also proposed to cap
+serum creatinine at 4.0 mg/dl, to limit MELD scores to a maximum of 40, and to
+rank candidates by their rounded MELD scores. Because of these choices, MELD 
+scores range from 6 to 40.
+
+It was anticipated that a purely MELD-based allocation would underserve 
+candidates with metabolic disease, cholestatic liver disease, or hepatocellular carcinoma
+[@kamathModelPredictSurvival2001; @wiesnerModelEndstageLiver2003]. 
+To help such candidates access transplantation, policymakers in the United States
+also introduced an elaborate exception point system that awards exception points 
+for various non-cirrhotic indications.
+
+```{r eval=FALSE}
+This point system gave patients who met predefined eligibility criteria a predefined 90-day mortality equivalent, which was translated back to the MELD scale based on a survival curve. For example, candidates with hepatocellular carcinoma could receive up to 29 MELD points at listing, which would increase every 90 days of waiting time until transplantation or until the candidate reached the maximum score of 40.
+```
+
+## MELD-based liver allocation in Eurotransplant 
+
+In 2003, the ELIAC recommended assessing whether MELD could replace the Child-Pugh
+score for liver allocation in Eurotransplant [@Jung2008]. Following this
+recommendation, delegates from Eurotransplant visited UNOS in 2003 and 2004 to
+study how a MELD-based allocation system could be adapted for Eurotransplant. 
+These visits ultimately led to the introduction of MELD-based liver allocation in
+Eurotransplant in December 2006. 
+`\newpage`{=latex}
+Because of these visits, the core of Eurotransplant's MELD-based liver allocation 
+system closely mirrors UNOS' implementation. For example, both systems give 
+priority to candidates with acute liver failure and prioritize "elective" 
+(i.e., non-HU) candidates using MELD scores. In both systems, prioritization is 
+based on the *"match-MELD"* score, which is the maximum of the *"lab-MELD*" score
+(calculated from biomarkers) and exception points. Eurotransplant also
+uses the exact same formulas as UNOS to calculate the lab-MELD and exception scores.
+
+Within MELD-based liver allocation in Eurotransplant, international sharing is mandatory
+only for candidates with a High Urgency (HU) status and those awaiting a combined
+transplantation. Otherwise, candidates located in the same country as the donor
+have priority in Eurotransplant. A distinctive feature of Eurotransplant's
+liver allocation system is
+that an obligation system was introduced, which ensures that livers exported 
+with international priority are paid back by the importing country [@jochmansAdultLiverAllocation2017].
+Another difference lies in the prioritization of pediatric candidates: within
+Eurotransplant, children are prioritized with exception points, while UNOS
+uses PELD, a disease severity score developed specifically for children
+[@freemanImprovingLiverAllocation2004].
+
+MELD-based liver allocation in Eurotransplant has to abide by the national regulations
+of its member countries, which introduces considerable complexity into the
+allocation system. For example, only in Germany and the Netherlands is the ranking
+of candidates completely based on the match-MELD. In Austria, Croatia, Hungary 
+and Slovenia, procurement centers are still allowed to select a candidate from 
+their own waiting list, as was the case under the center-based allocation system
+of the 1990s. In Belgium, a mixture of center- and patient-based allocation 
+is used, with centers free to select a candidate for Donation after Cardiac Death 
+(DCD) donors, but not for Donation after Brain Death (DBD) donors [@jochmansAdultLiverAllocation2017].
+National competent authorities have varying opinions regarding which indications deserve
+to be prioritized with exception points. To accommodate these different views,
+Eurotransplant's member countries have completely separate exception point systems, with exception
+points valid only for national allocation.
+
+## Areas for improvement in MELD-based allocation systems 
+
+Since Eurotransplant switched allocation by MELD in December 2006, 
+several potential areas for improvement for MELD-based liver allocation have been
+identified. One known limitation of MELD is that
+it underestimates the waiting list mortality risks for certain 
+cirrhotic patient groups. These include candidates with low serum sodium
+levels (hyponatremia) [@kimHyponatremiaMortalityPatients2008a]. This has motivated
+UNOS to switch in 2016 to liver allocation based on the MELD-Na score, which adds
+serum sodium to the MELD formula. A second patient group consists of female transplantation 
+candidates, who are more likely to have an adverse waiting list outcome than males
+in the United States [@moylanDisparitiesLiverTransplantation2008]. To address
+this disparity, UNOS liver allocation has become based on MELD 3.0 in 2023, which
+adds serum albumin to the formula and adds 1.33 to the MELD score of female transplant candidates [@kimMELD3point0]. In Chapter \@ref(CHsexdisparity), we examine whether 
+females are also more likely to face an adverse waiting list outcome in
+Eurotransplant, and assess why that would be the case.
+
+A second area of improvement concerns the formula that is used to calculate MELD scores.
+The coefficients in this formula were based on a Cox proportional hazards model 
+that was developed for the prediction of survival after a TIPS procedure, not survival
+on the liver waiting list. A rich literature exists which seeks to re-estimate 
+these coefficients on candidates for liver transplantation [@merionLongitudinalAssessmentMortality2003; @sharmaReweightingModelEndStage2008; @leiseRevisedModelEndstage2011]. 
+A related area of criticism concerns the choices that UNOS has made in introducing MELD,
+such as capping creatinine at 4.0 mg/dl and
+calculating MELD with minimum values of 1 for all biomarkers. Studies have
+argued that these choices lacked empirical support and have revised these
+upper and lower limits [@leiseRevisedModelEndstage2011]. For Eurotransplant specifically,
+Goudsmit et al. proposed ReMELD and ReMELD-Na, which were scores obtained by
+revising MELD and MELD-Na with retrospective data from Eurotransplant [@goudsmitRefittingModelEndstage2020]. In a case study in Chapter \@ref(CHelassimulator), we assess how implementation 
+of the ReMELD-Na score would affect waiting list outcomes in Eurotransplant.
+
+The studies that revise MELD based on liver transplant candidate data typically 
+associate a candidate's 90-day waiting list survival with their MELD biomarkers 
+reported at listing. This approach inefficiently uses the data that is available
+at Eurotransplant, because most candidates have multiple sets of MELD biomarkers
+available as centers are required to regularly recertify the MELD scores of their candidates.
+In Chapter \@ref(CHdynremeld), we assess how this information 
+can be used to revise MELD more efficiently.
+
+A third potential area of improvement is that the prioritization of candidates based on a 
+sickest-first principle may result in transplanting candidates who
+have a short life expectancy after transplantation. In Eurotransplant, mixed results exist as to
+whether allocation based on MELD leads to worse post-transplant outcomes [@Nagler2005; @Weismller2009].
+At least in theory, an allocation based on transplant benefit could help prevent such futile
+transplantations. Such a benefits-based allocation system was first proposed in
+the United States by Schaubel et al. [@Schaubel2009], but it was never implemented. 
+In the United Kingdom, allocation of livers has become
+based on the _Transplant Benefit Score_ (TBS) since 2018 [@Allen2024]. TBS has
+been contentious because it underserved candidates with HCC [@Attia2023] and 
+it is thought to have reduced access to transplantation for young liver 
+transplant candidates [@Attia2024].
+
+A fourth area of improvement is the exception point system that is used to prioritize
+non-cirrhotic candidates for transplantation. In the United States, 
+studies have reported that candidates eligible for exception points were overprioritized
+[@Massie2011; @Goldberg2014], which has led to a substantial deprioritization of 
+candidates with exception points in OPTN, which is the national system that manages organ 
+allocation in the United States. For example, UNOS first lowered the number 
+of points awarded to candidates with HCC in 2003, which was followed by removal
+of exception points for those with stage I HCC. In 2005, the priority for candidates with stage II HCC was again 
+lowered, which was followed by a "Delay and Cap" policy for HCC in 2015
+[@pillaiLiverAllocationPolicies2019]. With this policy, candidates
+with HCC would not be eligible for exception points until they had waited six months
+for a liver transplant (the "delay"), and would receive a maximum exception score of 34 points
+on the MELD scale (the "cap"). In 2019, UNOS completely removed the 90-day upgrades for all exception points,
+a decision motivated by findings that these 90-day upgrades were linked to an increase in the
+median MELD score at transplantation of 22 in 2005 to 27 in 2012 [@northupExcessMortalityLiver2015]. To counter such "MELD inflation", candidates
+with exceptions are now awarded a fixed number of points in the United States, 
+which is specified relative to the median MELD at transplantation (MMAT) [@Bonner2018]. For HCC, this number is 
+set to the MMAT minus three points.
+
+In Eurotransplant, in contrast, changes to the exception point system have been adopted only sporadically. For example, only in the Netherlands was a six-month waiting period 
+adopted for HCC, analogous to UNOS's 2015 "Delay and Cap" policy.
+This lack of policy reform is surprising because several articles
+have suggested that candidates with exception points are also overprioritized in Eurotransplant
+[@Goet2017; @Metselaar2017]. Notable in this regard is a study by Umgelter et al. [@umgelterDisparitiesEurotransplantLiver2017a], 
+who concluded on behalf of ELIAC that patients with exception points appear to be
+advantaged compared to candidates without exception points. In Chapter 
+\@ref(CHelassimulator), we examine how
+changes to the exception point system would affect waiting list outcomes in
+Belgium, the country in which most exceptions are awarded within Eurotransplant.
+
+As this chapter sets out, the literature is rich with ideas on how MELD-based
+liver allocation can be improved. A major barrier to implementing these ideas is
+that Eurotransplant has lacked the tools to quantitatively assess how a change
+in allocation rules would impact the 
+liver waiting list outcomes. To fill this gap, 
+we developed a discrete-event simulator that mimics the liver allocation system in Eurotransplant. 
+We describe this simulator in detail in Chapter \@ref(CHelassimulator).

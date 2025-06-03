@@ -1,0 +1,778 @@
+
+
+```{r, include=FALSE}
+library(tidyverse)
+library(pander)
+library(kableExtra)
+library(purrr)
+library(readxl)
+library(glue)
+
+knitr::opts_chunk$set(results = 'show', echo = FALSE, fig.pos='ht',
+                      fig.align = 'center',
+                      message = FALSE, warning = FALSE)
+
+source('R/R_functions.R')
+
+FIG_FOLDER <- 'figures/appendix/'
+
+APP_A_FIG_LIST <- list(
+  `FIG1` = 'gong_schaubel_ipcw'
+) |>
+  map(
+    ~ paste(FIG_FOLDER, .x, sep = '/')
+  )
+
+APP_A_FIG_CAPTIONS <- list(
+  FIG1="Figure demonstrating how inverse probability censoring
+weights (IPCW) are calculated for a subject $i$. Subject $i$ is
+registered at $R_{i}$, is active at cross-section date $CS_{k}$, and
+experiences an event at time $X_{i}$. Since subject $i$ has an active
+registration at $CS_{k}$, this subject contributes an observation to the
+data set. To correct for dependent censoring, the spell is weighted by
+the inverse probability that patient $i$ is transplanted between
+$CS_{k}$ and $X_{i}$, controlling for time-varying $Z( r )$
+(type A weight). To this end, cumulative hazards treatment hazards are
+estimated from registration $R_{i}$ to $CS_{k}$, and $R_{i}$ to $X_{i}$.
+The type A weight is the inverse probability of being transplanted
+before $X_{i}$, conditional on not being transplanted up to $CS_{k}$. It
+is thus strictly greater than 1, thereby unstabilized. Gong and Schaubel
+propose to normalize the type A weight by the conditional probability of
+comparable subjects in cross-section $k$ experiencing an event between
+$CS_{k}$ and $X_{i}$, conditional on the time-frozen covariate
+information $Z( S_{ik} )$."
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+
+
+TABLE_FOLDER <- 'tables/appendix/'
+
+APP_A_TABLE_LIST <- list(
+) |>
+  map(
+    ~ paste(TABLE_FOLDER, .x, sep = '/')
+  )
+
+APP_A_TABLE_CAPTIONS <- list(
+) |>
+  map(format_dates) |>
+  map(escape_latex) 
+
+
+APP_B_FIG_LIST <- list(
+  `SFIG2` = 'sfig2-estimated_event_probs',
+  `SFIG3` = 'sfig3-survival_selected_riskset',
+  `SFIG4` = 'riskset_event_probs'
+) |>
+  map(
+    ~ paste(FIG_FOLDER, .x, sep = '/')
+  )
+
+APP_B_FIG_CAPTIONS <- list(
+  SFIG2="Estimated survival probabilities estimated in the cohort, with (blue) and without (orange) Inverse Probability Censoring Weighting to correct for informative censoring by transplantation.",
+  SFIG3="Conditional survival function, estimated with inverse probability censoring weighting for the risk set $R_i$, where $i$ is the 64-year-old German candidate appearing in Table B.1.",
+  SFIG4="Estimates of 90-day residual survival ($\\hat{S}^{\\text{\text{IPCW}}}_T(90)$) per constructed risk set."
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+
+
+TABLE_FOLDER <- 'tables/appendix/'
+
+APP_B_TABLE_LIST <- list(
+  APP_B_TAB1 = 'match_table_liver.tex',
+  APP_B_TAB2 = 'match_table_kidney.tex'
+) |>
+  map(
+    ~ paste(TABLE_FOLDER, .x, sep = '/')
+  )
+
+APP_B_TABLE_CAPTIONS <- list(
+  APP_B_TAB1 = 'Example of the risk set $R_i$ for a selected liver transplant recipient.',
+  APP_B_TAB2 = 'Example of the risk set $R_i$ for a selected kidney transplant recipient. Note that matching in the ETKidney simulator
+  is based on dialysis vintage, not waiting time.'
+) |>
+  map(format_dates) |>
+  map(escape_latex) 
+
+```
+
+`r if(knitr:::is_latex_output()) '\\appendix'`
+
+`r if(!knitr:::is_latex_output()) '# (APPENDIX) Appendix {-}'` 
+
+
+# Inverse Probability Censoring Weights {#APPipcw}
+
+`\chaptermark{\text{IPCW}}`{=latex}
+
+In the transplantation literature, survival on the liver waiting list is regularly 
+modeled with Cox proportional hazards models adjusting for biomarkers reported at
+listing. Such a model can consistently estimate the parameters of the Cox
+proportional hazards model under the assumption of conditionally independent censoring. 
+However, this independent censoring assumption is implausible for liver waiting list
+survival, because expected waiting list survival is continuously monitored using
+MELD scores. Throughout part I of the thesis, we use
+inverse probability censoring weighting (IPCW) to correct for such dependent censoring,
+based on an approach originally proposed by Gong and Schaubel (2013)
+[@gongPartlyConditionalEstimation2013]. In this technical supplement, we explain
+how these IPCW weights are defined in the context of the calendar-time
+cross-sections, defined in Chapter \@ref(CHdynremeld). They may be readily
+adapted to a "*from registration*" approach.
+
+## Definition of IPCW weights {-}
+
+A graphical summary of how the inverse probability censoring weights are 
+defined is shown in Figure \@ref(fig:appfig1).
+
+```{r appfig1, fig.cap = chuck(APP_A_FIG_CAPTIONS, 'FIG1'), out.width = "95%", fig.pos="h"}
+FIG <- pluck(APP_A_FIG_LIST, 1)
+
+NEEDED_FIGS <- glue('{FIG}{c(".pdf", ".svg")}')
+if (any(!file.exists(NEEDED_FIGS))) {
+  TEX_FIG <- paste0(FIG, '.tex')
+  if (!file.exists(TEX_FIG)) {
+    stop('Tex file is expected to exist')
+  } else {
+    process_tikz_fig(tex_fig = TEX_FIG, final_fig = FIG)
+  }
+  if (!file.exists(NEEDED_FIGS[[2]])) {
+    stop(glue('Convert {NEEDED_FIGS[[1]]} to png'))
+  }
+}
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[2]])
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[1]])
+}
+```
+
+Let $R_{i}$ denote the registration date in calendar time for patient $i$, 
+and $r$ denote the time elapsed since patient $i$'s registration time $R_{i}$.
+Each patient has a waiting list death time ($D_{i}$), removal or censoring time
+$( C_{i} )$, and transplantation time $T_{i},$ all defined
+relative to the time origin $R_{i}$. In general, only one of these events is
+observable to us per patient, i.e., we observe $X_{i} = \min( D_{i},C_{i},T_{i} )$.
+
+Note that candidates for transplantation may become (temporarily) non-transplantable.
+To account for this, let $A_{i}( r )$ denote whether patient $i$ has an active registration $r$ time units after registration, i.e., 
+$A_{i}( r )$ = 1 only if patient $i$ is eligible
+for transplantation at calendar time $R_{i} + r.$ In addition, updated
+covariate information (for instance, MELD scores) may be reported for patient
+$i$. Denote with $Z_{i}( r )$ all covariate history reported
+up to $r$ time units after registration for patient ${i}$. Note
+that this covariate history can consist of observed covariates and other
+summaries of treatment eligibility history ($A_{i}( r )$).
+
+The key idea in Gong and Schaubel (2013) is to introduce a series
+of cross-section dates ($CS_{1},\ldots CS_{K})$, and model the mortality
+hazard from each cross-section onwards for patients who have an active
+registration at cross-section date $CS_k$. These mortality hazard models are partly
+conditional, which means they adjust only for covariate history observed prior to
+$CS_{k}$. The timescale the models use is the time elapsed since the cross-section
+date $CS_{k}$, which we denote by $\text{s}$. For notational
+convenience, it is helpful to define the time registered for patient $i$
+until cross-section $k$ by $S_{ik}$, i.e.
+$S_{ik} = CS_{k} - R_{i}.$ Gong and Schaubel's approach can then be
+represented with the following hazard model
+
+$$
+\lambda_{ik}^{D}( s ) = A_{i}( S_{ik} )\lambda_{0k}^{D}( s )\exp\left\{ \mathbf{\beta}_{\mathbf{0}}^{'}\mathbf{Z}_{\mathbf{i}}( S_{ik} ) \right\},\quad s > 0
+$$
+
+where $A_{i}( S_{ik} )$ indicates patients are active
+at the cross-section, $\lambda_{0k}^{D}( s )$ is a baseline
+hazard stratified by cross-section, and
+$Z_{i}( S_{ik} )$ is patient $i$'s covariate history
+observed before cross-section date $CS_{k}$.
+
+Direct estimation of Equation A1 through Cox regression results in biased
+$\widehat{\beta_{0}}$, since covariate information (e.g., MELD) reported
+after cross-section date $CS_{K}$ may still affect the probability of
+transplantation and waiting list mortality after $CS_{k}$. To correct for
+this, Gong and Schaubel propose weighing spells observed from cross
+section $CS_{k}$ to time $r$ by the inverse conditional probability of
+remaining on the waiting list up to time $r$, i.e.
+
+$$W_{\text{ik}}\left( r \right) = \left\lbrack P\left( T_{i} > r \middle| T_{i} > S_{\text{ik}},Z_{i}\left( t \right),t \leq r \right) \right\rbrack^{- 1} = \left\lbrack \frac{P\left( T_{i} > r \middle| Z_{i}\left( t \right),t \leq r \right)}{P\left( T_{i} > S_{\text{ik}} \middle| Z_{i}\left( t \right),t \leq S_{\text{ik}} \right)} \right\rbrack^{- 1}.$$
+
+Gong and Schaubel refer to this weight as the "type A" weight. Note that
+this weight is only defined as if the conditional probability of being
+transplanted between the cross-section and $r$ is strictly larger than
+0. This assumption is known as positivity.
+
+If we additionally assume that there is no unmeasured confounding of the 
+relation between transplantation and survival, IPCW can be used to
+construct a "pseudo-population", which would have been observed if transplantation
+had not existed. This means that under these assumptions, we can consistently
+estimate $\beta_0$ through Cox regression on the weighted population.
+
+To construct this pseudo-population, we have to estimate these IPCW weights.
+For this, Gong and Schaubel propose the following treatment hazard model:
+
+$$\lambda_{i}^{T}\left( r \middle| Z_{i}\left( r \right) \right) = A_{i}\left( r \right)\lambda_{0}^{T}\left( r \right)\exp\left\{ \mathbf{\theta}_{\mathbf{0}}^{'}\mathbf{Z}_{\mathbf{i}}\left( r \right) \right\}.$$
+
+This treatment hazard model use time since registration ($r)\ $as the
+timescale, and adjusts for time-varying covariate information
+($Z_{i}( r )$). Using the definition of the hazard rate, one
+can show that the type A weight reduces to
+
+$$
+\begin{aligned}
+W_{ik}(r) 
+  &= \left[ \frac{P\!\bigl(T_i > r \mid Z_i(t), t \le r\bigr)}
+                 {P\!\bigl(T_i > S_{ik} \mid Z_i(t), t \le S_{ik}\bigr)} 
+       \right]^{-1}\\
+     &= \exp\!\Bigl[
+            \int_{S_{ik}}^{r} A_i(u)\,\lambda_0^T(u)\,
+                            \exp\{\theta_0' Z_i(u)\}\,du
+       \Bigr],\\
+  &= \exp\!\bigl[\Lambda_i^T(r) 
+                \;-\;\Lambda_i^T\bigl(S_{ik}\bigr)\bigr].
+\end{aligned}
+$$
+
+where
+$\Lambda_{i}^{T}\left( r \right) = \int_{0}^{r}{\lambda_{i}^{T}\left( u \middle| Z\left( u \right) \right)\text{du}}$
+is the cumulative hazard of transplantation.
+
+The type A weight allows for unbiased estimation of $\beta_{0}$ under no
+unmeasured confounding and positivity. However, since
+$W_{ik}( r )$ is an inverse probability weight, it is
+greater than or equal to 1 for all individuals and cross-sections. This
+can result in instabilities when conditional probabilities become small.
+To avoid this, Gong and Schaubel also propose to stabilize the type A
+weight by a partial conditional estimate of the conditional probability
+of being transplanted, i.e., stabilize $W_{ik}( r )$
+with
+
+$$P\left( T_{i} > r \middle| Z_{i}\left( S_{\text{ik}} \right),t \leq r \right).$$
+
+Gong and Schaubel attain an estimate of this probability using the
+following partly conditional treatment hazard model,
+
+$$\lambda_{ik}^{T}( s ) = A_{ik}( s )\lambda_{0k}^{T}( s )\exp\left\{ \theta_{0}^{'}Z_{i}( S_{ik} ) \right\}.$$
+
+Note that this model is partly conditional and uses time since
+cross-section ($s)$ as the timescale. Gong and Schaubel confirm with
+simulations that empirically the type B weight results in smaller
+standard errors than the type A weight. Also note that IPCW weights can be calculated both for the chance of obtaining a transplantation, as well as for the chance of being removed from the waiting 
+list. Under the assumption that waiting list removal and transplantation
+are conditionally independent, a joint weight can be obtained which is the
+product of IPCW weights for transplantation and IPCW weights for delisting.
+Throughout part I of the thesis, we use these joint type B weights to correct
+for dependent censoring by transplantation and delisting.
+
+For the treatment and delisting hazard models, we adjust for a broad set of 
+confounders since IPCW relies on a no-unmeasured confounding assumption. 
+Patient factors adjusted for are sex, blood group, weight, listing country,
+and age at listing. Clinical variables adjusted for are whether the patient 
+has a downgraded MELD, is simultaneously listed for a kidney, and the percentage
+of time a patient has been non-transplantable (too good/too bad/other). 
+We directly adjust for MELD rather than MELD components, since Eurotransplant
+allocates based on MELD. Since allocation is a national affair, we also 
+interact MELD with the patient country.
+
+# Completing the status updates streams for transplant recipients {#APPimputation}
+
+`\chaptermark{Status update completion procedure}`{=latex}
+
+The ELAS and ETKidney simulators require complete streams of status updates 
+to be available for all patient registrations, which means that every registration
+must end with a waiting list removal (R) or death (D). However, most kidney or
+liver candidates are transplanted, making these endpoints -- and any status
+that would have occurred between transplantation and candidate death or removal --
+unobserved. This is a general problem faced for the development of
+discrete-event simulators for organ allocation. The SAM simulators address 
+it by matching transplant recipients to not-yet-transplanted patients based 
+on their predicted remaining lifetime, with remaining life time predicted using
+a standard Cox model [@SRTR2019]. However, this
+approach does address for repeated measures, does not match on other relevant
+characteristics that might affect a candidate's health status trajectory (such as 
+disease group), and also does not correct for informative censoring from 
+transplantation, which can bias mortality estimates.
+
+To address these limitations, we modify an existing statistical procedure from @tayobstatistical2017 to complete the status update streams for patient
+registrations in the ELAS and ETKidney simulators. This procedure constructs for every transplant recipient $i$ a risk set of
+$R_i$ of not-yet-transplanted patients, who (a) have similar covariate profiles as patient $i$ and (b) 
+have similar predicted remaining survival, where remaining survival is predicted
+using methodology that accounts for repeated measures and corrects for informative
+censoring. Algorithm B.1 summarizes this procedure. Steps 1 to 2 construct pseudo-observations for the expected log remaining survival time, 
+and Step 3 fits a model for log survival as a function of covariates. 
+These steps are performed once on the full cohort to estimate model 
+coefficients ($\beta^{\text{PO}}$). Step 4 is iteratively applied for each
+transplant recipient, until their registration ends with a waiting list death (D)
+or waiting list removal (R).
+
+```{r ch9algo, out.width = "100%"}
+FIG <- 'figures/appendix/flowchart'
+NEEDED_FIGS <- glue('{FIG}{c(".pdf", ".svg")}')
+
+if (any(!file.exists(NEEDED_FIGS))) {
+  TEX_FIG <- paste0(FIG, '.tex')
+  if (!file.exists(TEX_FIG)) {
+    stop('Tex file is expected to exist')
+  } else {
+    process_tikz_fig(tex_fig = TEX_FIG, final_fig = FIG)
+  }
+  if (!file.exists(NEEDED_FIGS[[2]])) {
+    stop(glue('Convert {NEEDED_FIGS[[1]]} to png'))
+  }
+}
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[2]])
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[1]])
+}
+```
+
+#### Summary of Tayob and Murray (2017) {.unnumbered}
+
+Algorithm B.1 uses statistical methodology developed by @tayobstatistical2017.
+Tayob and Murray aim to model the 12-month restricted survival time $T^* = \min(T, \tau)$
+of lung transplant candidates from pre-determined, regularly spaced landmark 
+times $j = 1, ..., J$. To this end, they define
+$T^*_{ij}$ as the $\tau$-restricted remaining survival time of subject
+$i$ from landmark time $j$, and use $\tau = 12$ months in their application.
+The central goal of their paper is to estimate
+the expected log-survival time conditional on covariates, i.e. to model
+$$\mathbb{E}[\log(T^*) | Z] = \beta^\intercal Z.$$ 
+
+They face three statistical challenges in the estimation of this model:
+
+1.  $T^*_{ij}$ is unobserved for most candidates due to censoring,
+2.  transplantation represents an informative censoring mechanism,
+3.  the $T^*_{ij}$s exhibit within-patient correlations across the landmark times $j$.
+
+To address these challenges, Tayob and Murray proceed as follows:
+
+1.  Tayob and Murray construct for each censored $T^*_{ij}$ a risk set $R_i$ of
+    individuals who are (a) uncensored, (b) have similar expected survival
+    as candidate $i$, and (c) have similar covariates as patient $i$. They construct
+    these risk sets by following steps 1 through 4.1 of Algorithm B.1. In 
+    constructing these risk sets, Tayob and Murray require candidates to
+    have similar covariate profiles to ensure that patients in the risk set are
+    comparable despite the substantial heterogeneity of patients on the waiting
+    list for lung transplantation. After step 4.1 of Algorithm B.1, Tayob and Murray derive 
+    $M=10$ imputes of $T^*_{ij}$ by inverse transform sampling from the risk-set 
+    specific survival function $S^{\text{IPCW}}(t|R_i)$. They then use these
+    imputes to fit the model
+    $\mathbb{E}[\log(T^*) | Z] = \beta^\intercal Z$, with
+    coefficients pooled using Rubin's rules.
+
+2.  they use inverse probability censoring weighting (IPCW) to correct for informative
+    censoring by transplantation in estimating the survival function in step 1 and step 4.2.
+    
+3.  In estimating $\mathbb{E}[\log(T^*)|Z] = \beta^\intercal Z$ in
+    step 3 (and in their final step), Tayob and Murray address the
+    within-patient correlations by fitting the model with
+    Generalized Estimating Equations (GEE) with an unstructured
+    working correlation matrix. This approach yields consistent
+    estimates of $\beta$ if the model is correctly specified (the 
+    correlation structure is allowed to be misspecified).
+    
+Tayob and Murray conduct extensive statistical simulations to show that their
+procedure can indeed estimate $\mathbb{E}[\log(T^*) | Z] = \beta^\intercal Z$ with
+minimal bias, and with similar efficiency to estimates obtained if censoring had never
+occurred.
+
+`\newpage`{=latex}
+
+#### Modifications to Tayob and Murray's procedure for Algorithm B.1. {#overview-of-the-counterfactual-future-status-imputation-procedure .unnumbered}
+
+Tayob and Murray thus construct for every transplant recipient $i$ a risk set
+$R_i$ of comparable patients, and use this risk set to sample imputes
+for $T^*_{ij}$. Our goal is to construct such a risk set $R_i$, and use this
+risk set to match candidate $i$ to a
+specific candidate $k \in R_i$, who has similar remaining life time and covariates.
+To achieve this, Algorithm B.1 has the following deviations from Tayob and Murray:
+
+-   Tayob and Murray only match censored candidates to non-censored candidates
+    at specific landmark times $j = 1, ..., J$. To enable discrete-event
+    simulations, we must match transplant recipients to not-yet-transplanted
+    candidates at the actual time of each transplant recipient's last known
+    status update, which we denote by $t$. The set of $t$ is fully
+    determined by the observed data, as the timings at which a
+    candidate reports status update are not set by Eurotransplant.
+    We define $T^*_{it}$ as the restricted
+    remaining survival time measured from $t$ onwards, and construct
+    pseudo-observations $PO_{it}$ for the log restricted remaining survival time
+    at time $t$. This is done by steps 1 and 2 of Algorithm B.1.
+    
+-   The time points $t$ correspond to any moment at which a candidate has
+    reported a status update, and are therefore irregularly spaced and 
+    patient-specific. Because this makes the number of time points large, estimation of 
+    $\beta^{\text{PO}}$ in step 3 using GEE with an unstructured working
+    correlation matrix is infeasible. Instead, we estimate
+    $\beta^\text{PO}$ with Quasi-Least Squares (QLS) with a Markov correlation structure
+    [@xieqls2010]. This structure assumes that the within-patient correlations 
+    between the pseudo-observations $PO_{it}$ decay with their spacing in $t$.
+
+-   After step 4.2, Tayob and Murray use inverse-transform sampling from the
+    risk-set-specific survival function $S^{\text{IPCW}}(t|R_i)$ to sample imputes for
+    $T^*_{ij}$. We instead use inverse-transform sampling from $S^{\text{IPCW}}(t|R_i)$
+    to match candidate $i$ to a specific candidate $k \in R_i$. We then copy over
+    the status updates from patient $k$ to patient $i$, and 
+    repeat this step until all candidates have status updates that end with a 
+    waiting list removal (R) or (D) (see Step 4.4 of Algorithm B.1).
+
+In the remainder of this appendix, we describe the steps of Algorithm B.1 in more detail.
+
+For the ELAS simulator, Algorithm B.1 was run separately
+for HU and elective candidates, with the time origin of $t$ defined for both
+candidate groups as the date a
+candidate was listed for transplantation. For the HU model, we used $\tau$=14 days as the time horizon. For the elective candidates, we used $\tau$=90 days.
+
+For the ETKidney simulator, Algorithm B.1 was run on all kidney
+transplant candidates, with the time origin defined as the dialysis initiation date. A time horizon of 365 days was used ($\tau=365$ days).
+
+`\newpage`{=latex}
+
+## Step 1 and 2: Construction of the pseudo-observations
+
+#### Step 1: Consistent estimation of the survival function {-}
+
+Algorithm B.1 requires us to consistently estimate the survival function in Step
+1 and Step 4.2. A statistical challenge for this is that we have to deal with
+informative censoring by transplantation. To correct for such informative
+censoring, we use a Cox
+model to predict the probability that a patient is transplanted over time, 
+and estimate the survival function weighing observations by their inverse probability of being transplanted.
+
+For the ELAS simulator, this censoring model adjusted for recipient sex, 
+recipient blood group, spline terms of recipient weight and age, recipient 
+disease group, percentage of time NT (total/too bad/too good), the national 
+match MELD, whether the patient is on dialysis, whether the patient has a downmarked
+MELD score, and whether the patient has an exception (Y/N).
+
+For the ETKidney simulator, this censoring model adjusted for are candidate sex,
+candidate blood group, spline terms of candidate age, the disease group (congenital,
+polycystic, neoplasms, diabetes, glomerular disease, renovascular / vascular disease, 
+tubular and interstitial disease, or other), the HLA-ABDR mismatch frequency 
+(defined in Section \@ref(sec:etkidneymmp))
+
+Figure \@ref(fig:chappsfig2) shows estimated survival functions
+without (orange) and with (blue) correction for dependent censoring for
+elective liver transplantation patients, stratified by their laboratory MELD score at listing. The estimates of the 90-day survival probabilities decrease 
+due to
+inverse probability weighting, with 90-day waiting list survival
+estimated with IPCW up to 7.4% lower for MELD 25--29 than 90-day waiting
+list survival estimated without IPCW. This is expected, as candidates who
+are deteriorate on the waiting list have a higher probability of being
+transplanted on the waiting list.
+
+With these censoring models, we can construct IPCW weights for each patient, based on the predicted probability
+of being transplanted at each time point. Using these IPCW weights, we then 
+estimate the counterfactual survival function with the Kaplan–Meier estimator. 
+This approach allows us to consistently estimate the survival function under 
+dependent censoring, as required for step 1 of Algorithm B.1.
+
+```{r chappsfig2, fig.cap = chuck(APP_B_FIG_CAPTIONS, 'SFIG2'), out.width = "90%"}
+FIG <- chuck(APP_B_FIG_LIST, 'SFIG2')
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+  
+}
+```
+
+`\newpage`{=latex}
+
+#### Step 2: Construction of pseudo-observations {-}
+
+To predict the expected remaining lifetime for candidates on the waiting list,
+we directly model candidate's expected residual remaining survival time $T^{*}$ using:
+$$\mathbb{E}[\log(T^*)|Z] = \beta^\intercal Z.$$ For this, we 
+would ideally know the remaining time-to-event $T^*_{it}$ for
+all patients $i$ and status update times $t$. However, censoring and
+transplantation within $\tau$ time units of $t$ prevent us from
+observing $T^*_{it}$. Formula (2) of @tayobstatistical2017 describes
+how pseudo-observations for $\log(T_{ij}*)$ can be constructed using
+only the survival function $\hat{S}^{\text{IPCW}}(t)$
+that was estimated in Step 1 of Algorithm B.1.
+We used this formula to calculate pseudo-observations $PO_{it}$ for
+$\log(T^*_{it})$. Armed with pairs $(PO_{it}, Z_i)$, we can
+estimate $\beta^{PO}$ in step 3 of Algorithm B.1.
+`\newpage`{=latex}
+
+## Step 3: Fitting a model for the mean restricted survival time
+
+With pairs $(PO_{it}, Z_i)$ we can model the expected log remaining
+survival time as 
+
+$$
+\mathbb{E}[\log(T^*) \mid Z] = \beta^\intercal Z
+\tag{B.1}
+$$
+
+A statistical challenge to estimating $\beta$ is that we have
+to deal with the within-patient correlations in $PO_{it}$ across
+status update times $t$. Tayob and Murray
+faced a similar issue, with correlations between $T^*_{ij}$
+over the landmark times $j$. They addressed this issue by estimating 
+$\beta$ with Generalized Estimating Equations (GEE) with an unstructured
+correlation matrix correlation over the landmark times $j$ (which
+requires $j(j+1)/2$ parameters). This allows for consistent estimation of
+$\beta$, even if the correlation structure is misspecified. 
+
+Unfortunately, this specific estimation strategy is not feasible in our setting: in our case, the pseudo-observations $PO_{it}$
+are indexed by $t$, i.e., all the timings at which candidates reported status
+updates to Eurotransplant, which would blow up the dimensions
+for an unstructured working correlation matrix. To
+estimate the model, we instead estimate
+the model with Quasi-Least Squares with a Markov correlation structure [@Shults2014-di]. This Markov correlation
+structure assumes that the correlation between measurements
+$PO_{is}$ and $PO_{it}$ decays with their separation in time:
+$$\texttt{Corr}(PO_{is}, PO_{it}) = \alpha^{|s-t|}.$$ Parameters
+$\alpha$ and $\beta$ of this model can be estimated with the `qlspack` R
+package [@xieqls2010]. With this approach, $\beta$ can also
+be consistently estimated even if the correlation structure is
+misspecified.
+
+For the ELAS simulator, we use different model specifications for HU
+and elective patients for equation B1. For HU patients, the covariates 
+include recipient age at registration, the laboratory MELD score, whether the
+patient is on biweekly dialysis, recipient sex, and disease group. For
+elective patients, we adjust for age at registration, recipient weight,
+MELD components (serum creatinine, bilirubin, INR, biweekly dialysis),
+recipient sex, disease group, cirrhosis etiology, type of exception
+score, whether it is a repeat transplant candidate, and whether the patient
+has failed to re-certify their MELD score. Continuous variables are
+transformed with spline terms.
+
+For the ETKidney simulator, we use covariates for candidate age, candidate sex, 
+whether the candidate has previously received a kidney transplantation, 
+as well as the time the candidate has waited on the kidney waiting list.
+
+`\newpage`{=latex}
+
+## Step 4: Constructing future statuses
+
+To complete the set of status updates for transplant recipient $i$, 
+we first construct a risk set $R_i$ of not-yet-transplanted candidates who
+are comparable to the transplant recipient (step 4.1). 
+As in Tayob and Murray, a minimum requirement to match transplanted
+candidates to not-yet-transplanted candidates is:
+$$|\hat{\beta}^{\text{PO}}\ ^\intercal Z_k(C_{i}) - \hat{\beta}^{\text{PO}}\ ^\intercal Z_i(C_{i})| < 0.50,$$
+i.e., candidates have similar expected log restricted survival.
+
+We additionally require candidates to match on other covariates,
+as is done by Tayob and Murray. A motivation for requiring candidates to
+also match on covariate profiles is that organ waiting lists are highly
+heterogeneous, and we want to ascertain that the candidate's risk set
+only consists of patients that are actually comparable to the patient. For example, by matching on disease groups for
+liver transplantation candidates, we can prevent that a candidate
+with chronic liver cirrhosis is matched to a candidate with hepatocellular
+carcinoma, even if these patients have similar predicted remaining
+survival time. 
+
+For the ELAS simulator, we require candidates to always match on pediatric status. For other discrete and continuous variables, we use an adaptive matching procedure,
+in which we strive towards $|R_i| = $35 candidates in the risk set for HU patients, and $|R_i| =$ 50
+candidates for non-HU patients. Specifically, the discrete variables used for matching are
+
+1.  whether the patient is a repeat transplant candidate
+2.  current urgency code (non-transplantable)
+3.  (N)SE group
+4.  disease group
+5.  urgency reason (NT too good / NT other / NT too bad)
+6.  biweekly dialysis (twice in week preceding MELD measurement)
+7.  recipient country.
+
+Continuous match variables used are the laboratory MELD score, age at
+registration, (N)SE MELD score (for elective patients only), where we
+restrict absolute differences in continuous variables to pre-determined
+caliper widths (lab-MELD: 5, age: 15 years, (N)SE-MELD: 5). In case
+matching according to all criteria fails to result in a risk set of
+sufficient size, we drop a discrete match criterion (from 7 to 1 in the
+list above). In case dropping all discrete match criteria does not
+result in adequately sized risk set, we increase caliper widths for
+continuous variables. In total, about 50% of transplant recipients can
+be matched to a risk set on all characteristics, and 80% of
+transplant recipients can be matched on
+the first 4 discrete variables (with the most restrictive caliper
+widths).
+
+For the ETKidney simulator, we always match candidates on whether they have
+had a previous kidney transplantation, as well as whether they have an active
+waiting list status. The procedure also tried to match candidates based on disease group, reason why they were non-transplantable, and candidate country of listing. These constraints were relaxed in case fewer than 50 candidates could be 
+included in the risk set. Finally, the procedure also imposed constraints on the 
+differences in accrued dialysis time and age at listing using pre-determined 
+caliper widths.
+
+#### Example of a constructed risk set for the ELAS simulator {-}
+
+In Table \@ref(tab:appBtab1) we show an example of a constructed
+risk set for a patient who was transplanted, and for whom we had to
+complete their status update trajectory. The first row of Table
+\@ref(tab:appBtab1) shows that this transplant recipient was listed in 2014 
+in Germany at an age of 64 for cirrhosis. The
+patient reported a lab-MELD score equal to 33 points 36 days after 
+registration, and was
+transplanted 6 days later. Based on our model (equation B1), the 
+expected log residual survival time for this patient is approximately 3.51, 
+which corresponds roughly to 34 days of remaining lifetime.
+
+The other rows of Table \@ref(tab:appBtab1) show 10 of the candidates
+who were present in patient $i$'s risk set $R_i$. These patients remain at
+risk 36 days after waiting list registration ($\min(C_{k}, T_k) > C_i$)
+and are similar in terms of predicted expected log survival. Turning to
+other characteristics, we see that the matching procedure did not match
+on listing country and receival of biweekly dialysis. The risk set is
+comparable in terms of continuous variables (lab-MELDs ranging from 28
+to 38, ages from 53 to 69).
+
+```{r appBtab1, tab.cap=chuck(APP_B_TABLE_CAPTIONS, 'APP_B_TAB1'), fig.pos='ht'}
+TAB <- chuck(APP_B_TABLE_LIST, 'APP_B_TAB1')
+
+tab <- do.call(
+  rbind,
+    readLines(TAB) |>
+    tail(-3) |>
+    head(-3) |>
+    str_split('&') |>
+    purrr::keep(function(.x) length(.x) > 10) |>
+    map(trimws, whitespace='[\\s\\\\]') |>
+    map(str_remove_all, fixed('hspace{1em}'))
+  ) |>
+    as.data.frame()
+colnames(tab) <- tab[1,]
+colnames(tab) <- make_first_low(colnames(tab)) |>
+  str_replace_all('\\st$', ' $t$') |>
+  str_replace_all('widehat', 'hat')
+tab <- tab[-1,]
+rownames(tab) <- NULL
+
+if (knitr::is_html_output()) {
+  names(tab)[5] <- 'expected survival'
+  tab <- mutate(tab, across(where(is.character), str_replace_all, '^-$', '\u2014'))
+  kable(tab, format='html', escape=FALSE) |>
+    kable_styling(font_size=14) |>
+    pack_rows("transplant recipient", 1, 1) %>%
+    pack_rows("risk set", 2, 11)
+
+  
+} else if (knitr::is_latex_output()) {
+  kable(
+    tab,
+    format='latex',
+    booktabs=TRUE,
+    escape=FALSE
+  ) |>
+    kable_styling(latex_options=c('hold_position', 'scale_down'), font_size=10) |>
+    pack_rows("transplant recipient", 1, 1) %>%
+    pack_rows("risk set", 2, 11)
+}
+
+
+```
+
+`\FloatBarrier`{=latex}
+
+Within risk set $R_i$, we can obtain a
+personalized estimate of the conditional probability of the candidate $i$'s
+survival $t$ time units after their censoring time (i.e.
+$\hat{S}^{\text{IPCW}}_T(t|R_i, T > C_i)$). For the 64-year-old, German
+transplant candidate discussed in Table \@ref(tab:appBtab1), the survival function estimated using Kaplan-Meier with IPCW in their risk set $R_i$ is shown by Figure \@ref(fig:chappsfig3). This suggests that the 64-year old candidate with a MELD score of 33 would 
+have a waiting list death probability of approximately 60% in the 90 days following their censoring time.
+
+```{r chappsfig3, fig.cap = chuck(APP_B_FIG_CAPTIONS, 'SFIG3'), out.width = "50%"}
+FIG <- chuck(APP_B_FIG_LIST, 'SFIG3')
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+}
+```
+
+#### Example of a constructed risk set for the ETKidney simulator {-}
+
+Table \@ref(tab:appBtab2) shows an example of a constructed
+risk set for a female candidate who was transplanted after waiting for
+4.5 years for a kidney transplantation with 6 years of accrued dialysis
+time in total. The first row of Table \@ref(tab:appBtab2) shows that this
+transplant recipient was listed in 2014 in Germany for polycystic kidney disease. The remaining
+rows of Table \@ref(tab:appBtab2) show 10 (out of 50) waiting list
+candidates in patient $i$'s risk set $R_i$. These patients remain at
+risk having waited 2162 days on dialysis for transplantation. They are
+also similar to the patient in terms of other covariates: all matched
+candidates are patients with polycystic kidney disease waiting in
+Germany, and around age 60.
+
+```{r appBtab2, tab.cap=chuck(APP_B_TABLE_CAPTIONS, 'APP_B_TAB2'), fig.pos='ht'}
+TAB <- chuck(APP_B_TABLE_LIST, 'APP_B_TAB2')
+
+tab <- do.call(
+  rbind,
+    readLines(TAB) |>
+    tail(-3) |>
+    head(-2) |>
+    str_split('&') |>
+    purrr::keep(function(.x) length(.x) > 6) |>
+    map(trimws, whitespace='[\\s\\\\]') |>
+    map(str_remove_all, fixed('hspace{1em}'))
+  ) |>
+    as.data.frame()
+colnames(tab) <- tab[1,]
+colnames(tab) <- make_first_low(colnames(tab)) |>
+  str_replace_all('\\st$', ' $t$') |>
+  str_replace_all('widehat', 'hat')
+tab <- tab[-1,]
+rownames(tab) <- NULL
+
+if (knitr::is_html_output()) {
+  tab <- mutate(tab, across(where(is.character), str_replace_all, '^-$', '\u2014'))
+  kable(tab, format='html', escape=FALSE) |>
+    kable_styling(font_size=14) |>
+    pack_rows("Transplant recipient", 1, 1) %>%
+    pack_rows("Risk set", 2, 11)
+  
+} else if (knitr::is_latex_output()) {
+  kable(
+    tab,
+    format='latex',
+    booktabs=TRUE,
+    escape=FALSE
+  ) |>
+    kable_styling(latex_options='scale_down', font_size=10) |>
+    pack_rows("Transplant recipient", 1, 1) %>%
+    pack_rows("Risk set", 2, 11)
+}
+```
+
+`\FloatBarrier`{=latex}
+
+## Step 4.2: matching the patient to a particular patient in the risk set
+
+The aim of step 4.2 in Algorithm B.1 is to match censored patient \(i\) to a single candidate \(k\) from their risk set (\(k\in 
+R_i\)). We do this by inverse transform sampling from the 
+risk-set-specific survival function 
+\(\hat{S}^{\text{IPCW}}_T(t\,|\,R_i,\, T > C_i)\). Specifically, we
+(i) draw a random number \(u\) from the uniform distribution, and 
+(ii) find the smallest time \(t\) such that \(\hat{S}^{\text{IPCW}}_T(t\,|\,R_i,\, T > C_i) \leq u\).  
+
+If such a \(t\) exists, it corresponds to the observed event 
+(removal or death) time of some patient \(k \in R_i\). We therefore 
+complete the status update trajectory for patient \(i\) by copying 
+over the future status updates of this patient $k$. 
+
+If no such \(t\) exists within the truncation time horizon \(\tau\), 
+this means patient \(i\) would be alive and remain waitlisted 
+$\tau$ days after their censoring time. In this case, we select a 
+candidate from those with censored restricted survival times, 
+i.e., from the set \(\{k \in R_i : T_k > C_i + \tau\}\). Among 
+these, a single patient is randomly chosen with sampling 
+probabilities proportional to their IPCW weights at time \(\tau\).
+
+We note that this procedure can also match a transplant recipient to
+another patient who receives a transplant. In that case, we still
+copy over all subsequent status updates from the matched candidate,
+excluding the transplant event itself. In those cases, Step 4
+of Algorithm B.1 is iteratively applied, until the candidate's
+registration ends with a removal (R) or death (D) status.
+

@@ -1,0 +1,39 @@
+\sffamily
+\usetikzlibrary{arrows.meta}
+\tikzset{
+	>={Latex[width=2mm, length=1mm]}
+}
+\tikzstyle{decision}=[diamond, draw, fill=yellow!20, aspect=2,
+text width=7em, text badly centered, node distance=2cm,
+inner sep=0pt]
+\tikzstyle{block}=[rectangle, draw, fill=blue!10, 
+text width=8em, text badly centered, rounded corners, minimum height=3.5em]
+\tikzstyle{line}=[draw, line width=.7pt, color=black!75, -{Latex[width=2.5mm,length=1mm]}]
+\tikzstyle{input}=[trapezium, trapezium left angle=84, trapezium right angle=96, draw, fill=green!20, text width=8em,
+minimum height=3em]
+
+\begin{tikzpicture}[node distance=2cm, every node/.style={}, auto]
+	
+	
+	\node [block] (matchlist) [text width=9em] {ETKAS or ESP match list};
+	\node [block] (number_until_rescue) [right of=matchlist, text width = 12.5em, xshift=2.5cm, yshift=-.12em] {simulate $k$, i.e. the number of offers made in standard allocation};
+	\node [block] (offering) [right of=number_until_rescue, yshift=-1.18em, text width = 13em, xshift=3.2cm] {offer kidney(s) to candidates on the \textit{filtered} match list, while (i) at least one kidney is available and (ii) fewer than $k$ offers have been made};
+	\node [decision] (offer_acceptance) [below of=offering, yshift=-.7cm, text width = 7em] {all kidneys accepted within $k$ offers?};
+	\node [block] (rescue_allocation) [left of=offer_acceptance, xshift=-3cm, text width = 11em] {continue with offers to the \textit{unfiltered} match list, with priority for local candidates};	
+	% Simulation of a transplantation	
+	\node [block] (sim_transplant) [below of=offer_acceptance, text width=10em, yshift=-.3cm, xshift=-0cm] {return accepting patient(s)};
+	\node [decision, text width=6em] (rescue_offer_acceptance) at (rescue_allocation.south |- sim_transplant.west) {all kidneys accepted?};
+	\node [block] (return_none) [left of=rescue_offer_acceptance, text width=10em, xshift=-2.5cm] {return discard(s) and the accepting patient(s) (if applicable)};
+		
+	% --------- Donor events -----
+	\draw[line] (matchlist.east) -- (matchlist.east -| number_until_rescue.west);
+	\draw[line] (number_until_rescue.east) -- (number_until_rescue.east -| offering.west);
+	\draw[line] (offering) -> (offer_acceptance);
+	\draw[line] (offer_acceptance) -- (rescue_allocation) node[midway,above] {no};
+	\draw[line] (rescue_allocation) -- (rescue_offer_acceptance);
+	\draw[line] (rescue_offer_acceptance.east) |- (sim_transplant.west) node[midway,above, xshift=.5cm] {yes};
+	\draw[line] (offer_acceptance.south) -- +(0, -.2cm) -| (sim_transplant.north) node[midway,left] {yes};
+	\draw[line] (rescue_offer_acceptance.west) -- (return_none.east) node[midway,above] {no};
+		
+	
+\end{tikzpicture}

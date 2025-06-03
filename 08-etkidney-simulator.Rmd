@@ -1,0 +1,1822 @@
+
+
+```{r, include=FALSE}
+library(tidyverse)
+library(pander)
+library(kableExtra)
+library(purrr)
+library(readxl)
+library(glue)
+library(readxl)
+
+knitr::opts_chunk$set(results = 'show', echo = FALSE, fig.pos='ht',
+                      fig.align = 'center',
+                      message = FALSE, warning = FALSE)
+
+source('R/R_functions.R')
+
+FIG_FOLDER <- 'figures/ch8/'
+
+CH8_FIG_LIST <- c(
+  'fig1-flowchart_kidney_allocation',
+  'fig2-event_handling_flowchart',
+  'fig3-graft_offering_diagram',
+  'fig4-vpra_effect',
+  'fig5-competing_risk_model',
+  'fig6-age_matching_policies',
+  'fig7-posttransplantevents',
+  SFIG1='sFig1'
+) |>
+  map(
+    ~ paste(FIG_FOLDER, .x, sep = '/')
+  )
+
+CH8_FIG_CAPTIONS <- list(
+  FIG1="Flow chart illustrating how Eurotransplant offers kidneys for kidney-only transplantation. The percentages shown represent the proportion of kidney-only transplantations performed through each mechanism between 2014 and 2023. Kidneys declined by all candidates in ESP were re-allocated via ETKAS until March 2021. Since March 2021, such kidneys are instead offered via extended ESP allocation, in which non-local candidates and those aged below 65 can participate since March 2021.",
+  FIG2="Event handling flowchart for the ETKidney simulator. Inputs and parameters are represented using parallelograms. If a kidney is declined by all candidates, simulation settings determine whether a discard is recorded or a candidate is forced to accept the kidney for transplantation. FES, Future Event Set.",
+  FIG3="Flow chart summarizing how the ETKidney simulator approximates the graft offering process.",
+  FIG4="Relations between the relative transplant rate and the vPRA in ETKAS, estimated on ETKidney simulator outcomes. These relations were estimated with a Cox proportional hazards model, using a spline transformation for the vPRA.",
+  FIG5="Estimated relations between graft loss and death with a functioning graft. Note that the hazard ratio for death with a functioning graft is shown on the logarithmic scale.",
+  FIG6="Evaluated age filters for ETKAS.",
+  FIG7="Expected number of post-transplant events ten years after transplantation, predicted based on candidate, donor, and transplantation characteristics with competing risk models.",
+  SFIG1="Cumulative incidence curves showing the probability of listing for repeat transplantation, stratified by time-to-event categories. These curves were estimated with the Kaplan-Meier estimator based on candidates transplanted between January 1, 2011, and January 1, 2024."
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+
+
+TABLE_FOLDER <- 'tables/ch8/'
+
+CH8_TABLE_LIST <- list(
+  STAB1="stab1-tb_vxm.tex",
+  STAB2="stab2-tb_esp.tex",
+  TAB1="tab1-summary_waitlist_results.tex",
+  TAB2="tab2-summary_transplants.tex",
+  TAB3="tab3-sim_abdr_matching.tex",
+  TAB4="tab4-effect_dr_matching_stars.tex",
+  TAB5="tab5-effect_age_matching_stars.tex",
+  TAB1_PAT_SIMSTART = 'ch8_table1_patients_simstart.csv',
+  TAB1_PAT_LISTED = 'ch8_table1_patients_listed.csv',
+  TAB1_DONORS = 'ch8_table1_donors.csv'
+) |>
+  map(
+    ~ paste(TABLE_FOLDER, .x, sep = '/')
+  )
+
+CH8_TABLE_CAPTIONS <- list(
+  TAB1 = "Input-output validation of waiting list outcomes between April 1, 2021 and January 1, 2024. For simulations, the numbers shown are the averages and 95% interquantile ranges (IQR) of outcomes over 200 simulations. Ranges are displayed in bold if the simulator is not well-calibrated, i.e. the actual statistic does not fall within the 95% IQR.",
+  TAB2 = "Validation of the number of transplantations between April 1, 2021, and January 1, 2024. For simulations, the numbers shown are averages and 95% IQRs over 200 simulations. Statistics are displayed in bold if the actual value does not fall within the 95% IQR.",
+  TAB3 = "Overview of the points awarded per locus for the alternative HLA-matching policies.",
+  TAB4 = "The simulated change in the number of transplantations under alternative HLA-ABDR matching policies. The numbers displayed are the averages of the differences observed over 20 simulations. mm: mismatches.",
+  TAB5 = "The simulated change in the number of transplantations in ETKAS under continuous candidate-donor age matching policies. The numbers displayed are the average differences over 20 simulations. mm: mismatches.",
+  STAB1 = "Input-output validation of the number of transplantations by vPRA, before
+and after the introduction of the virtual crossmatch on January 24, 2023.",
+  STAB2 = "Input-output validation of the number of transplantations with ESP donors in
+candidates under the age of 65, by recipient country of listing.",
+TAB1_PAT_SIMSTART = "Characteristics of patients already present on the waiting list on April 1, 2021.",
+  TAB1_PAT_LISTED = "Characteristics of newly registered patients who were used for simulations.",
+  TAB1_DONORS = "Characteristics of the donors used for simulation."
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+```
+
+# The ETKidney simulator {#CHetkidneysimulator}
+
+`\chaptermark{The ETKidney simulator}`{=latex}
+
+
+`r if (knitr::is_latex_output()) '\\vfill'`
+
+---
+
+`\noindent`{=latex}
+An article based on this chapter has been submitted for publication: 
+de Ferrante, H.C., Laguna-Goya, R., Smeulders, B.M.L., Spieksma, F.C.R., Tieken, I.
+
+`\newpage`{=latex}
+`\normalsize`{=latex}
+
+
+`<p><strong>Abstract</strong></p>`{=html}
+`\subsubsection*{Abstract}`{=latex}
+
+
+
+  A barrier to modernizing ETKAS and ESP kidney allocation
+  rules is that Eurotransplant lacks tools to quantitatively assess the
+  impact of kidney allocation policy changes. We present the ETKidney simulator, 
+  which was developed for this purpose. This tool simulates kidney allocation 
+  according to the actual ETKAS and ESP allocation rules. The ETKidney simulator was
+  developed in close collaboration with medical doctors from
+  Eurotransplant, and was presented to the Eurotransplant Kidney
+  Advisory Committee as well as other major
+  stakeholders. To enhance trust in the tool, the ETKidney simulator
+  has been made publicly available together with synthetic data.
+  
+  In this chapter, we describe the ETKidney simulator in detail and validate
+  the simulator by comparing simulated outcomes to actual ETKAS and ESP
+  outcomes between April 1, 2021, and December 31, 2024. We illustrate 
+  how the simulator can contribute to the evaluation of alternative kidney allocation
+  policies with three clinically motivated case studies. We anticipate
+  that the ETKidney simulator will be pivotal in modernizing ETKAS and
+  ESP allocation rules by enabling informed decision-making on kidney
+  allocation rules in collaboration with national competent authorities.
+
+`\newpage`{=latex}
+`\normalsize`{=latex}
+
+## Introduction
+
+Potential improvements to ETKAS and ESP are regularly proposed, and are
+often based on medical insights or ethical considerations. For instance,
+proposals have been made to emphasize DR matching in ETKAS
+[@vereerstraetenAllocationCadaverKidneys1999; @doxiadisSimplerEquitableAllocation2007],
+motivated by findings that mismatches at the HLA-DR locus are most deleterious to graft
+survival [@Roberts2004; @johnsonFactorsInfluencingOutcome2010].
+Other proposals include making candidates under the age of 65 eligible for ESP
+[@Ssal2020], introducing HLA-DR matching in ESP [@deFijter2023], introducing candidate-donor age matching
+[@vonsamson-himmelstjernaContinuousDonorrecipientAge2024], basing HLA matching on epitope
+matching [@Niemann2021], and giving extra priority to the candidates who
+are immunized but do not qualify for the Acceptable Mismatch (AM) program
+[@ziemannUnacceptableHumanLeucocyte2017; @zecherImpactSensitizationWaiting2022a].
+
+Within Eurotransplant, such areas for improvement are regularly discussed
+by the Eurotransplant Kidney Advisory Committee (ETKAC), whose members are
+nephrologists who represent the Eurotransplant member countries,
+an abdominal surgeon, and an immunologist. Despite regular ETKAC discussions
+on the aforementioned topics, ETKAS and ESP have not changed much since their
+initiations in 1996 and 1999, respectively. To support discussions within ETKAC
+and discussions with national competent authorities, Eurotransplant requires a tool that can
+quantify the impact of policy changes in ETKAS and ESP. Computer simulations 
+can be used for this purpose.
+
+The use of computer simulations to design kidney allocation systems is not new.
+In fact, ETKAS itself was based on computer simulations that were published in
+in 1993 [@wujciakComputerAnalysisCadaver1993; @wujciakProposalImprovedCadaver1993a]. Other organ allocation organizations also
+routinely note the usage of computer simulations. For example, in the United States,
+the Kidney-Pancreas Simulated Allocation Model (KPSAM) was used to revise allocation rules
+in 2014 [@israniNewNationalAllocation2014], and this tool continues to
+be used for the proposal of further changes to allocation
+[@israniNewKidneyPancreas2021; @mankowskiAcceleratingKidneyAllocation2019].
+The kidney allocation policies in France and the United Kingdom were also
+updated on the basis of bespoke computer simulations in 2015 and 2019,
+respectively [@jacquelinetChangingKidneyAllocation2006; @Audry2022; @Mumford2018].
+A bespoke model for Eurotransplant has not been available.
+
+This motivated us to develop a simulation toolbox that enables
+Eurotransplant and other stakeholders to quantify the impact of changes
+to ETKAS and ESP allocation rules. This tool, which we refer to as the
+ETKidney simulator, uses discrete-event simulation (DES) to mimic kidney
+allocation within Eurotransplant. The simulator was developed in close
+collaboration with medical doctors from Eurotransplant and was presented
+on several occasions to ETKAC, which has welcomed the ETKidney simulator as a tool to 
+inform policy discussions on kidney allocation. The Python code of the
+simulator is made publicly available together with synthetic data to
+enable collaborations with policymakers and scientists in evaluating
+alternative ETKAS and ESP allocation rules.^[[https://github.com/hansdeferrante/Eurotransplant_ETKidney_simulator](https://github.com/hansdeferrante/Eurotransplant_ETKidney_simulator)] 
+
+`\newpage`{=latex}
+
+In this chapter, we
+describe how kidneys are allocated within Eurotransplant (Section \@ref(sec:etkidneyalloc)) and how this process is approximated by
+the simulator (Sections \@ref(sec:etkidneydesign) and \@ref(sec:etkidneymodules)). We also give insight into how closely
+the simulator approximates outcomes of ETKAS and ESP with input-output
+validation (Section \@ref(sec:etkidneyvv)), and demonstrate how the ETKidney
+simulator can contribute to policy evaluation with three clinically relevant 
+case studies (Section \@ref(sec:etkidneycasestudies)).
+
+## The kidney allocation programs of Eurotransplant {#sec:etkidneyalloc}
+
+Figure \@ref(fig:ch8fig1) shows how Eurotransplant
+allocates the deceased-donor kidneys that become available for
+kidney-only transplantation.^[In case a multi-organ donor is reported to Eurotransplant, 
+the donor's kidneys may first be accepted by candidates waiting for a combined 
+transplantation of a kidney with another organ (heart, lung, pancreas, liver, or intestine). 
+These combined transplantations account for 7\% of all deceased-donor kidney transplants 
+in Eurotransplant [@statlibrary2152P_AllET_Kidney].] Three standard allocation programs are
+used to place these kidneys: the AM program, ETKAS and ESP (see Figure \@ref(fig:ch8fig1)).
+The program through which Eurotransplant offers the kidney(s) is determined by 
+the age of the donor. Kidneys from donors under the age of 65 are first offered for
+transplantation through the AM program, which accounted for 3% of
+kidney-only transplantations between 2014 and 2023, and then through
+ETKAS, which accounted for 69% of kidney-only transplantations. The ESP is
+used to allocate kidneys from donors aged 65 or older, and accounted for
+16% of kidney-only transplantations [@etStatsLibrary2072P].
+
+```{r ch8fig1, fig.cap = chuck(CH8_FIG_CAPTIONS, 'FIG1'), out.width = "96%", fig.pos="h"}
+FIG <- pluck(CH8_FIG_LIST, 1)
+
+NEEDED_FIGS <- glue('{FIG}{c(".pdf", ".svg")}')
+
+if (any(!file.exists(NEEDED_FIGS))) {
+  TEX_FIG <- paste0(FIG, '.tex')
+  if (!file.exists(TEX_FIG)) {
+    stop('Tex file is expected to exist')
+  } else {
+    process_tikz_fig(tex_fig = TEX_FIG, final_fig = FIG)
+  }
+  if (!file.exists(NEEDED_FIGS[[2]])) {
+    stop(glue('Convert {NEEDED_FIGS[[1]]} to png'))
+  }
+}
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[2]])
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[1]])
+}
+```
+
+
+The remaining 11% of kidney-only transplantations between 2014 and 2023
+resulted from *non-standard allocation*, which Eurotransplant can initiate
+if the loss of a transplantable graft is anticipated. In non-standard allocation,
+Eurotransplant offers the grafts to centers in the vicinity of the kidney(s),
+either through extended or rescue allocation. In extended kidney allocation, centers 
+have 60 minutes to propose candidates. In rescue allocation, offers are competitive,
+which means that the first center to respond receives the kidney. Not all kidneys offered by 
+Eurotransplant are eventually transplanted.
+In fact, approximately 24% of the kidneys that were offered by Eurotransplant
+for transplantation between 2014 and 2023 were discarded [@etreport_1132P].
+
+Match lists determine which candidate receives an offer at
+what moment. The composition and ordering of
+candidates on match lists are determined by program-specific
+*eligibility*, *filtering*, and *ranking criteria*. The eligibility
+criteria determine whether a candidate is allowed to appear on the match list
+under Eurotransplant kidney allocation rules. Examples of eligibility criteria are that the
+candidate must have the same blood group as the donor, and that the donor's HLA
+must not include an HLA antigen that the center has reported as unacceptable for
+the candidate.
+`\newpage`{=latex}
+The filtering criteria also determine whether Eurotransplant contacts 
+the center to make an offer for a specific candidate. While eligibility criteria
+are rules imposed by Eurotransplant, filtering criteria represent the preferences
+that transplant centers have on kidney offers.
+The filtering criteria can be distinguished into:
+
+1.  *allocation profiles*, with which centers can indicate that their
+    patient does not want to receive offers from donors with certain
+    characteristics (e.g. donors above a certain age, donors with a specific 
+    virology, or other donor-related characteristics), and
+2.  *HLA mismatch criteria*, with which centers can specify their minimum
+    requirements for the HLA match quality between the donor and
+    candidate on the HLA-A, -B, and -DR loci.
+
+Finally, the ranking criteria determine the position of a candidate on the
+match list. An overview of the ETKAS- and ESP-specific ranking criteria is included
+in Section \@ref(sec:etkidneympmod).
+
+In standard allocation, Eurotransplant only offers kidneys to candidates
+who appear on the *filtered match list*, which means that candidates must
+meet the program's eligibility and filtering criteria. In extended allocation, 
+centers are allowed to select candidates from the *unfiltered match list*, 
+which means that candidates only have to meet the program's eligibility criteria. 
+In rescue allocation, centers can also propose other candidates 
+for transplantation, including those with
+non-identical ABO blood groups.
+
+## Purpose and design of the ETKidney Simulator {#sec:etkidneydesign}
+
+We use discrete-event simulation (DES) to simulate kidney allocation according to the
+actual ETKAS and ESP allocation rules implemented in March 2021. Simulation of
+the AM program is beyond the scope of the ETKidney simulator, because
+the definition of acceptable antigens is based on an individualized
+risk-benefit analysis which requires specialized immunological
+knowledge. We note that the simulator has not been designed for the analysis of
+kidney discard rates.
+
+Relevant states for the simulation are (i) the statuses of candidates on the ETKAS or ESP
+waiting lists, (ii) the export
+balances of Eurotransplant member countries, which affect a candidate's
+rank on ETKAS match lists because of Eurotransplant's balance point
+system (see Section \@ref(sec:etkidneybalance)). In DES, we study how these system states
+evolve in response to a series of discrete events. For the ETKidney
+simulator, we distinguish between three types of events, which are:
+
+1.  _candidate status updates_; these include changes to a candidate's waiting
+    list status (transplantable, non-transplantable, HU, removed, transplanted, 
+    or deceased), their allocation profiles, their unacceptable antigens, 
+    their HLA mismatch criteria, the reporting of an antibody screening, 
+    or a choice between ETKAS or ESP in Germany (where these programs are mutually exclusive),
+
+2.  _donor arrivals_; these are donors reported to Eurotransplant for whom one or two kidneys become available for kidney-only transplantation through ETKAS or ESP, which generally
+    results in a transplantation, and
+
+3.  _balance update events_; these are transplantations across country borders
+    through allocation programs other than ETKAS and ESP. These transplantations
+    also count towards the export balances of Eurotransplant's member countries, based
+    on which balance points are awarded.
+
+### Input data for the ETKidney simulator {#sec:etkidneyinputstreams}
+
+Users of the ETKidney simulator have to specify the input streams that
+define the candidate status updates and donor arrival events. Furthermore, an input stream of
+international transplantations can be specified, which is used to
+initialize ETKAS balances and to define balance update events. For candidates 
+and donors, the data in the input streams must include
+all administrative and medical information required by the eligibility,
+filtering, and ranking criteria. Additional information may be required
+by the graft offer acceptance module to simulate the decision-making of kidney
+transplant centers in accepting kidney offers, and by the post-transplant module to simulate post-transplant
+survival.
+
+For candidates, the input streams must include complete information on
+what would happen to each candidate until they exit the waiting list,
+either because of a waiting list removal or a waiting list death. This requirement
+implies that candidate input streams cannot
+be solely based on historical registry data: after all, waiting list
+removals or waiting list deaths have not been observed for candidates who were
+transplanted via ETKAS or ESP.
+
+For simulations done in this chapter, we use input streams based on
+historical data. The actual status update trajectories of candidates are complemented
+with statuses copied over from comparable candidates who remained registered
+on the waiting list. For this, we use a procedure to complete a candidate's
+status updates that was originally developed for the ELAS simulator (see Chapter \@ref(CHelassimulator) and Appendix \@ref(APPimputation)).
+
+### Initialization of the ETKidney simulator's system state {#sec:etkidneyinit}
+
+The balance system is initialized using data from the input stream for international transplantations:
+all international transplantations that were performed prior to the simulation
+start date are processed, which ensures that the balances are correctly initialized.
+Additionally, the 
+simulator schedules a balance update event for every cross-border transplantation 
+that occurs within the simulation window via combined transplantations or via the AM
+program. This is necessary to accurately simulate the evolution of balances,
+because such transplantations also count towards a member country's export balance.
+
+From candidate input streams, the simulator loads all candidates who
+have an active status on the waiting list within the simulation window.
+The listings of candidates listed for repeat kidney transplantation whose initial
+transplantation takes place within the simulation window are excluded, which
+is necessary to ensure that a candidate cannot simultaneously wait for a
+primary and repeat transplantation in ETKidney simulation runs. For each candidate,
+a single patient event is scheduled in the Future Event Set (FES) timed at the
+candidate's first available status update. The scheduling of subsequent status
+updates is postponed until the status update has been processed.
+
+From donor input streams, all donors reported during the simulation
+window are loaded. For each donor, a donor event is scheduled in the FES
+on the donor reporting date.
+
+`\newpage`{=latex}
+
+### Overview of the simulation {#sec:etkidneyoverview}
+
+Figure \@ref(fig:ch8fig2) illustrates how events are processed in the simulation.
+The balance update events are handled by simply updating the export balances
+of the countries that were involved in the international transplantation. The 
+patient events are handled by updating the status
+of the corresponding patient. Handling of donor events is more complex, because
+the allocation of the kidney(s) through ETKAS or ESP has to be approximated
+by the simulator.
+
+
+```{r ch8fig2, fig.cap = chuck(CH8_FIG_CAPTIONS, 'FIG2'), out.width = "90%"}
+FIG <- pluck(CH8_FIG_LIST, 2)
+
+NEEDED_FIGS <- glue('{FIG}{c(".pdf", ".svg")}')
+
+if (any(!file.exists(NEEDED_FIGS))) {
+  TEX_FIG <- paste0(FIG, '.tex')
+  if (!file.exists(TEX_FIG)) {
+    stop('Tex file is expected to exist')
+  } else {
+    process_tikz_fig(tex_fig = TEX_FIG, final_fig = FIG)
+  }
+  if (!file.exists(NEEDED_FIGS[[2]])) {
+    stop(glue('Convert {NEEDED_FIGS[[1]]} to png'))
+  }
+}
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[2]])
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[1]])
+}
+```
+
+`\newpage`{=latex}
+To approximate such kidney-only allocation, the ETKidney simulator's
+*match list module* was developed (see Section
+\@ref(sec:etkidneympmod)). This module first
+creates, depending on the age of the donor, an unfiltered ETKAS or ESP
+match list that contains for each candidate who meets the
+corresponding program's eligibility criteria a *match record*. These match records
+are automatically ordered based on the respective
+program's ranking criteria, with the number of points awarded to each
+match record determined by the *point score module* (see Section
+\@ref(sec:etkidneympmod)).
+
+Using the ordered match list as the input, the *graft offering* module simulates
+which candidates accept the kidneys (see Section
+\@ref(sec:etkidneyacceptance)). In rare cases, all candidates on the match list
+are simulated to decline the kidney offer. If this 
+happens for an ESP match list, the graft offering module will
+try to place the kidneys through non-standard ESP allocation, which is
+how Eurotransplant allocates kidneys from donors aged 65 or older since
+March 2021. In the rare event that kidneys remain unplaced, the graft offering module 
+can either (i) record a discard for the kidney(s), or (ii) force transplantation of the
+candidate who was predicted to be most likely to accept the graft.
+For the simulations in this chapter, option (ii) is used because
+the donor input stream used for simulation consists only of donors whose
+kidneys were actually transplanted through ETKAS and ESP.
+
+After a graft has been accepted, transplantations are recorded with the
+kidney balances updated in case of a cross-border transplantation.
+The *post-transplant module* simulates post-transplant outcomes for transplant 
+recipients. In case a candidate is simulated to enlist for repeat transplantation,
+this module also schedules a *synthetic re-listing* (see Section
+\@ref(sec:etkidneysynthreg)).
+
+## Modules of the ETKidney simulator {#sec:etkidneymodules}
+
+This section describes key modules of the ETKidney simulator: the HLA
+system module (Section \@ref(sec:etkidneyhla)), the balance system module 
+(Section \@ref(sec:etkidneybalance)), the match list and point system
+module (Section \@ref(sec:etkidneympmod)), the graft offering
+module (Section \@ref(sec:etkidneyacceptance)), and the post-transplant module
+(Section \@ref(sec:etkidneyposttxp)).
+
+### The HLA system module {#sec:etkidneyhla}
+
+The HLA system module implements all mechanisms through which
+Eurotransplant prioritizes HLA matching. These procedures are (i)
+determining how many mismatches there are at the HLA loci of interest, (ii)
+calculating the vPRA on the basis of unacceptable antigens, and (iii) 
+calculating the mismatch probability.
+
+#### Calculation of HLA mismatches {#sec:etkidneyhlammcalc}
+
+The HLA system module can determine, for a given patient HLA and given
+donor HLA, how many antigen mismatches there are per locus (0, 1, or 2).
+The simulation settings file specifies at which HLA loci mismatches are to
+be determined. By default, the module only counts mismatches
+at the HLA-A, -B, and -DR loci, because the current ETKAS point
+system only awards points for these mismatches. HLA-A and HLA-B
+mismatches are determined at the level of broad antigens, while HLA-DR
+mismatches are determined at the level of split antigens (as is done
+for allocation in ETKAS, see [@manualKidney]).
+
+#### Quantification of virtual Panel-Reactive Antibodies (vPRA) {#sec:etkidneyvpracalc}
+
+A candidate's vPRA affects a candidate's position on the match list
+because the vPRA is used to calculate the mismatch probability. 
+In simulations included in this chapter the vPRA is quantified by
+counting the fraction of donors that carry unacceptable antigens in
+the ETRL donor panel (V4.0). This database includes the HLA phenotypes
+of 10,000 donors that were recently reported to Eurotransplant. 
+The HLA system module can also quantify the
+vPRA against a user-specified input database of 10,000 donor HLAs.
+
+#### Calculation of the Eurotransplant mismatch probability (MMP) {#sec:etkidneymmp}
+
+ETKAS awards points for the mismatch probability, which is the chance
+that there is *no* favorably matched donor for a candidate among the next
+1,000 donors reported to Eurotransplant. Eurotransplant calculates
+this mismatch probability analytically as:
+$$\texttt{MMP} = \Bigl(1 - f_{BG}\cdot (1-\texttt{vPRA})\cdot p_{\leq1mm}\Bigr)^{1000},$$
+where $f_{BG}$ is the candidate's blood group frequency and
+$p_{\leq1mm}$ is a quantification of the probability that a donor has at
+most 1 HLA-ABDR mismatch with the candidate.
+
+By default, $p_{\leq1mm}$ is calculated with analytic formulas for the probability of
+receiving exactly 0 mismatches and exactly 1 mismatch, which are also used for ETKAS
+allocation. A disadvantage of this approach is that both these formulas assume
+that HLA antigens are independently distributed according to their population
+frequencies, which ignores HLA linkage disequilibrium. To resolve this, the 
+HLA system module can also quantify the availability of favorably matched donors
+by counting the number of 0- or 1-ABDR mismatched donors among the pool of 10,000
+donors used to calculate the vPRA, which we denote by $f_{\leq1mm}$. Using this 
+quantity, we define the _"1-ABDR HLA mismatch frequency"_ as 
+$$\Bigl(1- f_{\leq1mm}\Bigr)^{1000}.$$ We note that this quantity does not
+take into account the candidate's blood group, nor the candidate's vPRA.
+We use this quantity in the second case study (see Section
+\@ref(sec:etkidneycasestudyvpra)).
+
+### The balance system module {#sec:etkidneybalance}
+
+To balance the international exchange of kidneys, Eurotransplant keeps track of
+the *net kidney export balances* of its member countries, and awards points in
+ETKAS based on these balances.^[The number of balance points awarded is calculated 
+by subtracting from each member country's export balance the export balance of
+the country which is the largest importer (a negative number), and multiplying
+the outcome by the balance weight. This balance weight is currently 30.] Within Austria, an additional regional balance system
+exists to ensure that the Austrian regions benefit equally from
+cross-border transplantations [@manualKidney]. The balance system module 
+implements both these national and regional balance systems for the ETKidney 
+simulator. Initialization of the net export balances is possible, and can be based on
+historical data. By default, separate balances are maintained for each donor 
+age group (0-17 years, 18-49 years, 50-64 years, or 65 years or older), which 
+is consistent with how balances have been maintained since April 1, 2019 [@manualKidney].
+
+### The match list module & point system module {#sec:etkidneympmod}
+
+The match list module is used to create ETKAS or ESP match lists, which
+serve as input for the graft offering module. Only candidates who meet
+the corresponding program's eligibility criteria appear on match lists,
+with each candidate ranked based on *tiers* and *points*. Candidates
+ranked in higher tiers receive priority over candidates in
+lower tiers. Within each tier, candidates are ranked by points. In ETKAS,
+tiers are in order of descending priority:
+
+1.  candidates with zero HLA-ABDR mismatches with the donor,
+
+2.  pediatric candidates, in case the donor is also pediatric,
+
+3.  all other candidates.
+
+The ETKAS point system awards:
+
+1.  33.33 points per year of accrued dialysis time,
+
+2.  400 minus 66.66 points per HLA-ABDR mismatch. These points are
+    doubled if the candidate is pediatric,
+
+3.  100 points if the candidate is pediatric,
+
+4.  500 points if the candidate has the High Urgency (HU) status,
+
+5.  up to 100 mismatch probability points,
+
+6.  balance points, the amount of which is determined based on the net export balances of
+    Eurotransplant's member countries,
+
+7.  up to 300 distance points if the candidate is located in the same
+    country as the donor. The specific amount awarded depends on the
+    country, see the kidney manual for an overview [@manualKidney].
+
+Since March 2021, ESP allocation has been based on nine tiers, which are defined
+based on the location of the candidate relative to the donor and whether the 
+candidate is 65 years or older. Within ESP tiers points are awarded
+based on the dialysis time that a candidate has accrued [@manualKidney].
+
+### The graft offering module {#sec:etkidneyacceptance}
+
+The graft offering module mimics how Eurotransplant offers kidneys to
+centers for transplantation, and returns, based on a match list, the
+candidates who accept the kidney for transplantation (if any). How kidney
+offers are simulated in the ETKidney simulator is illustrated in Figure 
+\@ref(fig:ch8fig3). The module first simulates, based on the donor, the
+maximum number of offers made in standard allocation. We denote this number by $k$. The module then makes kidney offers to
+candidates in order of their ranking on the *filtered* match list,
+either until $k$ offers have been made or until all available kidneys
+have been accepted for transplantation.
+
+```{r ch8fig3, fig.cap = chuck(CH8_FIG_CAPTIONS, 'FIG3'), out.width = "90%"}
+FIG <- pluck(CH8_FIG_LIST, 3)
+
+NEEDED_FIGS <- glue('{FIG}{c(".pdf", ".svg")}')
+
+if (any(!file.exists(NEEDED_FIGS))) {
+  TEX_FIG <- paste0(FIG, '.tex')
+  if (!file.exists(TEX_FIG)) {
+    stop('Tex file is expected to exist')
+  } else {
+    process_tikz_fig(tex_fig = TEX_FIG, final_fig = FIG)
+  }
+  if (!file.exists(NEEDED_FIGS[[2]])) {
+    stop(glue('Convert {NEEDED_FIGS[[1]]} to png'))
+  }
+}
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[2]])
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(NEEDED_FIGS[[1]])
+}
+```
+
+If not all kidneys have been accepted after $k$ offers in standard
+allocation, the match lists are re-ordered with priority for
+candidates located in the vicinity of the donor to
+approximate non-standard allocation. At this point, the module also makes 
+offers to candidates who appear only on the *unfiltered* match list, 
+as centers can select such candidates in extended and rescue allocation. 
+Offers in non-standard allocation are made either until all kidneys have been accepted
+or until the match list is exhausted. The module then returns the candidates who have
+accepted the kidneys.
+
+#### Simulating the switch to non-standard allocation {#sec:etkidneynonstandard}
+
+The graft offering module switches to non-standard allocation following $k$
+declines. We modeled $K$ with a Cox proportional hazards model with
+adjustment for donor characteristics (donor age, virology, death cause,
+last creatinine, diabetes, smoking, proteinuria, blood group, and
+extended donor criteria). Cox models were stratified by the program
+(ETKAS / ESP), and within ETKAS additionally by the donor country.
+The baseline hazards and parameters needed to simulate from this model
+are made available with the ETKidney simulator. These were estimated
+on match lists generated between January 1, 2014, and January 1, 2024. ESP match lists
+from before March 2021 were excluded for estimation of these parameters,
+because non-standard allocation was rarely used in ESP before March 2021.^[
+Before March 2021, kidneys which could not be successfully allocated via ESP
+were offered via ETKAS. After March 2021, such kidneys are allocated via non-standard
+ESP allocation.]
+
+#### Simulating kidney offer acceptance behavior with a two-staged approach {#sec:etkidneytwostage}
+
+To simulate the center offer acceptance behavior of transplant centers,
+a two-stage acceptance procedure was implemented that
+
+  1.  simulates *center-level* decisions based on donor characteristics
+      (donor death cause, age, last creatinine, blood group, DBD / DCD
+      donation, and extended donor criteria) and
+      center characteristics (country, distance to the donor). These
+      models simulate whether a center is willing to accept the kidney(s)
+      for any candidate in the center, and
+  
+  2.  simulates *patient-level* decisions to determine whether the center
+      accepts a kidney offer for a specific candidate. These decisions are
+      simulated only if the center is willing to accept the donor, and are
+      simulated based on donor characteristics (see above), candidate
+      characteristics (age, pediatric status, HU status, vPRA, dialysis
+      time, prior kidney transplantation), and match characteristics (HLA
+      match, geographic distance, candidate-donor age difference).
+
+Logistic models are used to simulate both center- and patient-level decisions. We anticipated
+that kidney offer acceptance behavior would differ between ETKAS and ESP,
+because HLA match quality has historically been ignored in ESP and because
+the programs have different donor and patient populations. Therefore, the
+ETKidney simulator uses separate models to simulate the offer acceptance behavior
+of transplant centers in ETKAS and ESP.
+
+The odds ratios required for simulations are made publicly available with
+the ETKidney simulator, and were estimated on match lists with mixed 
+effect logistic regressions. Random effects were included to account for
+within-donor, within-candidate and within-center correlations in organ 
+offer acceptance decisions. For ETKAS, odds ratios
+were estimated on historical data between January 1, 2012, and January 1, 2021. For
+ESP, odds ratios were estimated between January 1, 2018, and January 1, 2024. We
+included data from after 2021 to estimate the ESP odds ratios, because ESP
+offers to candidates younger than 65 and international candidates have only
+been allowed since March 2021.
+
+#### Simulation of dual kidney transplantations {#sec:dkt}
+
+Annually, approximately 20 to 30 candidates receive a dual kidney
+transplantation, a procedure that is permitted when loss of both grafts
+is anticipated or for specific anatomical reasons. The graft offering module 
+simulates whether such a dual kidney transplantation is performed based on donor
+and patient characteristics (candidate age,
+donor age, country of listing, and rescue allocation). For this, a
+logistic model is used. The odds ratios provided with the ETKidney
+simulator were estimated on match lists from January 1, 2018, to January 1, 2024,
+using only offers where both grafts remained available for transplantation.
+
+### The post-transplant module {#sec:etkidneyposttxp}
+
+In total, 13% of the candidates on the kidney waiting list have received
+a prior kidney transplant, which makes it important to simulate post-transplant
+survival in the ETKidney simulator. This simulation is important even for short-term
+simulations, as nearly 3% of kidney transplant recipients
+enlist for a repeat kidney transplantation within one year of transplantation
+[@eurotransplantinternationalfoundationWaitingListRegistrations2024]. 
+The post-transplant module was implemented to simulate survival after kidney
+transplantation and to simulate listing for repeat transplantation. 
+`\vfill`{=latex}
+
+#### Simulation of post-transplant failure time and a potential re-listing date {#sec:etkidneysimposttxp}
+
+For each kidney transplantation, the post-transplant module simulates a
+patient failure time $t$ based on donor characteristics (age,
+DBD/DCD donor, last creatinine, death cause, hypertension, malignancy, diabetes), 
+patient characteristics (age, dialysis time, repeat kidney
+transplantation, country of listing), and match characteristics (HLA
+match, standard or non-standard allocation, year of transplantation, international
+transplantation). This failure time is defined as a post-transplant
+death or a repeat kidney transplantation, whichever occurs first. We
+modeled $T$ with a Weibull model based on recipient, donor, and
+transplantation characteristics (as done for the ELAS simulator, see Section \@ref(sec:elassimposttxp)). 
+The scale and shape parameters supplied with
+the ETKidney simulator were estimated based on ETKAS and ESP
+transplantations that were performed between January 1, 2011, and January 1, 2021.
+
+Most transplant recipients enlist for a repeat kidney transplantation
+before a patient failure materializes. Because a
+potential re-registration must logically occur before a patient death
+or re-transplantation, we simulate the time-to-relisting $r$ based on
+the empirical distribution of $R$ relative to $T$ (explained in Section  \@ref(sec:elassrelisting) for the ELAS simulator).
+For the ETKidney simulator, we stratified these distributions based on 
+candidate age groups and time-until-failure $t$, which both strongly affect
+whether a candidate is listed for repeat kidney transplantation
+(see Figure \@ref(fig:ch8sfig1)).
+
+```{r ch8sfig1, fig.cap = chuck(CH8_FIG_CAPTIONS, 'SFIG1'), out.width = "100%", fig.pos='ht'}
+FIG <- chuck(CH8_FIG_LIST, 'SFIG1')
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+  
+}
+```
+
+#### Constructing synthetic re-registrations {#sec:etkidneysynthreg}
+
+In case transplant recipients are simulated to enlist for a repeat
+transplantation before the simulation end date, the post-transplant
+module creates a *synthetic re-listing* for this candidate. This
+synthetic re-listing is created by combining the static information from
+the transplant recipient with the dynamic candidate status updates from
+an actually re-listed candidate. The actually re-listed candidate is
+chosen such that they are similar to transplant recipient in terms of
+background characteristics as well as in time-to-failure $t$ and time-to-relisting
+$r$.
+
+By default, the post-transplant module finds a matching re-registration
+$k$ by:
+
+1.  Considering re-listings where candidates match on country of listing and on
+    whether they were re-listed within 1 year after transplantation^[Transplant
+    recipients who require dialysis within one year of their initial kidney
+    transplant may receive a portion of their previous waiting time back, see
+    the Eurotransplant kidney manual [@manualKidney].], are of similar age (<20 years difference), have similar time
+    to re-listing and time-to-failure, and have a similar number
+    of years on dialysis.
+
+2.  Selecting the m=5 listings for repeat transplantation with the closest Mahalanobis
+    distance between ($r_i$, $t_i$) and ($r_k$, $t_k$).
+
+3.  Sampling a random re-registration from the $m$ re-registrations.
+
+A synthetic re-registration is then constructed by combining patient
+attributes from patient $i$ with the urgency code updates and PRA re-certifications
+from patient $k$. These status updates affect whether a candidate is eligible for a match 
+list offer, as candidates with a non-transplantable status or outdated PRA screenings
+are not eligible for offers in ETKAS and ESP. Other status updates (vPRA, allocation profiles, 
+diagnosis groups, HLA, reported dialysis initiation dates) are not copied over 
+because they are considered patient-specific. We note that the PRA screenings
+are only used to determine the eligibility of the candidate, and not to predict
+graft offer acceptance behavior or post-transplant survival.
+
+A specific challenge for simulating listing for repeat transplantation is that
+kidney transplantation is a strongly immunizing event [@Lopes2015]. Many 
+repeat transplant candidates will therefore have
+developed _de novo_ Donor-Specific Antibodies (dnDSAs) that centers can report as
+unacceptable. Candidates who are listed for repeat transplantation
+therefore tend to have higher vPRAs and face reduced access to kidney transplantation.
+`\newpage`{=latex}
+It is not clear how to simulate such _de novo_ immunization, because:
+
+  - HLA antigens are cross-reactive, which means that patients typically also
+    develop DSAs against HLA antigens that were not present in the donor [@Lucas2015],
+    
+  - the immunogenicity of donor HLAs also depends on the patient's own HLA
+    [@Lucas2015], and
+    
+  - HLA laboratories and transplant centers have different attitudes in 
+    labeling the HLA antigens of the initial donor as unacceptable [@Susal2013; @Ziemann2022].
+
+Accurate simulation of _de novo_ immunization falls outside of the scope of
+the ETKidney simulator. Instead, a very simple procedure was
+implemented that assumes that candidates have a fixed probability
+of becoming immunized against any mismatched donor antigen. By default,
+this probability is set to 20%. This probability was chosen because
+having one additional mismatch per locus increases the probability of
+reporting unacceptable antigens against that specific locus with 10 to 25%
+on average (depending on the locus) [@Isaacson2022].
+
+## Verification and validation {#sec:etkidneyvv}
+
+This section describes verification and validation efforts undertaken to
+ensure that the ETKidney simulator closely mimics ETKAS and ESP.
+
+### Verification of the ETKidney simulator {#sec:etkidneyverification}
+
+We built unit tests to ensure that the behavior of the modules aligns 
+with their intended functionality. For example, unit tests were
+constructed to verify whether HLA match qualities returned by the HLA
+system module were equal to HLA match qualities recorded on actual ETKAS match lists.
+Unit tests were also used to ascertain that the HLA system module
+returned the correct mismatch probabilities and vPRAs.
+
+The simulation of the graft offering process and of post-transplant survival
+is based on statistical models whose parameters were estimated in the statistical
+programming language _R_. Unit tests were constructed to ensure that the 
+probabilities predicted in the ETKidney simulator based on these parameters matched
+the probabilities predicted in R, for both offer acceptance
+decisions as well as post-transplant survival.
+`\vfill`{=latex}
+`\newpage`{=latex}
+
+### Validation of the ETKidney simulator {#sec:etkidneyvalidation}
+
+To ensure face validity of the model, medical doctors from
+Eurotransplant were actively involved in the development and conceptual
+design of the simulator. We also had meetings with ETKAC and the ETRL on
+various occasions in which the ETKidney simulator was discussed. Moreover,
+the model was presented at the 2024 Eurotransplant Annual Meeting to
+collect feedback from additional major stakeholders,
+such as medical doctors and transplantation coordinators affiliated with the
+transplant centers.
+
+We assess the operational validity of the model using input-output validation. 
+For this, we simulate ETKAS and ESP kidney
+allocation between April 1, 2021, and January 1, 2024 under the actual allocation
+rules used within this simulation window. The simulation start date of April 1, 2021 
+was chosen because the allocation of ESP donors changed in March 2021.
+For the donor input stream, we
+used all 4,326 donors reported in the simulation window 
+whose kidneys were transplanted after allocation through ETKAS or ESP (see Table \@ref(tab:ch8tab1donors)
+for their characteristics). For the candidate input stream, we used all 
+n=9,393 candidates activated on the ETKAS or ESP waiting list during the 
+simulation period (Table \@ref(tab:ch8tab1patlisted)), and the n=14,647
+candidates already registered candidates on April 1, 2021
+(Table \@ref(tab:ch8tab1patsimstart)).
+
+```{r ch8tab1donors, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'TAB1_DONORS'), fig.pos='ht', results='asis'}
+TAB_NAME <- 'TAB1_DONORS'
+
+df_tab <- read_csv(chuck(CH8_TABLE_LIST, TAB_NAME))
+names(df_tab)[1:2] <- c('Variable', 'Level')
+df_tab$SMD <- NULL
+df_tab$p <- NULL
+
+df_tab <- df_tab |>
+  mutate(Variable = zoo::na.locf(Variable, na.rm=FALSE)) |>
+  mutate(across(where(is.character), replace_na, ''))
+
+df_tab <- df_tab |>
+  mutate(
+    Variable = recode(
+      Variable, 
+      `donor death cause` = 'death cause'
+    ),
+    Level = recode(
+      Level,
+      heartbeating = 'HB',
+      `non-heartbeating` = 'NHB',
+      `Head trauma` = 'trauma',
+      `F` = 'Female',
+      `M` = 'Male'
+    ),
+    Variable = str_replace(Variable, 'delisting', 'exit')
+  )
+
+df_tab <- df_tab |>
+  mutate(
+    across(where(is.character), str_replace_all, fixed('0 (0%)'), '–')
+  )
+
+df_tab$Level <- firstlow(df_tab$Level)
+names(df_tab) <- firstlow(names(df_tab))
+
+FOOTNOTE_TEXT <- "Based on donors reported between April 1, 2021, and December 31, 2024, who had their kidneys allocated and transplanted via ETKAS or ESP. Abbreviations: HB, heartbeating; NHB, nonheartbeating"
+FOOTNOTE_TEXT_HTML <- FOOTNOTE_TEXT
+
+
+if (knitr::is_html_output()) {
+  cat('<div class="table-scroll">\n')
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws() |>   
+    str_replace('\\s', '<br>')
+  df_tab[,3:9] <- df_tab[,3:9] |>
+    mutate_all(str_replace, '\\s+', '<br>')
+  df_tab |>
+    filter(row_number()!= 1) |>
+    kable(format='html', caption=chuck(CH8_TABLE_CAPTIONS, TAB_NAME), align='lcccccccc', escape=FALSE) |>
+    collapse_rows(columns = 1, valign = "middle")  |>
+    kable_styling(font_size=14) |>
+    add_footnote(FOOTNOTE_TEXT_HTML, notation='none', escape=FALSE) |>
+    cat() 
+  cat('</div>\n')
+} else if (knitr::is_latex_output()) {
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws()
+  lines <- df_tab |>
+    filter(row_number() != 1) |>
+    kable(format='latex', caption=chuck(CH8_TABLE_CAPTIONS, TAB_NAME), booktabs=TRUE, align='ccccccccc') |>
+    kable_styling(
+      latex_options = c("scale_down", "hold_position"), font_size=10
+    ) |>
+    column_spec(1, width = "6em") %>%
+    collapse_rows(columns = 1, valign = "middle") |>
+    insert_footnote_manually(.text = FOOTNOTE_TEXT) |>
+    read_lines()
+  lines <- gsub("([A-Za-z]+)\\s*\\(n=([0-9,]+)\\)", "\\\\makecell{\\1\\\\\\\\(n=\\2)}", lines)
+  pattern <- "\\[(\\d+\\.\\d+)-(\\d+\\.\\d+)\\]"
+  lines <- str_replace_all(lines, pattern, function(m) {
+    parts <- str_match(m, pattern)
+    q1 <- round(as.numeric(parts[2]), 1)
+    q3 <- round(as.numeric(parts[3]), 1)
+    sprintf("[%.1f-%.1f]", q1, q3)
+  })
+  lines |> paste0(collapse='\n') |> cat()
+}
+```
+
+```{r ch8tab1patlisted, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'TAB1_DONORS'), fig.pos='ht', results='asis'}
+TAB_NAME <- 'TAB1_PAT_LISTED'
+
+df_tab <- read_csv(chuck(CH8_TABLE_LIST, TAB_NAME))
+names(df_tab)[1:2] <- c('Variable', 'Level')
+
+df_tab$Variable <- str_replace(df_tab$Variable, 'dialysis time', 'dial. time')
+
+round_numbers <- function(x) {
+  str_replace_all(x, "\\d+\\.\\d+", function(num) sprintf("%.0f", as.numeric(num)))
+}
+
+df_tab <- df_tab |>
+  mutate(Variable = zoo::na.locf(Variable, na.rm=FALSE)) |>
+  mutate(across(where(is.character), replace_na, ''))
+df_tab$SMD <- NULL
+df_tab$p <- NULL
+
+df_tab <- filter(df_tab, Variable != 'status at listing')
+
+
+df_tab <- df_tab |>
+  filter(!(Variable == 'marginal donor' & Level == 'no')) |>
+  mutate(
+    Variable = recode(
+      Variable, 
+      `UNOS-MELD score` = 'lab-MELD',
+      `type donation` = 'type donor',
+      `(N)SE` = 'exception at listing'
+    ),
+    Level = recode(
+      Level,
+      `F` = 'Female',
+      `M` = 'Male'
+    ),
+    Variable = str_replace(Variable, 'delisting', 'exit')
+  )
+
+
+df_tab <- filter(df_tab, Variable != 'sex')
+
+df_tab$Level <- firstlow(df_tab$Level)
+names(df_tab) <- firstlow(names(df_tab))
+
+FOOTNOTE_TEXT <- "Based on patients listed in ETKAS or ESP between Apr 1, 2021 and December 31, 2024, with at least one active status in this period."
+FOOTNOTE_TEXT_HTML <- FOOTNOTE_TEXT
+
+if (knitr::is_html_output()) {
+  df_tab$level <- recode(df_tab$level, `mean [Q1-Q3]` = 'mean<br>[Q1-Q3]')
+  
+  cat('<div class="table-scroll">\n')
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws() |>     str_replace('\\s', '<br>')
+  df_tab[,3:9] <- df_tab[,3:9] |>
+    mutate_all(str_replace, '\\s+', '<br>')
+  df_tab |>
+    filter(row_number()!= 1) |>
+    kable(format='html', caption=chuck(CH8_TABLE_CAPTIONS, TAB_NAME), align='ccccccccc', escape=FALSE) |>
+    collapse_rows(columns = 1, valign = "middle") |>
+    kable_styling(font_size=13) |>
+    add_footnote(FOOTNOTE_TEXT_HTML, notation='none', escape=FALSE) |>
+    cat()
+  cat('</div>')
+} else if (knitr::is_latex_output()) {
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws()
+  lines <- df_tab |>
+    filter(row_number() != 1) |>
+    kable(format='latex', caption=chuck(CH8_TABLE_CAPTIONS, TAB_NAME), booktabs=TRUE, align='ccccccccc') |>
+    kable_styling(
+      latex_options = c("scale_down", "hold_position"), font_size=10
+    ) |>
+    column_spec(1, width = "6em") %>%
+    collapse_rows(columns = 1, valign = "middle") |>
+    insert_footnote_manually(.text = FOOTNOTE_TEXT)
+  lines <- gsub("([A-Za-z]+)\\s*\\(n=([0-9,]+)\\)", "\\\\makecell{\\1\\\\\\\\(n=\\2)}", lines)
+  lines <- str_replace_all(lines,
+                           'dial\\. time at listing', '\\\\makecell\\{dial\\. time\\\\\\\\at listing\\}')
+  
+  lines |> cat()
+}
+```
+
+
+```{r ch8tab1patsimstart, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'TAB1_PAT_SIMSTART'), fig.pos='ht', results='asis'}
+TAB_NAME <- 'TAB1_PAT_SIMSTART'
+
+df_tab <- read_csv(chuck(CH8_TABLE_LIST, TAB_NAME))
+names(df_tab)[1:2] <- c('Variable', 'Level')
+
+df_tab$Variable <- str_replace(df_tab$Variable, 'dialysis time', 'dial. years')
+df_tab$Variable <- str_replace(df_tab$Variable, fixed('on Apr 1, 2024'), '(Apr 1, 2024)')
+
+round_numbers <- function(x) {
+  str_replace_all(x, "\\d+\\.\\d+", function(num) sprintf("%.0f", as.numeric(num)))
+}
+
+df_tab <- df_tab |>
+  mutate(Variable = zoo::na.locf(Variable, na.rm=FALSE)) |>
+  mutate(across(where(is.character), replace_na, ''))
+df_tab$SMD <- NULL
+df_tab$p <- NULL
+
+df_tab <- filter(df_tab, Variable != 'sex')
+
+df_tab$Variable <- recode(df_tab$Variable, `age` = 'age (Apr 1, 2021)')
+
+df_tab <- df_tab |>
+  filter(!(Variable == 'marginal donor' & Level == 'no')) |>
+  mutate(
+    Variable = recode(
+      Variable, 
+      `UNOS-MELD score` = 'lab-MELD',
+      `type donation` = 'type donor',
+      `(N)SE` = 'exception at listing'
+    ),
+    Level = recode(
+      Level,
+      `F` = 'Female',
+      `M` = 'Male'
+    ),
+    Variable = str_replace(Variable, 'delisting', 'exit')
+  )
+
+df_tab$Level <- firstlow(df_tab$Level)
+names(df_tab) <- firstlow(names(df_tab))
+
+
+FOOTNOTE_TEXT <- "Based on patients listed in ETKAS or ESP before Apr 1, 2024, with at least one active status in this period."
+FOOTNOTE_TEXT_HTML <- FOOTNOTE_TEXT
+
+if (knitr::is_html_output()) {
+  df_tab$level <- recode(df_tab$level, `mean [Q1-Q3]` = 'mean<br>[Q1-Q3]')
+  cat('<div class="table-scroll">\n')
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws() |>
+    str_replace('\\s', '<br>')
+   df_tab[,3:9] <- df_tab[,3:9] |>
+    mutate_all(str_replace, '\\s+', '<br>')
+  df_tab |>
+    filter(row_number()!= 1) |>
+    kable(format='html', caption=chuck(CH8_TABLE_CAPTIONS, TAB_NAME), align='ccccccccc', escape=FALSE) |>
+    kable_styling(font_size=13) |>
+    collapse_rows(columns = 1, valign = "middle") |>
+    add_footnote(FOOTNOTE_TEXT_HTML, notation='none', escape=FALSE) |>
+    cat()
+  cat('</div>')
+} else if (knitr::is_latex_output()) {
+  names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws()
+  lines <- df_tab |>
+    filter(row_number() != 1) |>
+    kable(format='latex', caption=chuck(CH8_TABLE_CAPTIONS, TAB_NAME), booktabs=TRUE, align='ccccccccc') |>
+    kable_styling(
+      latex_options = c("scale_down", "hold_position"), font_size=10
+    ) |>
+    column_spec(1, width = "6em") %>%
+    collapse_rows(columns = 1, valign = "middle") |>
+    insert_footnote_manually(.text = FOOTNOTE_TEXT)
+  lines <- gsub("([A-Za-z]+)\\s*\\(n=([0-9,]+)\\)", "\\\\makecell{\\1\\\\\\\\(n=\\2)}", lines)
+  
+    # Force date on newline
+  lines <- str_replace_all(lines, "((dial\\.\\s)?[\\)\\(\\w\\\\\\-]+?)\\s*(\\(Apr 1, 2021\\))", "\\\\makecell\\{\\1\\\\\\\\\\2\\}")
+  
+  
+  lines |> cat()
+}
+```
+
+`\FloatBarrier`{=latex}
+
+To enable accurate simulation of the ETKAS balance system, we also
+exported from the Eurotransplant database all cross-border transplantations that 
+followed allocation via the AM program or were a combined transplantation. These
+transplantations were used to define the input stream of international transplantations. In
+simulations, we schedule donor arrivals, candidate status updates, and balance
+update events on the dates this information was actually reported to
+Eurotransplant. Our input-output validation exercise thus keeps the
+inputs as close as possible to reality, and assesses whether the outputs of
+the ETKidney simulator are comparable to the actual outputs of ETKAS and
+ESP.
+
+Importantly, the outputs of the simulator depend on several stochastic
+processes: the offer acceptance behavior of the transplant centers, 
+listing for a repeat transplantation after an initial kidney transplantation,
+and the switching to non-standard allocation by Eurotransplant. To give insight into variability of simulator
+outputs, we simulate ETKAS and ESP allocation 200 times over the
+simulation window and report 95% interquantile ranges for relevant
+summary statistics. These 95% IQRs are obtained by simulating allocation
+200 times and reporting the 2.5th and 97.5th percentiles of simulation
+outputs. For each of these 200 simulation runs, we use a different set
+of completed status trajectories (see Section \@ref(sec:etkidneyinputstreams)). We say that the ETKidney
+simulator is *"well-calibrated"* for a quantity of interest if the
+observed summary statistic falls within the 95% IQR of the 200
+simulations.
+
+#### Results of input-output validation {#sec:etkidneyioval .unnumbered}
+
+Table \@ref(tab:ch8tab1) reports results of this input-output validation for kidney waiting list outcomes.
+The ETKidney simulator
+is well-calibrated for almost all summary statistics: the total number
+of transplantations, the number of dual kidney transplantations, the
+number of ETKAS or ESP transplantations, the number of re-listings, and
+the number of waiting list deaths per country in all countries. We only
+observe miscalibration for the number of waiting list deaths in Hungary
+(-11%) and the active waiting list size at simulation termination (2%
+too many candidates have an active waiting list status).
+`\newpage`{=latex}
+Table \@ref(tab:ch8tab2) reports input-output validation
+results for ETKAS and ESP transplantations. For ETKAS, the simulator is
+well-calibrated for the number of transplantations placed by allocation mechanism
+(standard or non-standard), transplantations by candidate age group, and
+transplantations in repeat transplant candidates. The simulator is
+also well-calibrated for the number of transplantations by HLA match
+quality, with only the number of zero-mismatched transplantations
+overestimated (\Plus 5\%). The number of
+transplantations in candidates with vPRAs exceeding 95% is
+underestimated (-17%). This miscalibration appears to have been the result
+of the introduction of the virtual crossmatch in January 2023, potentially 
+because the number of positive crossmatches in the recipient center decreased 
+after the introduction of the
+virtual crossmatch in Eurotransplant [@Heidt2024] (see Table \@ref(tab:ch8stab1) for miscalibration after January 2023). The simulator is well-calibrated
+for the number of transplantations per country, with only a slight
+overestimation observed in Croatia (\Plus 3\%) and a slight
+underestimation observed in Hungary (-2%). The degree of geographical sharing
+is underestimated in ETKAS: there are too many local or regional transplantations
+in simulations (\Plus 5\%), and too few inter-regional (-11\%) or international
+(-9\%) transplantations.
+
+Table \@ref(tab:ch8tab2) also shows that the ETKidney simulator is
+well-calibrated for most relevant outcomes in ESP: the number of transplantations in
+primary and repeat kidney transplant candidates, and the number of 
+transplantations by HLA match quality and immunization status. The simulator 
+overestimates the number of kidneys transplanted after non-standard allocation
+in ESP (+23%). An apparent consequence of this is that the number of
+kidneys allocated to candidates under the age of 65 is overestimated
+(\Plus 28%), particularly in Belgium, the
+Netherlands, and Slovenia where
+centers appear to be reluctant to transplant a candidate under the age of 65
+with an ESP donor (see Table \@ref(tab:ch8stab2)). Finally, the simulator is well-calibrated for the
+number of transplantations by recipient country and match geography,
+with the only exception Germany where 2% too many ESP kidneys are
+transplanted.
+
+`\newpage`{=latex}
+Overall, the ETKidney simulator appears to be well-calibrated for most
+outcomes of ETKAS and ESP allocation. The results of this input-output
+validation exercise were discussed with medical doctors from
+Eurotransplant and ETKAC, who deemed differences small enough to make
+the simulator useful for determining the impact of alternative kidney
+allocation policies. We illustrate this with case studies in the next
+section.
+
+`\FloatBarrier`{=latex}
+
+```{r ch8tab1, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'TAB1')}
+if (knitr::is_html_output()) {
+  d_tab <- read_excel('raw_tables/ch8/validation.xlsx') |>
+    mutate(
+      across(where(is.character), str_replace, 'aitlist', 'aiting list'),
+      `range simulated`=replace_na(`range simulated`, '')
+    ) |>
+    unite(simulated, `mean simulated`, `range simulated`, sep = ' ')
+  
+  kbl_header <- d_tab %>%
+    mutate(variable = fct_inorder(factor(variable))) %>%
+    split(.$variable) |>
+    map_int(nrow)
+  names(kbl_header) <- firstlow(names(kbl_header))
+  
+  d_tab |>
+    mutate(simulated = ifelse(replace_na(sign, '0') == '1', cell_spec(simulated, bold = T), simulated)) |>
+    select(group, simulated, actual) |>
+    setNames(c('category', 'simulated results<br>(average and 95% IQR)', 'actual data<br>(2021-2024)')) |>
+    kable(format='html', escape=FALSE, align='lcc') |>
+    kableExtra::pack_rows(
+      index = kbl_header
+    )
+
+} else if (knitr::is_latex_output()) {
+  wrap_table(
+    CH8_TABLE_LIST$TAB1,
+    my_label = 'tab:ch8tab1',
+    my_caption = chuck(CH8_TABLE_CAPTIONS, 'TAB1'))
+}
+```
+
+```{r ch8tab2, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'TAB2')}
+if (knitr::is_html_output()) {
+  d_tab <- list(
+    ETKAS = read_excel('raw_tables/ch8/validation.xlsx', sheet=2),
+    ESP = read_excel('raw_tables/ch8/validation.xlsx', sheet=3)
+    ) |>
+    map(~ mutate(.x,
+                 `mean simulated` = round(as.numeric(`mean simulated`)),
+      across(where(is.character), str_replace, 'aitlist', 'aiting list'),
+      `range simulated`=replace_na(`range simulated`, '')
+    ) |>
+    unite(simulated, `mean simulated`, `range simulated`, sep = ' ') |>
+      mutate(simulated = ifelse(replace_na(sign, '0') == '1', cell_spec(simulated, bold = T), simulated))
+    ) |>
+    map(
+      select, variable, group, simulated, actual
+    ) %>%
+    reduce(
+      left_join,
+      by = join_by(variable, group),
+      suffix=names(.)
+    )
+  
+  kbl_header <- d_tab %>%
+    mutate(variable = fct_inorder(factor(variable))) %>%
+    split(.$variable) |>
+    map_int(nrow)
+  names(kbl_header) <- firstlow(names(kbl_header))
+  
+  d_tab |>
+    select(-variable) |>
+    setNames(c('category', 'simulated results<br>(average and 95% IQR)', 'actual','simulated results<br>(average and 95% IQR)', 'actual' )) |>
+    kable(format='html', escape=FALSE, align='ccccc') |>
+    kable_styling(font_size=15) |>
+    add_header_above(c(` ` = 1, `ETKAS` = 2, `ESP` = 2)) |>
+    kableExtra::pack_rows(
+      index = kbl_header
+    )
+
+} else if (knitr::is_latex_output()) {
+  wrap_table(
+    CH8_TABLE_LIST$TAB2,
+    my_label = 'tab:ch8tab2',
+    my_caption = chuck(CH8_TABLE_CAPTIONS, 'TAB2'))
+}
+```
+
+
+```{r ch8stab1, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'STAB1')}
+if (knitr::is_html_output()) {
+  readLines(chuck(CH8_TABLE_LIST, 'STAB1')) |>
+    purrr::keep(function(.x) str_detect(.x, '&')) |>
+    tail(-2) |>
+    str_remove_all('\\t') |>
+    str_remove_all('\\\\') |>
+    str_remove_all('$') |>
+    str_remove_all(fixed('hspace{1em}')) |>
+    paste0(collapse = '\n') |>
+    read_delim('&', col_names = c('vpra', 'sim1', 'actual1', 'sim2', 'actual2')) |>
+    mutate_all(trimws) |>
+    mutate_all(str_replace_all, 'Plus ', '+') |>
+    mutate_all(
+      function(.x) if_else(
+        str_detect(.x, 'textbf'), cell_spec(str_extract(.x, '(?<=\\{).+(?=\\})'), bold=TRUE), .x
+      )
+    ) |>
+    setNames(
+      c('vPRA', 'simulated<br>(mean, 95% IQR)', 'actual', 'simulated<br>(mean, 95% IQR)', 'actual')
+    ) |>
+    kable(format='html', escape=FALSE, align='ccccc') |>
+    add_header_above(c(` ` = 1, `before virtual crossmatch` = 2, `after virtual crossmatch` = 2)) 
+} else if (knitr::is_latex_output()) {
+  wrap_table(
+    CH8_TABLE_LIST$STAB1,
+    my_label = 'tab:ch8stab1',
+    my_caption = chuck(CH8_TABLE_CAPTIONS, 'STAB1'))
+}
+```
+
+
+```{r ch8stab2, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'STAB2')}
+if (knitr::is_html_output()) {
+  readLines(chuck(CH8_TABLE_LIST, 'STAB2')) |>
+    purrr::keep(function(.x) str_detect(.x, '&')) |>
+    tail(-2) |>
+    str_remove_all('\\t') |>
+    str_remove_all('\\\\') |>
+    str_remove_all('$') |>
+    str_remove_all(fixed('hspace{1em}')) |>
+    paste0(collapse = '\n') |>
+    read_delim('&', col_names = c('country', 'Simulated (mean, 95% IQR)', 'actual')) |>
+    mutate_all(trimws) |>
+    mutate_all(str_replace_all, 'Plus ', '+') |>
+    mutate_all(
+      function(.x) if_else(
+        str_detect(.x, 'textbf'), cell_spec(str_extract(.x, '(?<=\\{).+(?=\\})'), bold=TRUE), .x
+      )
+    ) |>
+    setNames(
+      c('recipient country', 'simulated<br> (mean, 95% IQR)', 'actual')
+    ) |>
+    kable(format='html', escape=FALSE, align='ccc') 
+} else if (knitr::is_latex_output()) {
+  wrap_table(
+    CH8_TABLE_LIST$STAB2,
+    my_label = 'tab:ch8stab2',
+    my_caption = chuck(CH8_TABLE_CAPTIONS, 'STAB2')
+  )
+}
+```
+
+`\FloatBarrier`{=latex}
+
+## Case studies {#sec:etkidneycasestudies}
+
+Together with ETKAC, three topics for case studies were selected in
+which the ETKidney simulator could help quantify the impact of 
+alternative kidney allocation rules. The selected
+topics all concern the ETKAS program, and are (i) emphasizing matching at the HLA-B and HLA-DR locus,
+(ii) the introduction of a sliding scale based on
+the vPRA, and (iii) candidate-donor age matching. To limit the effects of
+transient effects, we extend the simulation period for these case
+studies from January 1, 2016 to January 1, 2024. We simulate all policy
+alternatives 20 times, and use traditional hypothesis testing to assess
+whether alternative policies significantly change the outcomes compared
+to the current policy. To increase the power of these tests, we use common
+random numbers [@lawSimulationModelingAnalysis2015] as a variance
+reduction technique. Consequently, the outcomes that are simulated under the
+alternative allocation rules can be compared to the outcomes simulated under
+the current rules with pairwise t-tests.
+
+### Case study 1: emphasizing matching at HLA-B and HLA-DR loci {#sec:etkidneycasestudyhla}
+
+Since its initiation in 1996, the ETKAS point system has placed equal emphasis
+on matching at the HLA-A, HLA-B, and HLA-DR loci, despite broad
+consensus that HLA-DR mismatches are more deleterious to graft survival
+than HLA-A and HLA-B mismatches
+[@vereerstraetenExperienceWujciakOpelzAllocation1998; @Roberts2004].
+Internal analyses on registry data from Eurotransplant suggest that
+mismatches on the HLA-B and HLA-DR locus are indeed more strongly associated with graft
+loss than mismatches on the HLA-A locus. This motivated us to simulate
+policies that emphasize matching at the HLA-B and HLA-DR loci relative to the 
+HLA-A locus.
+
+The current ETKAS point system awards 400 points for HLA matching and
+penalizes HLA mismatches on the A, B, and DR loci with 66.7 points per
+mismatch. We assess the impact of three alternative HLA matching
+policies. These policies all continue to award up to 400 points for
+candidate-donor HLA match quality, but shift weight from the HLA-A
+locus to the HLA-B and HLA-DR loci (see Table \@ref(tab:ch8tab3)). 
+The first policy is referred
+to as the $\text{B} + 2\text{DR}$ policy, because it gives no weight to
+the HLA-A locus, maintains the same weight for the HLA-B locus (-66.7 points),
+and doubles the weight on the HLA-DR locus (-133.3 points). The second
+policy, referred to as the $0.5\text{A} + \text{B} + 1.5\text{DR}$
+policy, shifts only half of the weight placed on the HLA-A locus to the HLA-DR
+locus. The final policy, referred to as
+$1.5\texttt{B} + 1.5\texttt{DR}$, penalizes mismatches at the HLA-B and HLA-DR
+loci both with 100 points per mismatch.
+
+`\begingroup`{=latex}
+`\setlength{\aboverulesep}{0.2ex}`{=latex}
+`\setlength{\belowrulesep}{0.1ex}`{=latex}
+
+```{r ch8tab3, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'TAB3')}
+if (knitr::is_html_output()) {
+  readLines(chuck(CH8_TABLE_LIST, 'TAB3')) |>
+    purrr::keep(function(.x) str_detect(.x, '&')) |>
+    tail(-2) |>
+    str_remove_all('\\t') |>
+    str_remove_all('\\\\') |>
+    str_remove_all('$') |>
+    paste0(collapse = '\n') |>
+    read_delim('&', col_names = c('policy', 'A', 'B', 'DR')) |>
+    mutate_all(trimws) |>
+    kable(format='html', align='cccc', escape=FALSE) |>
+    add_header_above(c(` ` = 1, `HLA locus` = 3))
+} else if (knitr::is_latex_output()) {
+  wrap_table(
+    CH8_TABLE_LIST$TAB3,
+    my_label = 'tab:ch8tab3',
+    my_caption = chuck(CH8_TABLE_CAPTIONS, 'TAB3'),
+    scale_down=TRUE,
+    scale_factor=.94)
+}
+```
+
+`\FloatBarrier`{=latex}
+
+Simulation results for these three alternative policies are summarized
+in Table \@ref(tab:ch8tab4). These results show that the policy 
+alternatives reduce the number of transplantations with 2 DR or 3 or more B\Plus DR mismatches by 25 to 39%, and
+increase the number of transplantations with 1 B or 1 DR mismatch by 26
+to 49%. Thus, the policies indeed succeed in improving match quality on
+the HLA-B and HLA-DR locus.
+
+```{r ch8tab4, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'TAB4')}
+FOOTNOTE <- '*p < 0.05; **p < 0.01; ^***p < 0.001'
+CURRENT_COL <- "avg. number of transplantations observed under the current policy"
+
+
+if (knitr::is_html_output()) {
+  FOOTNOTE <- str_replace_all(FOOTNOTE, fixed('*'), '&dagger;')
+  d_t <- readLines(chuck(CH8_TABLE_LIST, 'TAB4')) |>
+    purrr::keep(function(.x) str_detect(.x, '&')) |>
+    tail(-6) |>
+    str_remove_all('\\t') |>
+    str_remove_all('\\\\') |>
+    str_remove_all('$') |>
+    str_remove_all(fixed('hspace{.5em}')) |>
+    paste0(collapse = '\n') |>
+    read_delim('&', col_names = c('variable', CURRENT_COL, 'change', 'percent', 'change2', 'percent2', 'change3', 'percent3')) |>
+    mutate_all(trimws) |>
+    mutate_all(str_replace_all, 'Plus ', '+') |>
+    mutate_all(
+      str_replace_all, fixed('$^{'), '<sup>'
+    ) |>
+    mutate_all(str_replace_all, fixed('}$'), '</sup>') |>
+    mutate_all(
+      str_replace_all, fixed('dagger'), '&dagger;'
+    ) |>
+    mutate_all(
+      str_replace_all, fixed('*'), '_'
+    ) |>
+    dplyr::rename_with(firstlow)
+  
+  names(d_t) <- str_remove_all(names(d_t), '[0-9]$')
+  names(d_t)[2:8] <- ' '
+  d_t |>
+    kable(format='html', escape=FALSE, align='ccrlrlrl') |>
+  add_header_above(unlist(rlang::list2(` ` = 1, !!CURRENT_COL := 1, `B + 2DR` = 2, `0.5A + B + 1.5DR` = 2, `1.5B + 1.5DR` = 2)), escape=FALSE) |>
+    add_header_above(c(` ` = 2, `Change in number of transplantations compared to current policy` = 6)) |>
+    pack_rows(
+      index=c(`ABDR mismatch count` = 7, `ABDR match quality` = 4, `candidate homozygosity on HLA-B and DR` = 4)
+    ) |>
+    kable_styling(font_size=14) |>
+    add_p_value_footnote(symbol='dagger')
+} else if (knitr::is_latex_output()) {
+  REPLACEMENTS <- c(
+    '\\*\\*\\*(?!\\d)' = '$^{\\\\dagger\\\\dagger\\\\dagger}$',
+    '\\*\\*(?!\\d)'    = '$^{\\\\dagger\\\\dagger}$',
+    '\\*(?![\\*\\d])'       = '$^{\\\\dagger}$'
+  )
+  wrap_table(
+    CH8_TABLE_LIST$TAB4,
+    my_label = 'tab:ch8tab4',
+    my_caption = chuck(CH8_TABLE_CAPTIONS, 'TAB4'),
+    scale_down=TRUE,
+    scale_factor=1
+  ) |>
+    str_split('\n') |> unlist() |>
+    str_replace_all(
+      REPLACEMENTS
+    ) |> 
+    str_replace(fixed('\\multirow[b]{1.5}{$^{\\dagger}$}'), '\\multirow[b]{1.5}{*}') |>
+    insert_footnote_manually(.text = "$\\qquad\\qquad$ $^{\\dagger}$ p < 0.05, $^{\\dagger\\dagger}$ p < 0.01, $^{\\dagger\\dagger\\dagger}$ p < 0.001") |>
+    knitr::asis_output()
+}
+```
+`\endgroup`{=latex}
+`\FloatBarrier`{=latex}
+
+However, results also show that there are unintended consequences of
+this policy: the total number of ABDR mismatches at transplantation
+increases with all alternative policies and there are 5 to 12% fewer
+transplantations in candidates who have homozygosity at the HLA-B or HLA-DR
+loci, who are already disadvantaged in the current ETKAS system. Results
+such as those presented in Table \@ref(tab:ch8tab4) can facilitate discussions by ETKAC
+on whether the improved match quality at HLA-B and HLA-DR loci is worth the increase 
+in total mismatches and the reduced access to kidney transplants for homozygotes.
+
+### Case study 2: a sliding scale for the vPRA {#sec:etkidneycasestudyvpra}
+
+Prior studies have suggested that immunized candidates have reduced
+access to transplantation in ETKAS (see [@ziemannUnacceptableHumanLeucocyte2017; @zecherImpactSensitizationWaiting2022a] and Chapter \@ref(CHvpra)).
+In this case study, we assess whether this disparity can be alleviated
+by awarding points directly for the vPRA. For this, we modify the ETKAS point
+system in two ways. The first modification is that we directly award points for
+the vPRA using a *sliding scale*. Such a sliding scale for the vPRA has been a part of
+kidney allocation in the United States since 2014 [@stewartSmoothingItOut2012].
+The number of points awarded based on this sliding scale is calculated as $$\texttt{weight}\cdot\frac{\texttt{base}^{\texttt{vPRA}}}{\texttt{base}-1}.$$
+The maximum number of points awarded by the sliding scale depends on its *weight*,
+and its steepness depends on the *base*. The second modification is that we no longer directly award points for the vPRA via the mismatch probability.
+Instead, we replace mismatch probability points by the 1-ABDR HLA mismatch frequency (see Section \@ref(sec:etkidneymmp)). This quantity awards points to candidates based on
+how difficult-to-match their HLA phenotype is, and not their blood group or
+their vPRA.
+
+Representatives of ETKAC reached consensus that the aim of the 
+sliding scale should be that a candidate's chance of being transplanted 
+through ETKAS should not decline up to a vPRA of 85%. Above this vPRA, 
+candidates could have access to the AM program, or should consider removing unacceptable antigens in case they do not
+meet AM criteria. We used the ETKidney simulator to simulate ETKAS for
+different combinations of weights and bases,
+and quantify the association between vPRA and the relative
+transplant rate using Cox proportional hazards model on the outcomes simulated
+by the ETKidney simulator. For this, the same model specification is used as in Chapter
+\@ref(CHvpra). In Figure
+\@ref(fig:ch8fig4) the estimated relation between vPRA and the transplant rate is
+shown for several sliding scales. From this figure, the sliding scale
+with a base of 5 and weight of 133 appears to be the most acceptable
+option: with this sliding scale, the relative transplant rate
+of sensitized candidates no longer decays until a vPRA of 85%, as was desired
+by ETKAC.
+
+```{r ch8fig4, fig.cap = chuck(CH8_FIG_CAPTIONS, 'FIG4'), out.width = "85%"}
+FIG <- pluck(CH8_FIG_LIST, 4)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+`\FloatBarrier`{=latex}
+
+### Case study 3: candidate-donor age matching {#sec:etkidneycasestudyagematching}
+
+Consensus in the transplantation literature is that kidneys procured
+from young donors should preferentially be transplanted in young
+candidates
+[@waiserAgeMatchingRenal2000; @pippiasYoungDeceasedDonor2020; @vanittersumIncreasedRiskGraft2017; @coemansCompetingRisksModel2024; @keithEffectDonorRecipient2004b].
+While allocation systems in France and the United Kingdom have implemented mechanisms that explicitly award points for 
+continuous candidate-donor age matching
+[@Audry2022; @watson2020overview], the
+ETKAS point system does not award points based on candidate or donor age
+(except for bonus points that are given to pediatric patients). In this case study, we (i) use retrospective data
+from Eurotransplant to quantify the associations of candidate and donor age with patient and graft survival
+with cause-specific
+hazard models, and (ii) simulate and evaluate two age matching policies
+for ETKAS.
+
+To quantify the relation between donor or candidate age and
+post-transplant survival, we consider all patients transplanted with a
+kidney through ETKAS or ESP between 2004 and 2019. We exclude candidates
+with the HU status and candidates without any follow-up information
+(n = 7,458), leaving n = 36,576 transplantations. We fit
+cause-specific Cox proportional hazards models on these transplantations
+for (i) graft loss and (ii) death with a functioning graft. We censored
+both time-to-event variables ten years after transplantation, because
+completeness of follow-up data beyond this time
+horizon is poor (available for less than 30\% of patients). Besides donor and candidate age, we adjust for
+donor characteristics (DCD/DCD donation, hypertension,
+last creatinine, death cause, diabetes, malignancy), candidate
+characteristics (dialysis time), and match characteristics (a zero-mismatch 
+indicator, the number of mismatches per locus for the HLA-A, -B, and -DR loci, and
+match geography). To allow for non-linear relations between continuous
+variables and the hazard rate, we adjust for spline transformations of
+the continuous variables. The estimated relations between donor or
+candidate age and patient and graft survival are shown in Figure \@ref(fig:ch8fig5). These results are qualitatively
+similar to results obtained by Coemans et al. [@coemansCompetingRisksModel2024],
+who report that the hazard rate of graft loss decays linearly with
+recipient age while it increases quadratically with donor age, and that
+the mortality hazard rate increases quadratically with candidate age (note that the y-axis for the second panel is shown on the logarithmic scale).
+
+```{r ch8fig5, fig.cap = chuck(CH8_FIG_CAPTIONS, 'FIG5'), out.width = "100%"}
+FIG <- pluck(CH8_FIG_LIST, 5)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+We simulate two candidate-donor age matching policies, both
+inspired by the French kidney allocation policy that was introduced in 2015
+[@Audry2022]. Like ETKAS, the French policy awards
+points for candidate waiting time, HLA matching between the donor and candidate, 
+the candidate's likelihood of being favorably matched with a kidney, and the geographic distance
+between the donor and candidate. However, in France an "age filter" is
+applied to the total number of points awarded, with candidates ranked based on
+the filtered number of points. For example, the French age filter is 0%
+for a candidate who is over 20 years older than the donor, which
+means that such candidates receive 0% of their total points for ranking.
+The French age filter is asymmetrical with allocation of kidneys from
+a young donor to an older patient discouraged more strongly than
+the allocation of a kidney from an older donor to a young candidate.
+
+Inspired by this French age filter, we evaluate two asymmetrical age filters for ETKAS
+(see Figure \@ref(fig:ch8fig6)). Both filters give a candidate 100%
+of their ETKAS points in case the age difference between the candidate and donor is 5 years or less. The "strict" filter (blue) is similar to the
+French age filter in that it gives almost no points in case the
+candidate is much older than the donor. The "muted" filter (orange)
+gives a larger fraction of the total number of ETKAS points, which we
+anticipated to be more acceptable for Eurotransplant because it
+maintains a better balance in the international exchange of kidneys.
+
+```{r ch8fig6, fig.cap = chuck(CH8_FIG_CAPTIONS, 'FIG6'), out.width = "100%"}
+FIG <- pluck(CH8_FIG_LIST, 6)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+Simulated outcomes for the muted and strict age matching policies are
+compared to the current policy in Table
+\@ref(tab:ch8tab5). The table shows that the muted
+and strict policies increase the number of age-matched transplantations (defined as
+transplantations with a candidate-donor age difference of at most five years) by 60% and 138%, respectively. 
+An unintended consequence is that the muted and strict age filters lead to reduced 
+HLA match quality at transplantation, with a 12% and 33% increase
+in the number of level 4 mismatched kidney transplantations (2 DR, or 3 or 4 B+DR
+mismatches), respectively. Table also
+\@ref(tab:ch8tab5) shows that the muted policy
+only modestly increases international sharing (+5%) and inter-regional
+sharing (+7%), while the strict policy leads to a 37% increase in
+international transplantations. The
+strict age filter increases the number of extended or rescue
+transplantations (+7\%), potentially because international offers are
+relatively more likely to be declined.
+
+To evaluate whether the benefits of candidate-donor age matching outweigh
+its unintended consequences, we use the earlier mentioned cause-specific
+hazard models to predict the probability of death with a functioning
+graft ten years after transplantation for all simulated
+transplantations. For this, we predict the cumulative incidence of death
+with functioning graft using a cause-specific hazards approach [@wreedeMstatePackageAnalysis2011]. By summing up these 10-year event probabilities
+for all candidates, we obtain the expected number of events ten years after
+transplantation, which is visualized in Figure \@ref(fig:ch8fig7) for the current policy
+(green), the muted age filter (orange), and the strict age filter
+(blue). These results suggest that the muted and strict age filter could
+reduce the numbers of deaths with a functioning graft 10 years after
+transplantation by 11% and 18%, respectively.
+
+```{r ch8tab5, tab.cap=chuck(CH8_TABLE_CAPTIONS, 'TAB5'), results='asis'}
+if (knitr::is_html_output()) {
+  
+  d_t <- readLines(chuck(CH8_TABLE_LIST, 'TAB5')) |>
+    purrr::keep(function(.x) str_detect(.x, '&')) |>
+    tail(-5) |>
+    str_remove_all('\\t') |>
+    str_remove_all('\\\\') |>
+    str_remove_all('$') |>
+    str_remove_all(fixed('hspace{1em}')) |>
+    paste0(collapse = '\n') |>
+    read_delim(
+      '&',
+      col_names = c(
+        'variable',
+        ' ',
+        'muted', 'percent_muted',
+        'strict', 'percent_strict'
+      )
+    ) |>
+    mutate_all(trimws) |>
+    mutate_all(str_replace_all, 'Plus ', '+') |>
+    mutate_all(str_replace_all, fixed('$^{'), '<sup>') |>
+    mutate_all(str_replace_all, fixed('}$'), '</sup>') |>
+    mutate_all(str_replace_all, fixed('dagger'), '&dagger;') |>
+    dplyr::rename_with(firstlow)
+  
+  # Remove any trailing numbers from colnames (if needed)
+  names(d_t) <- str_remove_all(names(d_t), '[0-9]$')
+  names(d_t)[3:6] <- ' '
+  
+  # Multi-row header: First, merge over the two columns for each policy, then the higher-level header
+  d_t |>
+    kable(format='html', escape=FALSE, align='lcrlrl') |>
+    add_header_above(
+      rlang::list2(" " = 1,
+        !!CURRENT_COL := 1,
+        "muted filter" = 2,
+        "strict filter" = 2) |> unlist()
+    ) |>
+    add_header_above(
+      c(" " = 2,
+        "Change in number of transplantations compared to current policy" = 4)
+    ) |>
+    pack_rows(
+      index = c(
+        "age difference" = 7,
+        "ABDR match quality" = 4,
+        "match geography" = 3,
+        "type of allocation" = 2
+      )
+    ) |>
+    kable_styling(font_size=14) |>
+    add_p_value_footnote(extra_text='') |>
+    cat()
+
+  
+} else if (knitr::is_latex_output()) {
+  wrap_table(
+    CH8_TABLE_LIST$TAB5,
+    my_label = 'tab:ch8tab5',
+    my_caption = chuck(CH8_TABLE_CAPTIONS, 'TAB5')) |>
+    str_split('\n') |> unlist() |>
+    insert_footnote_manually(.text = "$^{*}$ p < 0.05, $^{**}$ p < 0.01, $^{***}$ p < 0.001") |>
+    cat()
+}
+```
+
+
+`\FloatBarrier`{=latex}
+
+```{r ch8fig7, fig.cap = purrr::chuck(CH8_FIG_CAPTIONS, 'FIG7'), out.width="65%", fig.pos='h'}
+FIG <- pluck(CH8_FIG_LIST, 7)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+}
+if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+
+`\FloatBarrier`{=latex}
+
+## Discussion and conclusion {#sec:etkidneydiscussion}
+
+Eurotransplant has long recognized the important role computer simulations could have for
+allocation development. For example, in the one-year evaluation of ETKAS that was
+published in 1998, the organization stressed that *"introduction of a change must be
+preceded by a computer simulation study"*
+[@demeesterNewEurotransplantKidney1998]. However, Eurotransplant has
+only recently started the development of tools required for such
+simulation studies, with initiatives including the development of the ELAS simulator 
+(see Chapter \@ref(CHelassimulator)) and the passing a recommendation by the Thoracic
+Committee to develop a simulation tool for heart and lung allocation in 2024. 
+Within this line of research, we present the ETKidney
+simulator.
+
+Discrete-event simulators are already routinely used to update allocation rules in other
+geographic regions
+[@Pritsker1995; @Mumford2018; @jacquelinetChangingKidneyAllocation2006].
+The most prominent simulator for kidney allocation is the Kidney-Pancreas Simulated Allocation
+Model (KPSAM), which was developed to simulate kidney allocation in the United States and which is made publicly available for research by the SRTR. KPSAM differs
+from the ETKidney simulator in several aspects. Firstly, KPSAM users have to
+manually specify in simulation inputs when a candidate would list for a
+repeat transplantation, as well as how their statuses would
+evolve after their return to the waiting list; in the ETKidney simulator, simulation of re-listings is instead
+based on historical data. Secondly, in KPSAM the graft offer acceptance behavior is
+simulated according to a single, patient-level logistic regression, while the ETKidney simulator additionally includes logistic
+regressions at the center level to capture that centers regularly
+decline kidneys for all their candidates. Thirdly, in KPSAM the kidneys that
+become available for allocation are discarded after a fixed number of offers, while
+the ETKidney simulator has functionality to simulate based on donor characteristics
+after how many offers Eurotransplant would stop offering the kidney in standard allocation.
+Thereafter, the ETKidney simulator switches to non-standard
+allocation. Such out-of-sequence offering is not simulated in
+KPSAM.
+
+More important than these technical differences is that the ETKidney
+simulator is a bespoke model for Eurotransplant, which implements
+Eurotransplant-specific allocation mechanisms such as the points for the mismatch
+probability and the balance system that Eurotransplant uses to balance the
+international transfer of kidneys. Eurotransplant needs such a
+bespoke model in its communication with national competent authorities, who
+are interested not only in the overall effects of policies but also in
+the specific impacts that the policy changes have on their national waiting list populations.
+`\newpage`{=latex}
+To build trust in the simulator, we have used input-output validation to
+show that the simulator can closely approximate contemporary
+transplantation patterns of ETKAS and ESP. Results of this validation
+exercise were discussed with medical doctors from Eurotransplant, and
+presented at the Eurotransplant Annual Meeting to additional major
+stakeholders, including representatives from national competent authorities
+as well as medical professionals from the kidney transplant centers. In
+the view of many of these stakeholders, the simulator has become a useful
+tool for kidney allocation policy development as we have also demonstrated in this
+chapter through three clinically motivated case studies.
+
+From discussions with ETKAC, ETRL and other stakeholders, it became
+clear that the policies proposed in these case studies have to be refined further. The
+first case study focused on HLA matching at the A, B, and DR
+loci. This focus was motivated by the fact that HLA-B 
+and HLA-DR are most strongly associated with graft loss in Eurotransplant. However,
+HLA matching in kidney transplantation also aims to prevent _de novo_ 
+sensitization. Recent literature has shown that HLA-DQ mismatches are most 
+strongly associated with antibody formation [@Tambur2021; @Isaacson2022]. 
+Further simulations should explore how HLA-DQ matching can be included in ETKAS.
+
+The aim of the second case study was to develop a sliding scale
+that provides 
+candidates with vPRAs below 85% with equality of opportunity in ETKAS. This aim was based on the fact that candidates with a
+vPRA >85% may have access to the AM program. However, it has
+been observed that certain patient groups in the AM program are
+transplanted within months of entering the program [@Heidt2015], which 
+suggests that these candidates may not require priority that is given by the
+AM program. 
+Based on these findings, ETRL and Eurotransplant's advisory committees have
+recommended changing the AM entry criterion to a donor frequency of 2%, which
+corresponds to a vPRA of approximately 95%. The sliding scale proposed in this case study should be revised to ensure that candidates with vPRAs between 85% and 
+95% are not disadvantaged in ETKAS.
+
+The final case study suggested that continuous candidate-donor age matching is
+a promising avenue to improve kidney allocation in Eurotransplant, because it
+substantially reduces the number of post-transplant deaths with a functioning
+graft. However, these reductions are partly due to a decrease in transplantations
+among candidates aged 55 and older. A question that
+should be explored further is whether these candidates should be given access 
+to donors aged 65 and over, as was already unanimously recommended in a 2018 European
+Consensus Meeting [@Ssal2020]. Such access could be achieved by allowing 
+candidates between 55 and 65 to participate in ESP, or by allocating
+donors aged over 65 via ETKAS. The preferred route should be discussed together
+with the advisory committees and national competent authorities.
+`\newpage`{=latex}
+We acknowledge that the ETKidney simulator also has limitations.
+Firstly, the graft offer acceptance models and post-transplant survival models
+are calibrated to historical data. These models may lack external
+validity for future post-transplant survival and future offer acceptance
+behavior. An example of this, encountered during input-output
+validation, is that the simulator appears to underestimate the number of
+transplantations in immunized candidates after the introduction of the virtual
+crossmatch in Eurotransplant in January 2023. This limitation could be addressed
+by refitting the organ acceptance models in the future on more
+contemporary data. A second limitation is that validation was only based on
+historical input-output validation. Ideally, we would have been able to
+observe ETKAS and ESP outcomes under alternative allocation
+rules, and study whether the simulator would be able to capture
+simulated outcomes under these alternative rules [@sargent2020].
+Unfortunately, this was not feasible, since ETKAS and ESP allocation rules
+have undergone only minimal changes since their introductions in 1996 and 1999,
+respectively. A final limitation is that Eurotransplant is not allowed
+to publicly release information that could potentially identify its
+donors and candidates, which prevents exact reproduction of our simulations by external parties. We have tried to address this
+limitation by making synthetic data available on which kidney
+allocation can be simulated.
+
+In conclusion, we are confident that the ETKidney simulator is a valuable tool
+for quantifying the impact of kidney allocation policy changes in
+Eurotransplant, as we demonstrated with three clinical case studies. We
+anticipate that the simulator can play a pivotal role in modernizing
+ETKAS and ESP allocation rules, in collaboration with subject-matter
+experts from ETKAC, the ETRL, and national competent authorities.

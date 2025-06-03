@@ -1,0 +1,48 @@
+# Summary {-}
+
+```{=latex}
+\addcontentsline{toc}{chapter}{Summary}
+\markboth{SUMMARY}{SUMMARY}
+```
+
+Every year, more than 6,000 organ transplantations are performed in the eight
+European countries that participate in Eurotransplant. Despite this, the persistent
+shortage of donor organs means that about 1,000 patients die annually while waiting for
+an organ transplantation.
+
+Eurotransplant is responsible for offering the deceased-donor organs to 
+the candidates who await a transplantation. To which patient Eurotransplant makes
+an offer is determined by allocation rules, which have been shaped by almost six decades of
+scientific, legal, and ethical discussions between Eurotransplant and
+the national competent authorities of the eight member countries. Eurotransplant 
+has implemented these rules in allocation algorithms, which determine which candidates
+are eligible to receive an organ offer, and in what order they ought to be contacted.
+
+A central goal of Eurotransplant's allocation systems is that patients should have an equal opportunity
+of receiving a transplant. A first goal of this thesis is to study research questions
+relating to such equality of opportunity. Our results show there is room
+for improvement. For example, female patients on the liver waiting list are more 
+likely to experience an adverse outcome than male patients. We link
+this disparity to the smaller body size of female transplantation candidates --
+and not sex itself, as is suggested by the existing literature. Similarly,
+kidney transplant candidates who are immunized face reduced access to transplantation
+under the current rules. This latter disadvantage persist even though Eurotransplant
+has implemented special mechanisms to support these groups.
+
+One reason why such disadvantages persist is that Eurotransplant lacks the tools
+to quantify the impact of policy changes. This complicates discussions within
+Eurotransplant's advisory committees on how the allocation can be improved. To
+overcome this barrier, the second goal of this thesis is to develop discrete-event
+simulators for liver and kidney allocation. These tools allow Eurotransplant
+to assess the impact of alternative allocation policies on waiting list outcomes,
+and can facilitate collaborations with clinicians, policymakers, and other stakeholders on how
+allocation can be improved. We validated these simulation
+tools on historic data, and the simulators already support discussions within
+Eurotransplant on how policies can be improved. For example, the liver simulator
+has been used to support discussions on switching to a new score for liver allocation.
+
+Although these tools do not eliminate the difficult ethical trade-offs involved
+in organ allocation, they help Eurotransplant by making these trade-offs explicit. 
+Thereby, the simulators can pave the way for a more informed and constructive dialogue
+among clinicians, policymakers, and other stakeholders on how the allocation of
+deceased-donor organs can be improved.

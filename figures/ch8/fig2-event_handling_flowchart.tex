@@ -1,0 +1,173 @@
+\sffamily
+\usetikzlibrary{arrows.meta}
+\tikzset{
+	>={Latex[width=2mm, length=1mm]}
+}
+\tikzstyle{decision}=[diamond, draw, fill=yellow!20, aspect=2,
+text width=7em, text badly centered, node distance=2cm,
+inner sep=0pt]
+\tikzstyle{block}=[rectangle, draw, fill=blue!10, 
+text width=8em, text badly centered, rounded corners, minimum height=3.5em]
+\tikzstyle{line}=[draw, line width=.7pt, color=black!75, -{Latex[width=2.5mm,length=1mm]}]
+\tikzstyle{headlessline}=[draw, line width=.7pt, color=black!75]
+\tikzstyle{input}=[trapezium, trapezium left angle=84, trapezium right angle=96, draw, fill=green!20, text width=8em,
+minimum height=3em]
+
+\usetikzlibrary{positioning}
+\begin{tikzpicture}[node distance=2cm, every node/.style={font=\fontsize{11.5pt}{13pt}\selectfont}, auto]
+	
+	% Simulation initialization & iteration over the Future Event Set
+	\node [block, text width = 8em] (init) {initialize waiting lists, balances, and FES};
+	\node [decision] (next_event) [below of=init, align=center, text width = 5.5em, yshift=0cm, xshift=0.4cm] {next event};
+	
+	% Events relating to a donor event
+	\node [block] (matchlist) [right of=next_event, xshift=3cm, yshift=1cm, text width=10em] {advance clock \& create unfiltered ETKAS or ESP match list};
+
+	%Offer acceptance 
+	\node [block, align=left] (accmodule) [right of=matchlist, text width = 14.5em, xshift=3.8cm] {simulate: \vspace{-.2cm}\hspace*{-.5cm}
+	\begin{itemize}[noitemsep, leftmargin=*]
+		\item offer acceptance behavior
+		\item non-standard allocation
+		\item dual kidney transplantation
+		\end{itemize}};
+	
+	
+	\node [decision] (all_accepted) [below of=accmodule, yshift=-.5cm, xshift=.9cm, text width=5.2em] {all kidneys\\accepted?};
+	\draw[line] ([xshift=9mm]accmodule.south) -- (all_accepted.north);
+
+	\node [decision] (discards_allowed) [left of=all_accepted, xshift=-1.9cm, text width=4.5em] {discards\\allowed?};
+
+	\node [block] (force_acceptance) [xshift=-.2cm, below of=discards_allowed, text width=5.4em] {force\\acceptance};
+		
+	
+	% Simulation of a transplantation	
+	\node [block, align=left] (posttransplant_module) [below of=accmodule, text width=15em, yshift=-6cm] {\vspace{-.45cm}\hspace*{0cm}
+		\begin{itemize}[noitemsep, leftmargin=*]
+			\item simulate survival time
+			\item simulate time-to-listing for a repeat transplantation
+			\item create synthetic re-listings, if applicable
+	\end{itemize}};
+	
+
+	\draw[line] (all_accepted.south) node[right, xshift=0cm, yshift=-.2cm] {yes} |- ([xshift=-1.8cm, yshift=.6cm]force_acceptance.east -| posttransplant_module.north) --  ([xshift=-1.8cm]posttransplant_module.north);
+	\draw[line] (all_accepted) -- (discards_allowed.east) node[midway,above] {no};
+	\draw[line] (discards_allowed.south) -- (discards_allowed.south |- force_acceptance.north) node[midway,left] {no};	
+	% Processing of an international AM / combined transplantation
+	\node [block] (am_balance_update) [below of=next_event, yshift=-1.2cm, text width=8em] {advance clock \& update country import/export balances};
+	
+	% Processing of patient events
+	\node [block] (patient_update) [right of=am_balance_update, xshift=1.2cm, text width = 6em] {advance clock \& update patient information};
+	\node [decision] (patient_remains_waiting) [below of=patient_update, yshift=-.3cm, text width=3.5em] {still\\waiting?};
+	
+	\node [block] (record_exit) [below of=patient_remains_waiting, text width=6.7em, xshift=1.5cm, yshift=.2cm] {schedule next status update for patient in FES};
+	\node [block] (schedule_new_event) at (am_balance_update |- record_exit) [text width = 7em, xshift=1.6cm] {record waiting list death or removal for the patient};
+	
+	% Termination of simulation after simulation end time is reached
+	\node[decision] (time_termination) [below of=am_balance_update, yshift=-5cm, text width=7.2em]{simulation end\\time reached?};
+	
+	% Blocks for recording transplantation & discards
+	\node [block, align=left] (record_transplant) at ([yshift=-.5cm]posttransplant_module |- time_termination) [text width = 16.5em] {update system state:
+		\vspace{-.3cm}\hspace*{-.5cm}
+		\begin{itemize}[noitemsep, leftmargin=*]
+			\item record transplantation(s)
+			\item de-list transplant recipient(s)
+			\item update balances in case of cross-border transplantation(s)
+			\item add synthetic re-listing(s) to waiting list
+	\end{itemize}};
+	\draw[line] ([xshift=-13mm]posttransplant_module.south) -- ([xshift=-13mm]record_transplant.north);
+	\node [block] (record_discard) [below of=force_acceptance, xshift=-1.4cm, yshift=.3cm, text width = 4em] {record discard};
+	
+	\draw[line] (discards_allowed.west) -| (record_discard.north) node[midway,left] {yes};
+	
+	% Simulation termination
+	\node [block] (termination) [left of=record_transplant, text width=14em, yshift=-.9cm, xshift=-4.5cm] {write out patient states and transplantations \& terminate simulation};
+	
+	% Simulation data input streams
+	\node [input] (inputs) [above of=init, text width=10em, yshift=.22cm, xshift=0cm] {
+		simulation inputs \& data input streams
+	};
+	
+	% Match list modules specifying allocation rules
+	\node [input] (rules) [above of=matchlist, text width=13em, yshift=.64cm, xshift=-.6cm] {
+		match list module:
+		\vspace{-.3cm}\hspace*{-.5cm}
+		\begin{itemize}[noitemsep, itemsep=-.2ex, leftmargin=*]
+			\item eligibility, filtering, and ranking criteria
+			\item geographical definitions
+			\item HLA match definitions
+		\end{itemize}
+	};
+	
+	% Acceptance module
+	\node [input] (accmodule_parameters) [above of=accmodule, text width=17em, yshift=.64cm, xshift=-.25cm] {
+		graft offering module:
+		\vspace{-.32cm}\hspace*{-.5cm}
+		\begin{itemize}[noitemsep, itemsep=-.2ex, leftmargin=*]
+			\item odds ratios for offer declines and dual kidney transplantation
+			\item hazard ratios for number of offers until rescue
+		\end{itemize}
+	};
+	
+	% Post-transplant module
+	\node [input] (posttxp_parameters) [above of=posttransplant_module, text width=12em, xshift=.9cm, yshift=.75cm] {
+		post-transplant module:
+		\vspace{-.3cm}\hspace*{-.5cm}
+		
+		\begin{itemize}[noitemsep, leftmargin=*]
+			\item survival parameters
+			\item actual re-listings
+			\item re-listing probabilities
+		\end{itemize}
+	};
+	
+	
+	% --------- Connecting all blocks and decisions  -----
+	\draw[densely dotted,line] (inputs.south) -| (init.north);
+	\draw[line] ([xshift=4mm]init.south) -- (next_event.north);
+	
+	% --------- Donor events -----
+	\draw[line] (next_event.east) -| ([xshift=.5cm]next_event.east |- matchlist.west) -- (matchlist.west) node[midway,above,align=center]{donor\\event};
+	 node[midway,left,align=center, yshift=.3cm] {no};
+	\draw[line] (matchlist.east) -- +(0.1, 0) -| ([xshift=-5mm]accmodule.west) -- (accmodule.west);
+	
+	
+	\draw[headlessline] (force_acceptance.east) -- ([xshift=-1.8cm]force_acceptance.east -| posttransplant_module.north) node[midway,left] {};
+	
+	\draw[line] (record_transplant.west |- time_termination.east) -- (time_termination.east);
+	
+	\draw[line] (schedule_new_event.south) |- ([yshift=3mm]time_termination.north) -- (time_termination.north);
+	\draw[line] (record_discard.south) |- (time_termination.east);
+	\draw[line] (record_discard.south) -- (record_discard.south |- time_termination.east);
+	
+	\draw[line] (record_exit.south) |- (time_termination.east);
+	\draw[line] (record_exit.south) -- (record_exit.south |- time_termination.east);
+	\draw[line] (time_termination.west) -- +(-.15,0) node[midway,right, yshift=.75cm] {no} |- (next_event.west);
+	
+	% Arrows for termination of the simulation
+	\draw[line] (time_termination.south) |- ([yshift=-.2cm]termination.west) node[midway,left] {yes};
+	
+	% ---- Patient update connections
+	
+	\draw[line] (next_event.east) -| ([xshift=.5cm]next_event.east) |- ([yshift=0.8cm]patient_update.north) -- (patient_update.north) 
+	node[midway,right,align=center, xshift=-1.5cm, yshift=1cm]{patient\\event} ;
+	\draw[line] (patient_update.south) -- (patient_remains_waiting.north);
+	\draw[line] (patient_remains_waiting) -| (schedule_new_event) node[midway,above, xshift=0cm] {no};
+	\draw[line] (patient_remains_waiting.east) -| (record_exit.north) node[midway,above] {yes};
+	
+	% ---- AM / combined transplantation connections
+	\draw[line] (next_event.south) -- (am_balance_update.north) node[midway, left, align=center, yshift=1mm] {balance\\update\\event};
+	
+	\draw[line] (am_balance_update.south) -- (time_termination.north);
+	
+	
+	\pgfdeclarelayer{background}
+	\pgfsetlayers{background,main}
+	% add the box to the background layer
+	\begin{pgfonlayer}{background}
+		\draw[densely dotted,line] (rules.south) -- (rules.south |- matchlist.north);
+	\end{pgfonlayer}
+	
+	\draw[densely dotted,line] (accmodule_parameters.south) -- ([xshift=-2.5mm] accmodule.north);
+		
+	\draw[densely dotted,line] (posttxp_parameters.south) -- (posttxp_parameters.south |- posttransplant_module.north);
+\end{tikzpicture}

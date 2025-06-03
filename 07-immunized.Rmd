@@ -1,0 +1,650 @@
+
+```{r, include=FALSE}
+library(tidyverse)
+library(pander)
+library(kableExtra)
+library(purrr)
+library(readxl)
+library(glue)
+
+knitr::opts_chunk$set(results = 'show', echo = FALSE, fig.pos='ht',
+                      fig.align = 'center',
+                      message = FALSE, warning = FALSE)
+
+source('R/R_functions.R')
+
+# create variable to resize figures depending on output
+if (knitr::is_latex_output()) {
+  out_width <- "130mm" # for latex, this should be the max width
+} else {
+  out_width <- NULL # for html, don't scale
+}
+
+FIG_FOLDER <- 'figures/ch7/'
+
+CH7_FIG_LIST <- list(
+  FIG1='figure1',
+  FIG2='figure2',
+  FIG3='figure3',
+  FIG4='figure4',
+  SFIG1='supp_figure_1',
+  SFIG2='supp_figure_2'
+) |>
+  map(
+    ~ paste(FIG_FOLDER, .x, sep = '/')
+  )
+
+CH7_FIG_CAPTIONS <- list(
+  FIG1 = "Relation between the relative ETKAS transplant rate and vPRA. This relation was estimated with a Cox proportional hazards model using vPRA as a time-varying variable and adjustment for other variables. The solid grey line was estimated using penalized spline terms with 8 degrees of freedom; the dotted lines were obtained by adjusting for discretized vPRA. Labels indicate point estimates of the hazard ratios for vPRA categories with 95% confidence intervals.",
+  FIG2 = "Predicted conditional probabilities of being transplanted within four years 
+  upon entering the waiting list with two years of dialysis time, stratified by blood group
+  and listing country. Predictions were made for a 49-year-old, male candidate who was listed for their first kidney transplantation. For Germany, distributions are displayed per DSO region.",
+  FIG3 = "Sensitivity checks for the relation between the vPRA and relative transplant rate. Panel (a) shows penalized spline terms estimated separately for German allocation regions and Eurotransplant countries. Panel (b) shows penalized spline terms estimated separately for patients already on the waiting list on January 1, 2016, versus those registered afterwards. Panel (c) assesses whether the spline term is affected by whether a time-varying vPRA is used. Panel (d) shows how the relation between the relative transplant rate and vPRA varies by quantiles of the number of 0 DR-matchable donors. Panels (a), (b), and (d) use vPRA as a time-varying variable.",
+  FIG4 = "Mismatch probability points awarded to immunized patients based on their vPRA. Each dot represents an immunized patient in the cohort. Statistics were obtained by calculating the difference in MMP calculated with the actual vPRA versus the MMP calculated with a vPRA of 0%.",
+  SFIG1 = "Distributions of the vPRA (%) per center for immunized patients who were active on the kidney transplant waiting list between January 1, 2016, and January 1, 2020.",
+  SFIG2 = "Predicted conditional probabilities of being transplanted within the next 4 years upon entering the waiting list with 2 years of dialysis time, for combinations of blood group and German allocation region. Predictions were made for a 49-year-old, male primary transplant candidate."
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+
+TAB_FOLDER <- 'raw_tables/ch7/'
+
+CH7_TAB_FILES <- list(
+  `TAB1` = 'tab1-data.xlsx',
+  `TAB2` = 'tab2-data.xlsx',
+  `STAB1` = 'stab1.xlsx'
+) |>
+  map(
+    ~ paste(TAB_FOLDER, .x, sep = '/')
+  )
+
+CH7_TABLE_CAPTIONS <- c(
+  `TAB1` = "The baseline characteristics of our patient cohort, stratified by level of the vPRA. The Kruskal-Wallis test was used for group comparisons of continuous variables. Fisher's exact test was used for group comparisons of categorical variables.",
+  `TAB2` = "Hazard ratios estimated in the time-to-offer analyses. The hazard ratios were estimated with a Cox proportional hazards model that uses vPRA as a time-varying variable and adjusts for other variables.",
+  `STAB1` = "Immunization statuses of patients on the ETKAS waiting list on June 1st per year. Shown are the number of immunized patients (with a fraction of the total number of patients that have an active registration), and the median vPRA for immunized patients."
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+```
+
+# Access to transplantation for immunized candidates {#CHvpra}
+
+`\chaptermark{Immunization}`{=latex}
+
+
+`r if (knitr::is_latex_output()) '\\vfill'`
+
+---
+
+`\noindent`{=latex}
+An article based on this chapter has appeared in _Transplantation_, de Ferrante, H.C., Smeulders, B.M.L., Tieken, I., Heidt, S., Haasnoot, G., Claas, F.H.J., Vogelaar, S., Spieksma, F.C.R., 2023. [10.1016/j.ajt.2024.06.018](https://doi.org/10.1097/TP.0000000000004687) [@deferranteImmunizedPatientsFace2023]
+
+`\newpage`{=latex}
+`\normalsize`{=latex}
+
+`<p><strong>Abstract</strong></p>`{=html}
+`\subsubsection*{Abstract}`{=latex}
+
+The presence of donor-specific antibodies (DSAs) before
+transplantation is associated with graft rejection and poor
+transplantation outcomes. Kidney transplant centers can assign HLA
+antigens as unacceptable, to prevent kidney offers against which their
+candidates have developed clinically relevant antibodies. In this chapter, we assess
+to what degree having unacceptable antigens affects access to transplantation
+in ETKAS. 
+
+For this, candidates for kidney-only transplantation listed
+between January 1, 2016, and January 1, 2020 were included (n=19,240).
+Cox regression was used to quantify the relation between the relative
+transplant rate and the vPRA. Models used accrued dialysis time as
+the timescale, were stratified by patient country and blood group, and
+adjusted for non-transplantable status, patient age, sex, history of
+kidney transplantation, and the prevalence of 0 HLA-DR mismatched donors in
+Eurotransplant's donor pool.
+
+Transplant rates were 23% lower for vPRA >0--50%, 51%
+lower for vPRA 75--85%, and decreased rapidly for vPRA >85%
+(p < 0.001). The inverse relation between transplant rate and vPRA is
+independent of Eurotransplant country, listing time, and the availability
+of donors with 0 HLA-DR mismatches. Results were similar when quantifying the
+relation between vPRA and the attainment of a sufficiently high rank for
+ETKAS offer, which suggests that the lower transplant rates for immunized
+patients are due to ETKAS allocation, and not the offer acceptance behavior
+of kidney transplant centers. We conclude that the current ETKAS allocation mechanism
+inadequately compensates immunized patients for reduced access to
+transplantation.
+
+
+`\newpage`{=latex}
+`\normalsize`{=latex}
+
+
+##  Introduction
+
+The presence of pre-formed HLA antibodies restricts a candidate's 
+potential donor pool, which could imply that immunized candidates face
+prolonged waiting times. In Eurotransplant, highly immunized candidates
+(vPRA >85%) may access the AM program, in which more than half
+of the patients are transplanted within a year of entry [@Heidt2021].
+However, fewer than 10% of the immunized candidates meet the AM entry criteria,
+and the remaining 90% of immunized candidates depend on ETKAS for access to transplantation.
+
+In ETKAS, immunized candidates are indirectly prioritized via the mismatch
+probability, which is the probability that among the next 1,000
+reported donors, there is no blood group-identical donor, who has no HLA antigens
+unacceptable to the candidate and who has at most 1 HLA mismatch with the candidate.
+However, it has been questioned
+whether enough points are given to the mismatch probability to avoid prolonged
+waiting times for immunized candidates [@susal2015]. An additional problem
+is that an increased vPRA may only marginally increase the mismatch probability
+for some patient groups, such as candidates with a difficult-to-match HLA typing
+or those with blood group AB [@ziemannUnacceptableHumanLeucocyte2017]. These criticisms suggest that the 
+priority currently awarded to immunized patients in ETKAS is insufficient.
+
+In Eurotransplant, two prior studies have examined the relation between the relative
+transplant rate and immunization, both using cohorts from Germany. These
+studies used the vPRA to quantify immunization status. Firstly, a six-center
+study by Ziemann et al. studied the impact of vPRA on
+time-to-transplantation with a 2012 cohort, using Cox proportional
+hazard (PH) models with time elapsed since 2012 as the timescale
+[@ziemannUnacceptableHumanLeucocyte2017]. Adjusting for blood group,
+accrued dialysis time, and the vPRA, Ziemann et al. reported that a 1%
+increase in vPRA is associated with an approximate 1% decrease in
+transplant rate. A limitation of the Ziemann et al. study is that
+the 2012 cohort precedes the actual implementation of the vPRA in Eurotransplant,
+such that those vPRA values may not be a reliable proxy for a candidate's
+degree of immunization.
+
+Zecher et al. [@zecherImpactSensitizationWaiting2022a] studied the
+relation between vPRA and the transplant rate with a 2019 German
+population-wide cohort. Instead of the time a candidate had spent on the
+waiting list, Zecher et al. used time-on-dialysis as the timescale. 
+Adjusting for recipient age, sex, blood group, percentage time being
+transplantable, allocation region, and enrolment in the AM program,
+Zecher et al. described that only highly immunized patients (vPRA >85%) have
+significantly lower transplant rates in Germany (42% lower). Whether
+this finding is generalizable to other Eurotransplant member countries is
+an open question, because dialysis time is a bottleneck in Germany but not
+in Eurotransplant's other member countries.
+`\newpage`{=latex}
+In this chapter, we examine the relation between the vPRA 
+and the relative transplant rate, using a 2016 to 2020 cohort of
+all kidney-only transplant candidates on the ETKAS waiting list. Unlike
+the aforementioned studies, we were able to use vPRA as a time-varying variable,
+and can adjust for a candidate's non-transplantable status. 
+
+##  Materials and methods
+
+### Study population and data
+
+Kidney-only transplant candidates on the ETKAS waiting list between
+January 1, 2016, and January 1, 2020 were included. The start date of
+January 1, 2016 was chosen because the median vPRA reported for immunized
+candidates stabilized in 2016. The end date was chosen because Covid-19
+substantially reduced transplant activity in 2020 [@putzer2022]. Candidates waiting for a living donor transplantation and
+transplant candidates with additional priority in allocation were excluded.
+The latter group included patients who require a combined transplantation, pediatric
+patients, and patients with a High Urgency (HU) status. Our analyses use
+accrued dialysis time as the timescale. This means that the transplantation
+rate could not be modeled for preemptively listed patients, i.e. patients who did not start dialysis before being activated on the Eurotransplant kidney
+waiting list. Patients listed
+preemptively thus entered our analysis only on the date they started dialysis, 
+and patients that were transplanted preemptively were excluded. transplant candidates 
+were censored at age 65 because candidates above this age become eligible for allocation through
+the Eurotransplant Senior Program (ESP). We also censored candidates at entry
+into the AM program.
+
+### Outcome variables
+
+Time-to-transplantation was used as the primary outcome. Patients
+waiting for a transplant on January 1, 2020 were censored, as were patients
+that were delisted for other reasons than transplantation (waiting list death or
+removal). An unmeasured confounder of the relation between vPRA and the
+transplant rate may be local (center) policies with respect to
+accepting kidney offers. For example, risk averse centers or doctors may use a
+liberal definition of unacceptability (increasing the vPRA) and have
+strict requirements for donor-recipient match quality (turning down more
+kidney offers). This risk-averseness could thereby increase the candidate's vPRA
+and prolong their waiting time, which could induce an association between the
+vPRA and the transplant rate that is not due to ETKAS allocation itself.
+`\newpage`{=latex}
+This motivated us to also assess the relation between vPRA and the kidney
+offer rate. Pivotal for this is careful definition of what constitutes
+an offer. The relation between vPRA and time to actual offer can also be
+confounded by kidney offer acceptance policies, as allocation
+profiles can be used to specify that a candidate wishes to be excluded
+from potential kidney offers (for example, based on donor age, extended
+criteria donors, and HLA match quality). To avoid confounding bias in a
+time-to-offer analysis, we define time-to-offer as the first time a
+patient was ranked high enough on a kidney match list to have received
+an actual offer (ignoring offer turndowns due to allocation profiles). This
+information is retrievable from unfiltered match lists from the
+Eurotransplant database. We refer to this outcome as "time-to-any-offer".
+
+This time-to-any-offer may be of limited clinical relevance. For instance,
+it could be that the offered kidney had a poor HLA match quality with the
+candidate, or that the kidney was first declined by many other candidates for
+quality reasons. We therefore also assess the relation between vPRA and a 
+"high-quality" offer, where "high quality" is defined as an offer with no HLA-DR
+mismatches that was declined for quality reasons by fewer than five higher-ranked
+candidates.
+
+### Adjustment variables, transformations, and stratification
+
+Multivariable Cox proportional hazards (PH) models were used to study
+the relation between the vPRA and the transplant rate. The vPRAs used
+were calculated against ETRL donor panel (v3.0), which includes HLA data on the
+serological split level for HLA-A, -B, -C, -DR and -DQ. We note that centers and
+local HLA laboratories may have differing policies in labeling antigens as
+unacceptable [@ziemannUnacceptableHumanLeucocyte2017]. For over
+half of immunized patients the set of unacceptable antigens changed
+while on the ETKAS waiting list. This motivated use of vPRA as a
+time-varying variable.
+
+Cox models used time-on-dialysis as the timescale, since ETKAS
+allocation is driven by accrued dialysis time and not waiting time. 
+A potential issue with using time-on-dialysis as the time
+scale is that patients may have started with dialysis before they
+were listed for kidney transplantation in ETKAS. Such previously accrued dialysis time could bias the analysis,
+as a standard Cox model would consider patients with previously accrued
+dialysis time to have been at risk of transplantation before they were
+actually listed on the kidney waiting list of Eurotransplant. To avoid such bias, we estimate the
+relation between vPRA and waiting list outcomes using the extended Cox model,
+which allows for delayed entry.
+`\newpage`{=latex}
+One prior study did not use a non-linear transformation for vPRA [@ziemannUnacceptableHumanLeucocyte2017], 
+which implicitly makes the assumption that an increase from vPRA 0% to 1% has
+the same effect as an increase from 99% to 100%. This assumption is implausible,
+because a candidate with a vPRA of 1% can still access 99% of donors, while a
+candidate with vPRA 100% cannot receive any offers. Another study allowed for
+a non-linear effect of vPRA by discretizing the vPRA (0%, 0.1--50%, 50.1--85%,
+85.1--95%, and >95%). One disadvantage to discretizing the vPRA is that it
+assumes that candidates in the same group (e.g., vPRA 0.1% and 50%) all have the same
+reduction in relative transplant rate. A second disadvantage is that it wastes
+statistical information [@altmanRoyston2006]. 
+We therefore use in our preferred
+specification a spline transformation for the vPRA (with 8 degrees of
+freedom). We compare this strategy to using a
+fine-grained discretization of the vPRA (0%, >0--25%, 25--50%, 50--75%,
+75--85%, 85--95%, 95--99%, 99--100%).
+
+Confounders adjusted for in the analysis are the patient age at listing, patient
+sex, and the number of previously received kidney transplants (none, 1 or 2+). For each
+patient, we also counted the number of 0 HLA-DR mismatched kidneys among
+the last 10,000 donors reported to Eurotransplant (ignoring blood group identity),
+and adjusted for this number in our analyses. We adjusted for the HLA-DR locus
+because this locus most strongly affects outcomes after kidney transplantation.
+We did not adjust for the mismatch probability because the mismatch probability
+is indirectly based on the vPRA, which leads to issues of multicollinearity.
+Finally, we adjusted for whether the patient
+was non-transplantable (time-varying variable). All these confounders have to be
+reported to Eurotransplant to activate a candidate on the kidney waiting list, such
+that there was no missing data. We adjusted for penalized spline terms of 
+continuous confounders with 4 degrees of freedom (candidate age and the number of 0 
+HLA-DR mismatched kidneys).
+
+How much dialysis time a candidate needs in order to receive an offer
+through ETKAS strongly depends on their country of listing and
+blood group. Such heterogeneity makes a proportional hazards assumption for 
+blood group and recipient country implausible and motivated us to stratify Cox
+proportional hazards models by recipient country and blood group. Within Germany, we
+stratified based on the seven organ procurement regions because donor availability
+differs by region.
+`\newpage`{=latex}
+
+## Results
+
+This study included 19,420 patients on the ETKAS waiting list between
+January 1, 2016, and January 1, 2020 (see Table \@ref(tab:ch7tab1)). In total, 
+1,316 patients were excluded because they were transplanted preemptively.
+Unacceptable antigens were reported for 21% of the candidates that met inclusion
+criteria, either at registration or before study start (January 1, 2016). For almost
+21% of patients this first set of unacceptable antigens reported was updated after
+their registration, or after study start. In total, unacceptable antigens were
+reported for almost 30% of patients during the study period. Immunization
+(defined as vPRA >0%) was associated with being female, having had a previous
+transplantation, having accrued more time on dialysis, and having spent more time on 
+the waiting list (p < 0.001, see Table \@ref(tab:ch7tab1)).
+Figure \@ref(fig:ch7fig1) plots per Eurotransplant center
+the distribution in vPRA for immunized patients. Although there is
+center-to-center variation in reported vPRAs, most variation in
+vPRA is at the patient level.
+
+```{r ch7tab1, tab.cap=chuck(CH7_TABLE_CAPTIONS, 'TAB1')}
+d_tab <- read_excel(
+  chuck(CH7_TAB_FILES, 'TAB1')
+) |>
+  janitor::remove_empty(which='rows') 
+
+d_tab$level[13] <- paste0(d_tab$level[13], '%')
+
+d_tab$group <- firstlow(d_tab$group)
+d_tab$level <- firstlow(d_tab$level)
+
+hdr <- c(` ` = 1, table(factor(zoo::na.locf(d_tab$group), levels=unique(d_tab$group))))
+names(hdr) <- format_dates(names(hdr))
+     
+  
+if (knitr::is_html_output()) {
+  
+  names(d_tab)[ncol(d_tab)] <- ' '   
+  d_tab$level <- recode(d_tab$level, `median [Q1-Q3]` = 'median<br>[Q1-Q3]')
+  d_tab |>
+    mutate(across(where(is.character), replace_na, '')) |>
+    select(-group) |>
+    kable(format='html', align='lccccc', escape=FALSE) |>
+    pack_rows(index=hdr) |>
+    kable_styling(font=14) |>
+    add_header_above(
+      c(` ` = 1, `by vPRA` = 4, `total` = 1)
+    )
+
+} else if (knitr::is_latex_output()) {
+  
+  names(d_tab)[ncol(d_tab)] <- ' '       
+  
+  d_tab |>
+    mutate(across(where(is.character), replace_na, '')) |>
+    select(-group) |>
+    kable(format='latex', booktabs=TRUE, align = 'lccccc') |>
+    kable_styling(latex_options='scale_down') |>
+    pack_rows(index=hdr) |>
+    plyr::rename(c(level = ' ')) |>
+    column_spec(
+      1, width='3.7cm'
+    ) |>
+    add_header_above(
+      c(` ` = 1, `by vPRA` = 4, `total` = 1)
+    )
+}
+```
+
+
+```{r ch7sfig1, fig.cap = chuck(CH7_FIG_CAPTIONS, 'SFIG1'), out.width = "100%"}
+FIG <- chuck(CH7_FIG_LIST, 'SFIG1')
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+}
+```
+
+`\FloatBarrier`{=latex}
+
+### The association of the vPRA with ETKAS transplant rates
+
+The curve in Figure \@ref(fig:ch7fig1) shows the estimated relation between
+the relative transplant rate and the vPRA. The relative transplant rate
+decreases with a higher vPRA. Adjusting for vPRA categories rather than
+with a spline term yields similar results (horizontal dotted lines,
+Figure \@ref(fig:ch7fig1)). The relative transplant rate for patients with vPRA
+0.1-50% is estimated to be 23% lower than non-immunized patients, and
+51% lower for patients with vPRA 75--85%. For vPRAs exceeding 85%, the
+relative transplant rate decreases rapidly: it is 65% lower for candidates
+with vPRA ranging between 85% and 95% than for non-immunized candidates, and 94%
+lower for candidates with vPRAs ranging between 99 and 100%.
+
+```{r ch7fig1, fig.cap = chuck(CH7_FIG_CAPTIONS, 'FIG1'), out.width = "100%"}
+FIG <- chuck(CH7_FIG_LIST, 'FIG1')
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+### Predicted transplant probabilities for a synthetic patient across Eurotransplant regions and blood groups
+
+Figure \@ref(fig:ch7fig2) shows predicted transplant probabilities for a hypothetical
+patient based on a Cox proportional hazards model fitted with delayed entry. This
+hypothetical patient was defined as a patient who is a 49-year-old, male primary
+transplant candidate, who had accrued 2 years of dialysis time at listing 
+and who remained transplantable and non-immunized (vPRA 0%) during their waiting 
+list registration. The predicted probability of transplantation is almost 100% within the first 4
+years of registration in all Eurotransplant countries except for Germany where the
+predicted probability of transplantation is just over 25% (except for blood
+group AB). Comparing transplant probabilities across blood groups shows that 
+blood group AB patients have the highest transplant rates in Austria, Hungary, and Germany,
+but not in the Netherlands and Belgium. This suggests that a proportional
+hazards assumption is implausible for blood group and highlights the
+need for stratifying Cox models by both blood group and recipient
+location.
+
+```{r ch7fig2, fig.cap = chuck(CH7_FIG_CAPTIONS, 'FIG2'), out.width = "100%"}
+FIG <- chuck(CH7_FIG_LIST, 'FIG2')
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+}
+```
+
+###  Sensitivity checks for the main result
+
+Our main result is that a candidate's relative transplant rate decreases
+substantially with an increasing vPRA, and that this decrease accelerates for
+a vPRA exceeding 85%. Figure \@ref(fig:ch7fig3) shows sensitivity checks for this result. 
+For panel A models were re-estimated separately for German and non-German patients.
+The inverse relation between the vPRA and relative transplant rate
+is reproduced in both regions. An apparent difference between Germany and the
+other Eurotransplant member countries is that the relative
+transplant rates only appears to decrease for vPRAs greater than 50% for German candidates, 
+while a decrease is visible over the whole domain for Eurotransplant's other member countries.
+In panel B, we re-estimated models
+separately in patients registered before and after January 1, 2016, the study start
+state. This sensitivity check was motivated by the fact that
+candidates already on the waiting list on January 1, 2016 are a 
+non-representative selection
+of the kidney transplant candidate population. The estimated spline curves 
+are again very similar. In panel C, we assessed the impact of not using vPRA
+as a time-varying variable. The obtained curves differ minimally, although it appears that
+using time-fixed versions of the vPRA modestly increases effect
+sizes. Finally, in panel D we assessed sensitivity of our result to the
+availability of 0 DR-mismatched donors in Eurotransplant's donor pool. Also
+here, no meaningful differences are found.
+
+```{r ch7fig3, fig.cap = chuck(CH7_FIG_CAPTIONS, 'FIG3'), out.width = "99%"}
+FIG <- chuck(CH7_FIG_LIST, 'FIG3')
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+}
+```
+
+
+`\vfill`{=latex}
+
+`\newpage`{=latex}
+
+
+### The association of the vPRA with ETKAS offer rates
+
+The hazard ratios estimated for time-to-any-offer and time-to-high-quality-offer are
+shown in Table \@ref(tab:ch7tab2). The hazard ratios obtained for the time-to-any-offer 
+analysis (first
+row, Table \@ref(tab:ch7tab2)) differed minimally from the hazard ratios obtained for the
+relative transplant rate, at 28% lower for vPRAs 50-75%, 61% lower
+for vPRA 75--85%, and a strong decrease for vPRA >85%. When using a high-quality
+offer as an outcome the inverse relation also reproduces (second
+row), although estimated hazard ratios are attenuated. For example,
+patients with a vPRA between 75 and 85% have an approximate 33% lower high-quality
+offer rate than their non-immunized peers, while they have a 51% lower transplant
+rate and a 61% lower any-offer rate.
+
+```{r ch7tab2, tab.cap=chuck(CH7_TABLE_CAPTIONS, 'TAB2'), results='asis'}
+d_tab <- read_excel(
+  chuck(CH7_TAB_FILES, 'TAB2')
+) |>
+  janitor::remove_empty(which='rows') |>
+  plyr::rename(
+    c(`...1` = 'offer')
+  ) |>
+  mutate(
+    across(1, zoo::na.locf)
+  )
+
+d_tab$offer <- firstlow(d_tab$offer)
+
+  
+if (knitr::is_html_output()) {
+                  
+  d_tab <- d_tab |>
+    mutate(across(2:8, str_replace, '\\(', '<br>('))
+  
+  names(d_tab)[1] <- ' '
+  d_tab |> kable(format='html', escape=FALSE, align='lccccccc') |>
+    collapse_rows(1) |>
+    add_header_above(
+      c(` ` = 1, `by vPRA` = 7)
+    ) |>
+    kable_styling(font = 14) |> cat()
+
+} else if (knitr::is_latex_output()) {
+  
+  lines <- d_tab |>
+    kable(format='latex', booktabs=TRUE) |>
+    kable_styling(latex_options=c('scale_down', 'hold_position')) |>
+    collapse_rows(1) |>
+    add_header_above(
+      c(` ` = 1, `by vPRA` = 7)
+    ) |>
+    read_lines()
+  
+  lines <- gsub(
+    "(\\d+\\.\\d+) \\((\\d+\\.\\d+-\\d+\\.\\d+)\\)",
+    "\\\\makecell{\\1\\\\\\\\(\\2)}",
+    lines
+  )
+  cat(lines)
+}
+```
+
+`\FloatBarrier`{=latex}
+
+### Mismatch probability points awarded for the vPRA
+
+Immunized patients are indirectly awarded points in ETKAS through points awarded
+for the mismatch probability (MMP), which is a quantification of the frequency of favorably
+matched donors. Candidates with rare
+blood groups or difficult-to-match HLAs may receive very few extra points for being
+sensitized, as the MMP is by definition higher for candidates with rare blood groups or those with difficult-to-match HLA phenotypes. To highlight this, we calculated for
+all immunized patients the difference between mismatch probability
+points calculated based on their actual vPRA, and mismatch probability
+points with a vPRA of 0%. This difference is the number of mismatch probability
+points that the candidate received on the basis of their vPRA.
+`\newpage`{=latex}
+Figure \@ref(fig:ch7fig4) shows the distributions of MMP points that the immunized patients in our cohort received based on
+the vPRA. Immunization indeed results only in a marginal increase in the number
+of points received for candidates with rare blood groups: the median
+sensitized candidate with blood group AB receives fewer than 20 additional
+MMP points, regardless of their vPRA. Moreover, a quarter of patients with
+the highest vPRAs (>85%) receive less than 50 mismatch probability points
+based on their vPRA. The number of additional MMP points awarded based 
+on the vPRA thus appears meagre compared to the median number of ETKAS points needed for
+transplant through ETKAS, which exceeded 900 points between
+January 1, 2016, and January 1tab1, 2020.
+
+```{r ch7fig4, fig.cap = chuck(CH7_FIG_CAPTIONS, 'FIG4'), out.width = "95%"}
+FIG <- chuck(CH7_FIG_LIST, 'FIG4')
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+}
+```
+
+`\FloatBarrier`{=latex}
+
+## Discussion
+
+More than 90% of immunized kidney transplant candidates in Eurotransplant
+rely on ETKAS for access to kidney transplantation. Concerns exist that these candidates
+are inadequately served by the mismatch probability points, and that they face extended
+waiting times [@susal2015; @ziemannUnacceptableHumanLeucocyte2017; @zecherImpactSensitizationWaiting2022a].
+This motivated us to study the relation between the vPRA and relative 
+transplant rate in ETKAS. Our study is the first to quantify this relation
+Eurotransplant-wide, and complements two previous studies that used German
+cohorts [@ziemannUnacceptableHumanLeucocyte2017; @zecherImpactSensitizationWaiting2022a], 
+`\newpage`{=latex}
+We studied the relation with Cox regression stratified by blood group
+and recipient country, using accrued dialysis time as the timescale.
+In this analysis, we allowed for delayed entry and included the vPRA as a
+time-varying variable. This study design avoids some methodological issues of the
+previous studies. Dialysis time is a more appropriate timescale than
+Ziemann et al.'s time-since-listing, as ETKAS allocation prioritizes
+based on accrued dialysis time and not waiting time. Zecher et al. used
+total accrued dialysis time as the outcome, and associated this with the vPRA recorded
+on January 1, 2019, which was their study start date. This appears problematic as over half of the
+immunized patients change the set of unacceptable antigens during
+registration, which means that the vPRA recorded on January 1, 2019 is not
+pre-determined to their accrued dialysis time. Our analyses avoided this issue 
+by allowing for delayed entry of transplant candidates (not modeling 
+transplant rates before January 1, 2016) and using the vPRA as a time-varying
+variable.
+
+Our results show that a higher vPRA is associated with significantly reduced
+relative transplant rates in ETKAS. Unlike prior studies, reductions in
+transplant rates are already highly significant for vPRAs below
+85%, with transplant rates 23% lower for vPRAs from 0--50%
+(p < 0.001) and 51% lower for vPRAs 75--85% (p < 0.001). Transplant rates
+are even lower for candidates with vPRA exceeding 85%; for example, candidates with 
+vPRAs greater than 99% face 94% lower transplant rates. We note that candidates with
+vPRAs exceeding 85% may still depend on access to transplantation through ETKAS, for
+example because their center does not participate in the AM program or because
+the candidate does not meet AM criteria (unacceptable antigens require
+CDC reactivity or documentation of a sensitizing event [@Heidt2021]). 
+One possible reason why even candidates with very low vPRAs (0-10%) face
+reduced access to transplantation is that immunized candidates 
+could not be selected in non-standard allocation in the study period, which
+accounts for approximately 10% of kidney transplantations in Eurotransplant.
+
+A strength of our study is the inclusion of several sensitivity checks, which show that the inverse
+relation between vPRA and the transplant rate generalizes beyond Germany, 
+is independent of whether the patient was listed before or after 2016, and is 
+independent of the type of vPRA used (time-varying, first vPRA, or final vPRA).
+The difficulty of finding a high-quality match (defined as the number of donors
+with 0 HLA-DR matches) also does not affect the relation. 
+
+A limitation to our study is that attention was restricted to patients
+eligible for ETKAS only, with patients censored if they enrolled into the
+AM program or became eligible for ESP. Zecher et al. instead adjusted in
+their analyses for enrolment in the AM program. We did not pursue this, as
+AM allocation is not based on accrued dialysis time which makes the proportional
+hazards assumption implausible. Ziemann et al. and Zecher et al. both also
+studied time-to-transplant for ESP patients. We did not pursue this, as candidates can choose to continue their participation in ETKAS after their 65th birthday, and it is not clear how to correct for the resulting selection bias. Moreover, elderly patients listed
+in other Eurotransplant member countries can simultaneously participate in ETKAS
+and ESP, and it is unclear how to appropriately account for the simultaneous 
+participation of candidates in these in our analysis. Another limitation to our 
+study is that sensitization against
+HLA-DQA, -DPA and -DPB may further limit transplant rates due to positive
+physical cross-matches. These antibody specificities were not captured by
+the vPRA used in this analysis.
+
+Our secondary analyses showed that the vPRA is also inversely related to
+ETKAS kidney offer rates, both when considering any offer as an outcome
+and when considering only high-quality offers as an outcome. This
+suggests that the reduced transplant rate for immunized patients is
+a result of ETKAS allocation, and not the kidney offer acceptance behavior of
+the transplant centers. We showed that many immunized patients receive only a marginal amount of 
+additional MMP points based on their vPRA, in particular those with a difficult-to-match
+HLA or rare blood group. A potential policy implication of our work is thus
+that it seems worthwhile to revise the number of points that is awarded for the MMP, 
+which has remained capped at 100 points since the introduction of ETKAS
+in 1996.
+
+Finally, our work can help inform decision-making on whether to assign
+non-CDC reactive antigens as unacceptable. For ETKAS such decisions are
+made based on personalized risk assessments by doctors and local HLA
+laboratories, not on criteria prescribed by Eurotransplant. Our finding
+that increases in the vPRA beyond 85% strongly
+decreases the transplant rate may, for example, motivate local
+transplant professionals to be cautious in assigning antigens without
+CDC-reactivity as unacceptable for patients with already high vPRA
+(>85%). In this way, our work could help avoid situations where caution
+of local transplant teams unintentionally prolongs a candidate's waiting time.

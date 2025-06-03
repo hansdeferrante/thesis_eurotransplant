@@ -1,0 +1,48 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Preface {-}
+
+Eight European countries participate in Eurotransplant, the international organ
+exchange organization situated in Leiden, the Netherlands. When a deceased
+organ donor becomes available in these countries, Eurotransplant's role is to
+find suitable recipients for the donor's organs. This allocation problem is not
+trivial, as more than 13,500 candidates are waiting for a transplant in 73
+active transplantation programs. To facilitate the allocation process, Eurotransplant
+has implemented complex allocation systems, which include mechanisms that aim
+to give patients a fair chance of receiving a transplant.
+
+In this thesis, we first examine whether Eurotransplant's liver and
+kidney allocation systems are delivering such equality of opportunity to patients
+who are waiting for transplants. Our second objective is to develop simulation tools which
+can be used to quantify the impact of alternative allocation rules on waiting 
+list outcomes in kidney and liver transplantation.
+
+The cover of this thesis (see below) graphically illustrates
+Eurotransplant's allocation problem, with kidney transplant centers labeled 
+in blue, liver transplant centers in red, and transplant centers that 
+perform both liver and kidney transplantations appearing in both colors. The size of 
+the dots corresponds to the annual transplantation volume per center. The shading
+of the region corresponds to the number of donors available relative to an area's
+population density. Regions shown in yellow, such as Belgium and Rijeka in Croatia, have 
+the highest organ donation rates.
+
+```{r cover, align='center', out.width='400px', fig.cap = NULL, echo=FALSE, include = knitr::is_html_output()}
+knitr::include_graphics(file.path('figures', 'ch1', 'cover.png')) # show thesis cover
+```
+
+*Cover of this thesis*
+
+This PhD project was conducted under the supervision of Dr. Bart Smeulders and 
+Prof. Dr. Frits Spieksma at Eindhoven University of Technology. 
+
+The research of H.C. de Ferrante and F.C.R. Spieksma was partly funded
+by the Netherlands Organization for Scientific Research (NWO) through
+Gravitation grant NETWORKS 024.002.003.
+
+```{r}
+Sys.setenv(R_GSCMD = "C:/Program Files/gs/gs10.04.0/bin/gswin64.exe")
+```
+

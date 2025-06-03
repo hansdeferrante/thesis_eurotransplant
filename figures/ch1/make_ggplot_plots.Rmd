@@ -1,0 +1,168 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+here::i_am('.here')
+pacman::p_load(tidyverse, ggplot2, patchwork, magrittr, here, glue)
+```
+
+
+```{r}
+
+make_plot <- function(df) {
+  
+  df %>% ggplot(
+    aes(
+      y = `Patient survival`,
+      x = id_patient,
+      col = `Survival`
+      )
+  ) +
+  geom_line(
+    position = position_dodge(width = .5),
+    size = 2
+  ) +
+  geom_point(
+    aes(x = id_patient, y = `Patient survival`,
+        color = Survival), 
+    data = filter(df, time_type == 'end'),
+    position = position_dodge(width = .5), 
+    size = 5,
+    shape = 3
+    ) +
+  ggokabeito::scale_color_okabe_ito(drop=FALSE) +
+    scale_shape_manual('Patient death date') +
+  coord_flip(ylim = c(0,150)) +
+  theme_bw() +
+    theme(axis.text.x = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank())
+  
+}
+
+
+show_different_types_allocation <- function(df) {
+  
+  df_long <- df %>%
+    pivot_longer(
+      cols = starts_with('t_'),
+      names_pattern = c('t_([a-z]+)_(.+)'),
+      names_to = c('time_type', 'Survival'),
+      values_to = 'Patient survival'
+    ) %>%
+    mutate_if(is.character, as.factor)
+  
+  
+  df_won <- df %>% mutate(
+    t_start_won = `t_end_without transplant`,
+    t_end_won = `t_end_with transplant`
+  ) %>%
+    select(id_patient, matches('won')) %>%
+    pivot_longer(
+      cols = c(t_start_won, t_end_won),
+      
+      names_to = 'time_type',
+      values_to = 'Patient survival'
+    )
+  
+  plts <- list(
+    `Patient survival` = df_long %>% make_plot, 
+    `Urgency-based allocation` = df_long %>%
+      filter(Survival == 'without transplant') %>%
+      make_plot(),
+    `Utility-based allocation` = df_long %>%
+      filter(Survival == 'with transplant') %>% make_plot,
+    `Benefits-based allocation` = df_won %>%
+      ggplot(aes(y = id_patient, x = `Patient survival`, group = id_patient)) +
+      geom_line(size = 2, color = ggokabeito::palette_okabe_ito()[3]) +
+      theme_bw() +
+      coord_cartesian(xlim = c(0, 150)) +
+      xlab('Life years won') +
+      ylab('Patient') +
+      theme(panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank())
+  )
+  
+  plts %>% imodify(~ .x)
+  
+}
+
+```
+
+
+
+```{r, fig.width = 12, fig.height = 6}
+df <- tibble(
+  id_patient = factor(c('A', 'B', 'C'), levels=c('C', 'B', 'A')),
+  `t_start_with transplant` = c(0, 0, 0),
+  `t_start_without transplant` = c(0, 0, 0),
+  `t_end_without transplant` = c(30, 35, 95),
+  `t_end_with transplant` = c(40, 100, 110),
+) 
+
+
+plts <- df |> show_different_types_allocation()
+
+save_with_spacer <- function(plts, cols_to_exclude = NULL, rows_to_exclude = NULL) {
+  
+  
+  if (!is.null(cols_to_exclude)) {
+     plts %<>% map(~ modify_at(.x, cols_to_exclude, ~ plot_spacer()))
+    if (!is.null(rows_to_exclude)) {
+      plts %<>% modify_at(rows_to_exclude, ~ modify(.x, ~ plot_spacer()))
+    }
+    
+  }
+ 
+  plts %<>% map(~ .x %>%
+    reduce(`+`) +
+    plot_layout(nrow = 1)) 
+  
+  plts %>%
+    reduce(`/`) +
+    plot_layout(guides='collect', nrow=2) &
+    theme(
+      plot.background = element_blank(),
+      legend.background = element_blank(),
+      legend.position='none',
+      axis.title.y = element_blank(),
+      #plot.margin = margin(.25, .3, .25, .3, 'cm'),
+      axis.text.x = element_blank(),
+      panel.grid.minor.x = element_blank()
+    )
+  
+}
+```
+
+
+```{r fig.height=6, fig.width=12}
+plt_all <- plts |> reduce(`+`) +
+      plot_layout(nrow = 2) &
+        theme_minimal() &
+      theme(
+        
+        plot.background = element_blank(),
+        legend.background = element_blank(),
+        legend.position='none',
+        axis.title.y = element_blank(),
+        #plot.margin = margin(.25, .3, .25, .3, 'cm'),
+        axis.text.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank()
+      )
+plt_all
+
+ggsave(here(glue('allocation_mechanisms_all-5.pdf')), plot = plt_all, width = 6, height = 4.5)
+```
+
+
+```{r}
+purrr::transpose(plts) %>%
+  setNames(nm = tolower(str_replace_all(names(.), '\\s', '_'))) %>%
+  unlist(recursive=FALSE) %>%
+  imap(~ ggsave(here(glue('{.y}.pdf')), plot = .x + theme(plot.background = element_blank(), legend.position = 'bottom', legend.background = element_blank()),
+                width = 4, height = 4.5))  
+```

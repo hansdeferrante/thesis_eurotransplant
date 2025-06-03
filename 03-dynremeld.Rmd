@@ -1,0 +1,1032 @@
+
+
+```{r, include=FALSE}
+library(tidyverse)
+library(pander)
+library(kableExtra)
+library(purrr)
+library(readxl)
+library(glue)
+
+knitr::opts_chunk$set(results = 'show', echo = FALSE, fig.pos='ht',
+                      fig.align = 'center', error=TRUE,
+                      message = FALSE, warning = FALSE)
+
+source('R/R_functions.R')
+
+# create variable to resize figures depending on output
+if (knitr::is_latex_output()) {
+  out_width <- "130mm" # for latex, this should be the max width
+} else {
+  out_width <- NULL # for html, don't scale
+}
+
+FIG_FOLDER <- 'figures/ch3/'
+
+CH3_FIG_LIST <- list(
+  FIG1='figure1',
+  FIG2='figure2',
+  FIG3='figure3',
+  FIG4='figure4',
+  SFIG1='supp_figure_1',
+  SFIG2='supp_figure_2',
+  SFIG3='fig_ll'
+) |>
+  map(
+    ~ paste(FIG_FOLDER, .x, sep = '/')
+  )
+CH3_FIG_CAPTIONS <- list(
+  FIG1 = 'Illustration of from “registration” and “from cross-section” approaches to modeling waiting list mortality. For revision of MELD, typically 90-day time-stopped Cox models are used. The “from registration” approach (left) uses time since registration as the timescale and adjusts for biomarkers reported at registration. The “from cross-section” approach (right) models time-until-death from cross-section dates, pre-specified in calendar time, and adjusts for MELD biomarkers reported before the cross-section date. WL, waiting list.',
+  SFIG1 = 'Comparisons of the estimated relation between MELD scores and the absolute 90-day mortality risk. Curved lines show a smoothed relation based on proportional hazards model, estimated “from cross-section” with IPCW. Dots present estimates of the absolute 90-day mortality risks by Kaplan–Meier, stratified by the score. Standard errors were estimated as in Ruth et al. [@ruthFullyNonparametricSurvival2022].',
+  SFIG2 = 'Relations between the relative mortality rate and MELD biomarkers, separately for the “from registration” and “from cross-section” approaches. Relations were estimated with multivariable Cox PH models in the development cohort, with penalized spline terms for MELD biomarkers with 4 degrees of freedom, with boundary knots placed at the 2.5% and 97.5% percentiles.',
+  SFIG3 = 'Heatmaps of the log-likelihood values for combinations of lower and upper bounds for serum bilirubin (mg/dl), serum creatinine (mg/dl), and the INR. Blue dots represent the optimal caps in the development data; purple dots represent the caps derived for ReMELD.'
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+
+
+TAB_FOLDER <- 'raw_tables/ch3/'
+
+CH3_TAB_FILES <- list(
+  `TAB1` = c(paste0(TAB_FOLDER, 'DynReMELD_tables.xlsx'), 'Table1'),
+  `TAB2A` = c(paste0(TAB_FOLDER, 'DynReMELD_tables.xlsx'), 'Table2_panelA'),
+  `TAB2B` = c(paste0(TAB_FOLDER, 'DynReMELD_tables.xlsx'), 'Table2_panelB'),
+  `TAB3` = c(paste0(TAB_FOLDER, 'DynReMELD_tables.xlsx'), 'Table3'),
+  `TAB4` = c(paste0(TAB_FOLDER, 'DynReMELD_tables.xlsx'), 'Table4'),
+  `STAB1` = c(paste0(TAB_FOLDER, 'DynReMELD_tables.xlsx'), 'STAB_1'),
+  `STAB2` = c(paste0(TAB_FOLDER, 'DynReMELD_tables.xlsx'), 'STAB_2'),
+  `STAB3` = c(paste0(TAB_FOLDER, 'DynReMELD_tables.xlsx'), 'STAB_3')
+  )
+
+CH3_TABLE_CAPTIONS <- c(
+  `TAB1_baseline` = 'Baseline characteristics and observed waiting list outcomes for the development and validation cohorts.',
+  
+  `TAB1` = 'Number of UNOS-MELD scores used for the model fit in the “from registration” approach, and “from cross-section” approach.',
+  
+  `TAB2` = "Comparison of MELD coefficients for different model fits from registration (panel A) and “from cross-section” (panel B), for (1) revision with ReMELD's prognostic index as an offset, (2) revision without the offset, and (3) revision with IPCW.",
+  
+  `TAB2relweights` = 'Relative weights put on bilirubin, creatinine and INR by UNOS-MELD, ReMELD and DynReMELD. Relative weights were calculated $w_{i} = \\frac{\\beta_{i}\\text{SD}_{i}}{\\sum_{j}^{}{\\beta_{j}\\text{SD}_{j}}}$, where $\\beta_{i}$ is the coefficient on biomarker $i$ and $\\text{SD}_{i}$ its standard deviation in the development cohort.',
+  
+  `TAB3` = 'C-indices at 90 days after listing with bootstrapped standard errors shown in brackets.',
+  
+  `TAB4` = 'The 90-day mortality equivalents that are used by Eurotransplant, as well as estimates of the 90-day mortality risk per score. These were estimated with Cox models fitted “from cross-section”, with adjustment for the MELD point score.',
+  
+  `STAB1` = 'Baseline characteristics and observed waiting list outcomes for patients included in this study.',
+  
+  `STAB2` = 'Relative weights put on bilirubin, creatinine and INR by UNOS-MELD, ReMELD and DynReMELD. Relative weights were calculated $w_i=\\frac{\\beta_i\\text{SD}_i}{\\sum_{j}{\\beta_j\\text{SD}_j}}$, where $\\beta_i$ is the coefficient on biomarker i and \\text{SD}_i its standard deviation in the development cohort.',
+  
+  `STAB3` = 'Estimates of absolute 90-day mortality risks “from registration” and “from cross-section”. Reported risks were estimated without IPCW.'
+) |>
+  map(format_dates) |>
+  map(escape_latex)
+```
+
+#  Revising MELD from calendar-time cross-sections with correction for selection bias {#CHdynremeld}
+
+`\chaptermark{DynReMELD}`{=latex}
+
+`r if (knitr::is_latex_output()) '\\vfill'`
+
+---
+
+`\noindent`{=latex}
+An article based on this chapter has appeared in _BMC Medical Research Methodology_, de Ferrante, H.C., De Rosner-van Rosmalen M., Smeulders, B.M.L., Vogelaar, S., Spieksma, F.C.R., 2024,  [10.1186/s12874-024-02176-8](https://doi.org/10.1186/s12874-024-02176-8), 
+[@deFerranteDynremeld]
+
+`\newpage`{=latex}
+`\normalsize`{=latex}
+
+`<p><strong>Abstract</strong></p>`{=html}
+`\subsubsection*{Abstract}`{=latex}
+
+Eurotransplant allocates livers using the MELD score as originally proposed
+by UNOS. Several studies have revised this UNOS-MELD score using retrospective
+data on liver transplant candidates. The standard approach taken in such studies is to model 90-day 
+waiting list mortality from the time of listing, based on biomarkers reported at 
+listing, while censoring candidates at delisting or transplantation. This approach
+ignores a candidate's biomarkers that were reported after registration, and ignores informative
+censoring by transplantation and delisting.
+
+We study how MELD revision is affected by using calendar-time
+cross-sections and by correcting for informative censoring with inverse
+probability censoring weighting (IPCW). To this end, we revised UNOS-MELD
+on patients with cirrhosis who were on the Eurotransplant waiting list
+between 2007 and 2019 (n=13,274) with Cox models with as endpoints
+90-day survival (a) from registration and (b) from weekly drawn
+calendar-time cross-sections. We refer to the score revised from
+cross-section with IPCW as *DynReMELD*. We compare DynReMELD to
+UNOS-MELD and ReMELD, a prior revision of UNOS-MELD for Eurotransplant,
+in a geographical validation.
+
+Our results show that revising MELD from calendar-time cross-sections leads to significantly
+different MELD coefficients. IPCW increases estimates of absolute 90-day
+waiting list mortality risks by approximately 10 percentage points.
+DynReMELD shows improved discrimination compared to UNOS-MELD (delta c-index:
+0.0040, p\<0.001) and ReMELD (delta c-index: 0.0015, p\<0.01), with
+differences comparable in magnitude to the addition of an extra
+biomarker to MELD (delta c-index: ±0.0030).
+
+Correction for selection bias by transplantation or delisting with inverse
+probability censoring weighting does not
+improve the discrimination of revised MELD scores, but does substantially
+increase estimates of absolute 90-day mortality risks. Revision from
+cross-section uses waiting list data more efficiently, and improves
+discrimination compared to revision of MELD exclusively based on
+the information available at listing.
+
+`\newpage`{=latex}
+
+## Introduction
+
+Eurotransplant calculates MELD scores with a formula originally introduced by 
+UNOS in 2002. We refer to this score as UNOS-MELD. Various limitations of UNOS-MELD
+have been described, including that
+
+1.  it was not developed to predict mortality on the liver waiting list [@malinchocModelPredictPoor2000],
+
+2.  it overemphasizes renal dysfunction
+    [@sharmaReweightingModelEndStage2008],
+
+3.  it uses biomarker caps that are not evidence-based
+    [@leiseRevisedModelEndstage2011],
+
+4.  it is poorly calibrated for specific subgroups, such as
+    patients with hyponatremia [@kimHyponatremiaMortalityPatients2008a].
+
+These limitations have motivated several studies to revise MELD, either
+by re-estimating the equation's coefficients using registry data on
+liver transplant candidates (e.g., [@sharmaReweightingModelEndStage2008;
+@leiseRevisedModelEndstage2011]), or by expanding the scoring system
+with new biomarkers (e.g., MELD-Na
+[@kimHyponatremiaMortalityPatients2008a] or MELD 3.0
+[@kimMELD3point0]). In 2020, the equation's coefficients and caps of MELD
+were revised by Goudsmit et al. using retrospective data from Eurotransplant.
+The resulting score is referred to as the "ReMELD" score [@goudsmitRefittingModelEndstage2020].
+
+MELD revision typically proceeds by modeling waiting list mortality up to
+90 days after waiting list registration based on biomarkers reported at
+registration (e.g., [@leiseRevisedModelEndstage2011; @kimHyponatremiaMortalityPatients2008a; @kimMELD3point0;
+@goudsmitRefittingModelEndstage2020]). This *"from registration"* approach
+poorly aligns with the clinical use of MELD: in allocation, candidates are prioritized
+on their last reported MELD score, and not on the MELD score that was reported at listing. Moreover, revising MELD *"from registration"* ignores
+waiting list deaths that occur more than 90 days after listing, which are 
+two-thirds of all liver waiting list deaths within Eurotransplant.
+
+Previously, such waste of statistical information was avoided by
+adjusting for MELD biomarkers as time-varying covariates 
+([@sharmaReweightingModelEndStage2008; @merionLongitudinalAssessmentMortality2003]). 
+However, MELD biomarkers also increase as part of the death process
+[@bambhaPredictingSurvivalPatients2004], such that use of
+MELD biomarkers as time-varying covariates leads to issues of reverse
+causality. This reverse causality problem is exacerbated by the fact that MELD scores can be updated voluntarily at any time and by the fact that sicker patients are required 
+to update their MELD scores more frequently.
+
+To prevent these issues, we propose revising MELD *"from cross-section"*
+using methodology developed by Gong and Schaubel
+[@gongPartlyConditionalEstimation2013]. With this approach MELD is
+revised by modeling the remaining time-until-death from pre-specified
+calendar-time cross-sections rather than from registration. Biomarkers
+measured after listing and deaths recorded more than 90
+days after listing thereby inform MELD revision. To prevent issues of reverse
+causality, adjustment at each cross-section is for historical biomarker
+information only. The evolution of biomarkers after the cross-section
+date affects survival, transplantation and delisting rates, which makes 
+transplantation and delisting informative censoring mechanisms. Prior revisions 
+of MELD censor patients at transplantation or delisting, which introduces
+bias. We study how MELD revision is 
+affected by correcting for dependent censoring with inverse 
+probability censoring weighting, which was first proposed by Gong and Schaubel [@gongPartlyConditionalEstimation2013].
+
+## Materials and methods
+
+### Study population and data
+
+Adult patients with any active waiting list status on the Eurotransplant
+waiting list between December 16, 2006, and December 31, 2019, were extracted from
+the Eurotransplant database. Only patients with cirrhosis were included
+in the study, which is the patient group on which UNOS-MELD was originally
+validated. Patients with other diagnoses, those prioritized through exception
+points, and those awaiting a repeat transplantation or combined transplantation
+were excluded (except combined liver-kidney transplantation
+candidates). Patients with impossible values for MELD biomarkers (e.g., all 
+zeroes for bilirubin, creatinine, and the INR) were excluded.
+
+To activate a candidate on the liver waiting list, centers have to report MELD 
+biomarkers to Eurotransplant. Reported MELD scores are valid for a maximum of one 
+year, and expire in a shorter time window for sicker patients (within seven days for MELD scores greater than 25
+[@ETLiverMan2025]). Failure to update the MELD score results in the
+lowest possible MELD score of 6 being used for allocation. Consequently,
+MELD updates are available for most transplant candidates in the Eurotransplant
+database. Centers can set
+candidates to non-transplantable (NT) if they are temporarily not available
+for transplantation, which ensures that the transplant center is not
+contacted with offers for these patients.
+
+### MELD scores, UNOS-MELD and ReMELD
+
+We define a MELD scoring system as a system that calculates a score based 
+on serum bilirubin, serum creatinine and the INR, using the following formula:
+
+$$\text{intercept}\  + \text{coef}_{\text{bili}}\ln\left( \text{bili} \right) + \ \text{coef}_{\text{crea}}\ln\left( \text{crea} \right) +
+\text{coef}_{\text{INR}}\ln\left( \text{INR} \right),$$
+
+with serum bilirubin and serum creatinine measured in mg/dl. A specific MELD
+score proposes values for the intercept and coefficients, and bounds for the
+values of MELD biomarkers. A MELD score also has to propose how to calculate
+MELD scores for candidates who received dialysis twice in the week before
+measurement of MELD biomarkers (henceforth "patients on biweekly dialysis"), 
+since dialysis reduces measured creatinine levels. Eurotransplant currently uses UNOS-MELD for allocation, i.e.
+
+$$6.43\  + 3.78\ln\left( \text{bilirubin} \right) + 9.57\ln\left( \text{creatinine} \right) + 11.20\ln\left( \text{INR} \right),$$
+
+in which creatinine is capped at 4.0 mg/dl, a lower limit of 1.0 is imposed on
+all biomarkers, and creatinine is set to 4.0 mg/dl for patients on biweekly
+dialysis.
+
+Various revisions of MELD have been proposed (e.g., see
+[@leiseRevisedModelEndstage2011; @goudsmitRefittingModelEndstage2020; @bambhaPredictingSurvivalPatients2004]). 
+One alternative -- that was
+developed specifically for Eurotransplant -- is ReMELD
+[@goudsmitRefittingModelEndstage2020], which calculates the score as
+
+$$8.422\  + 7.728\ln\left( \text{bili} \right) + \ 3.446\ \ln\left( \text{crea} \right) + 10.597\ln\left( \text{INR} \right).$$
+
+In calculating ReMELD scores, bilirubin is bounded between 0.3 and 27 mg/dl, the INR is
+bounded between 0.1 and 2.6, and creatinine is bounded between 0.7 and 2.5 mg/dl. Creatinine is
+also set to the upper cap of 2.5 mg/dl for patients on biweekly dialysis.
+
+### Revision *"from registration" vs. "revision from cross-section"*
+
+In revising MELD, authors typically re-estimate MELD coefficients *"from
+registration"*. By this, we mean that authors use Cox proportional hazards models
+to model 90-day waiting list mortality after registration with adjustment
+for MELD biomarkers that were reported at listing. Coefficients for the MELD scoring system are then commonly derived by rescaling the estimated regression coefficients ($\widehat{\beta}$) to the UNOS-MELD scale. This rescaling is typically achieved by matching quantiles of the linear predictor to corresponding quantiles of UNOS-MELD scores (e.g., [@leiseRevisedModelEndstage2011; @goudsmitRefittingModelEndstage2020]). 
+This *"from registration"* approach ignores any MELD measurements recorded after registration, as
+well as patient deaths recorded more than 90 days after registration. We
+propose to avoid such waste of statistical information by revising
+MELD with a *"from cross-section"* approach. The key differences between these
+approaches are illustrated in Figure \@ref(fig:ch3fig1).
+
+The *"from cross-section"* approach uses methodology developed by Gong and Schaubel
+[@gongPartlyConditionalEstimation2013], and models the remaining
+time-until-death from pre-specified calendar-time cross-sections (see
+right panel, Figure \@ref(fig:ch3fig1)). This approach uses cross-section calendar
+times as the time origin, and the time elapsed since the cross-section date as
+the timescale. The coefficients are estimated with a Cox proportional hazards model
+that is stratified by the cross-section. At each cross-section only
+patients with an active registration (i.e., without non-transplantable
+status) are included in the analysis, and Cox models adjust only for
+biomarker information reported *before* the cross-section. We point out
+that patients waiting at multiple calendar-time cross-sections
+contribute multiple observations to the Cox model fit (right panel,
+Figure \@ref(fig:ch3fig1)). Thereby, revision of MELD is also affected by (i)
+waiting list deaths that occur more than 90 days after listing, and (ii)
+biomarker measurements taken after listing.
+
+`\vfill`{=latex}
+
+```{r ch3fig1, fig.cap = chuck(CH3_FIG_CAPTIONS, 'FIG1'), out.width = "87%", fig.pos="h"}
+FIG <- pluck(CH3_FIG_LIST, 1)
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+  
+}
+```
+
+`\FloatBarrier`{=latex}
+`\newpage`{=latex}
+
+In this chapter, we compare revision of MELD *"from
+registration"* to revision *"from cross-section"*. In revising MELD
+*"from registration"*, we stratify models by country of listing. For the
+*"from cross-section"* approach, we use weekly cross-sections from
+December 22, 2006 to December 31, 2019 and stratify Cox models by the
+candidate's country of listing and
+by cross-section. The candidate survival status 90 days after the cross-section date is
+used as an endpoint, and adjustment at each cross-section is for the
+last reported MELD biomarker values before the cross-section date.
+
+### Outcome definition
+
+Time-until-death is modeled with 90-day time-stopped Cox PH
+models. Delisted patients who die within 90 days of deregistration are
+treated as if they had died on waiting list exit (as in
+[@goudsmitRefittingModelEndstage2020]). Patients who were
+transplanted or delisted within 90 days are censored.
+Inverse probability censoring weighting (IPCW) is used to correct for
+selection bias due to transplantation and delisting.
+
+### Inverse probability censoring weighting to correct for dependent censoring
+
+Consistent estimation of parameters $\beta$ with a standard Cox PH model
+requires that the censoring process is independent of survival,
+conditional on covariates. This independent censoring
+assumption is violated for both the *"from registration"* and *"from
+cross-section"* approaches, because only MELD biomarkers
+reported at listing (or before the cross-section date) are included as covariates, while MELD biomarkers
+reported after listing (or cross-section) affect patient survival and transplantation/delisting rates.
+Gong and Schaubel proposed a procedure
+that can correct for the bias introduced by dependent censoring due to transplantation.
+This procedure weighs candidates by their inverse probability of having been transplanted
+between the cross-section and exit date (IPCW-T weights, T for transplantation). 
+Such probabilities can be estimated using an extended Cox proportional hazards model, which
+uses the candidate's transplantation status as the outcome.
+
+We expand in this chapter on Gong and Schaubel's approach by also
+constructing inverse probability censoring weights for delisting
+(IPCW delisting (IPCW-D) weights). Under the assumption that delisting
+and transplantation are conditionally independent, a joint inverse
+probability censoring weight can then be obtained by multiplying
+IPCW-T and IPCW-D weights (see also [@schnellingerMitigatingSelectionBias2021]). Details on how weights
+were constructed are included in Appendix \@ref(APPipcw). In this chapter, we assess
+how IPCW affects revised MELD coefficients both *"from registration"*
+and *"from cross-section"*.
+
+`\vfill`{=latex}
+
+### Adjustment variables, caps, and functional forms
+
+Cox PH models adjust for variables present in MELD, i.e., serum bilirubin, 
+serum creatinine, and the INR. Spline terms are used to assess
+whether the relation between log-transformed biomarkers and the
+mortality rate is approximately linear. Final models use
+logarithmic transformations for the biomarkers, with lower and upper
+limits for biomarkers optimized over regions where violation of
+log-linearity was visually apparent (as in
+Leise et al. [@leiseRevisedModelEndstage2011] and Goudsmit et al. 
+[@goudsmitRefittingModelEndstage2020]).
+
+On the Eurotransplant liver waiting list, more than 10% of patients receive biweekly dialysis, and
+measured creatinine is not used to calculate lab-MELD scores for these patients.
+To also ignore measured creatinine in revising MELD for these patients, we set
+creatinine to 1.0 mg/dl for patients on dialysis (leading to $\ln(1.0) = 0$ MELD points). 
+Instead, we use whether the patient receives biweekly dialysis as an adjustment variable.
+
+### Development and validation cohorts
+
+To enable revision and geographical validation for all Eurotransplant countries, 
+we aimed to use a 70%/30% center-based split per country. Such a
+split was feasible for Germany (70%/30%), Belgium (70.1%/29.9%)
+Austria (62.6%/37.4%), and the Netherlands (74.3%/25.7%), but not for
+Hungary (1 center), Slovenia (1 center), and Croatia (1 large center, 2
+very small centers). Therefore, Hungarian, Slovenian and Croatian
+patients (11% of the total cohort) were randomly split into 70%/30%
+development/validation cohorts.
+
+All models -- including those used to estimate inverse probability
+weights -- were fitted on the development cohort only. The validation
+cohort was used to compare the newly developed score -- which we name *DynReMELD* -- to
+ReMELD and UNOS-MELD.
+
+### Comparison to UNOS-MELD and ReMELD
+
+We revised MELD *"from registration"* and *"from cross-section"* both
+with and without IPCW. Without IPCW, MELD was also revised with ReMELD's
+linear predictor used as an offset. This enables assessment of whether
+revision of MELD on all cirrhotic patients yields a significantly
+different equation from ReMELD. We define *DynReMELD* as the equation
+obtained by quantile matching the linear predictor revised *"from
+cross-section"* with IPCW to quantiles of UNOS-MELD.
+`\newpage`{=latex}
+We compare the discrimination of MELD, ReMELD and DynReMELD using the c-index
+in the validation cohort. This c-index quantifies the degree to which patients with a
+higher score die earlier on the Eurotransplant waiting list. In the literature,
+the c-index is most commonly estimated with Harrell's c-index, which is a
+consistent estimator of the c-index in case of independent censoring. Because
+this assumption is implausible in liver transplantation, we use Gerd's c-index [@gerdsEstimatingTimedependentConcordance2012]. 
+This c-index is a consistent estimator for the c-index provided that a consistent
+estimator of the conditional probability of remaining uncensored is available
+[@gerdsEstimatingTimedependentConcordance2012; @Hartman2025].
+We estimate Gerd's c-indices for two separate prediction tasks,
+namely (i) prediction of time-until-death from listing based on biomarkers
+reported at listing,
+and (ii) prediction of remaining time-until-death from calendar-time
+cross-sections based on the last reported MELD biomarkers.
+
+Assessment of calibration for *DynReMELD* is complicated by the fact
+that models developed with IPCW are counterfactual prediction models,
+and it is not clear how to assess calibration for such models
+[@linScopingReviewCausal2021]. Instead of assessing calibration, we report estimates
+of absolute 90-day survival risks for *DynReMELD* estimated with and
+without IPCW. These 90-day survival estimates are of interest to Eurotransplant,
+as Eurotransplant uses them to convert awarded exception scores to the MELD scale.
+
+## Results
+
+This study included 13,343 liver waiting list registrations for 13,274
+patients^[A small group of patients is removed from the waiting list without
+transplant, but later re-registered.] with cirrhosis waiting for a first
+liver transplant. We note that candidates with exception points (for example,
+HCC) were not included in our study cohort. We excluded 107 patients (\<1%) 
+because they reported impossible MELD biomarker values (e.g., zeroes for all 
+biomarkers). Baseline characteristics of development and validation cohorts 
+are included in Table \@ref(tab:ch3tab1baseline).
+
+```{r ch3tab1baseline, tab.cap=chuck(CH3_TABLE_CAPTIONS, 'TAB1_baseline'), out.width="75%", results='asis'}
+df_tab <- read_excel('raw_tables/ch3/table1_dynremeld.xlsx') |>
+  janitor::remove_empty(which='rows') |>
+  mutate(Variable = zoo::na.locf(Variable, na.rm=FALSE)) |>
+  mutate_all(replace_na, '')
+
+names(df_tab) <- firstlow(names(df_tab))
+
+df_tab$variable <- firstlow(df_tab$variable)
+
+df_tab$level <- firstlow(df_tab$level) |>
+  str_remove(fixed('/unknown'))
+
+names(df_tab) <- firstlow(names(df_tab))
+
+FOOTNOTE_TEXT <- "NAFLD; non-alcoholic fatty liver disease."
+
+if (knitr::is_html_output()) {
+  df_tab$variable <- str_replace_all(df_tab$variable, '\\sat\\slisting', '<br>at listing')
+  df_tab$variable <- str_replace_all(df_tab$variable, '\\sDecember', '<br>Dec')
+  
+  df_tab |>
+    kable(format='html', caption=CH3_TABLE_CAPTIONS[['TAB1_baseline']], escape=FALSE, align='llccl') |>
+    collapse_rows(columns = 1, valign = "middle") |>
+    kable_styling(font_size=15) |>
+    add_footnote(
+      FOOTNOTE_TEXT, notation='none'
+      )
+} else if (knitr::is_latex_output()) {
+  df_tab |>
+    kable(format='latex', caption=CH3_TABLE_CAPTIONS[['TAB1_baseline']], booktabs=TRUE, align='llccl') |>
+    kable_styling(
+      latex_options = c("scale_down", "hold_position"), font_size=10
+    ) |>
+    collapse_rows(columns = 1, valign = "middle", ) |>
+    insert_footnote_manually(
+      .text = FOOTNOTE_TEXT
+    ) |>
+    cat()
+  }
+```
+
+`\FloatBarrier`{=latex}
+
+### Number of MELD scores informing the revision of MELD
+
+With cross-sections, 8,779 out of 9,288 (95%) patients in the
+development cohort are active at a cross-section date, and inform
+revision of MELD. The remaining 509 patients 
+were transplanted, delisted, or marked non-transplantable before a cross-section date
+was reached (which means they exited the waiting list within at most 7 days of listing). We note that these 509 candidates do not inform revision of
+MELD from cross-section.
+
+Biomarker measurements taken after listing are ignored by the *"from registration"* approach, 
+while these measurements inform revision of MELD with a *"from cross-section"* approach.
+Table \@ref(tab:ch3tab1) shows that the number of unique MELD scores
+informing MELD revision increases about sevenfold with a *"from
+cross-section"* approach, from 9,264 to 67,433.
+The number of observed waiting list deaths and event rates also increase
+substantially with the *"from cross-section"* approach. For example, *"from
+cross-section"* the number of included MELD scores between 36 and 40
+triples from 456 to 1,248, with 47% of these patients dying 90 days
+after cross-section, compared to only 31% *"from registration"*.
+
+`\begingroup`{=latex}
+`\setlength{\aboverulesep}{0.2ex}`{=latex}
+`\setlength{\belowrulesep}{0.3ex}`{=latex}
+
+```{r ch3tab1, tab.cap=chuck(CH3_TABLE_CAPTIONS, 'TAB1'), out.width="75%"}
+file_and_sheet <- chuck(CH3_TAB_FILES, 'TAB1')
+
+d_tab <- read_excel(
+  file_and_sheet[[1]],
+  sheet=file_and_sheet[[2]]
+) |>
+  janitor::remove_empty(which='rows') |>
+  mutate(
+    group = if_else(group=='', NA_character_, group) |> zoo::na.locf(na.rm=FALSE),
+    across(where(is.character), replace_na, ''),
+    across(where(is.character), format_dates),
+    across(where(is.character), trimws)
+  )
+
+d_tab$Dataset <- firstlow(d_tab$Dataset)
+
+if (knitr::is_html_output()) {
+                  
+  d_tab |>
+    dplyr::rename_with(firstlow) |>
+    kable(format='html', align='lcccc') |>
+    kable_styling(font=14) |>
+    collapse_rows(columns=1) |>
+    pack_rows(index=c(` ` = 2, `by MELD` = 8)) |>
+    add_header_above(
+      c(` ` = 3, `outcome within 90 days` = 2)
+    ) |> column_spec(2, extra_css = "padding-left:0.5em !important;")
+} else if (knitr::is_latex_output()) {
+  d_tab <- d_tab |>
+     mutate(across(where(is.character), str_replace, fixed('%'), '\\%'))
+  names(d_tab)[1:2] <- ' '
+  names(d_tab)
+  names(d_tab) <- firstlow(names(d_tab)) |>
+    str_replace(fixed('#'), '\\#') |>
+    str_replace(fixed('/'), ' / ')
+   d_tab |>
+    kable(format='latex', booktabs=TRUE, escape=FALSE, align='llccc') |>
+    kable_styling(latex_options = "hold_position", font_size = 9.5) |>
+    collapse_rows(columns=1) |>
+    pack_rows(index=c(` ` = 2, `By MELD` = 8)) |>
+    add_header_above(
+      c(` ` = 3, `event within 90 days` = 2)
+    )
+}
+```
+
+`\endgroup`{=latex}
+`\FloatBarrier`{=latex}
+
+### Revising the MELD formula using Cox models
+
+Evidence-based caps were derived using the procedure proposed by Leise et al.
+[@leiseRevisedModelEndstage2011]. This procedure involves estimating 
+Cox proportional hazard models with different caps applied and
+choosing the caps that result in the maximal log-likelihood. The procedure
+is applied separately for each biomarker, with the biomarker under consideration
+modeled linearly and the other biomarkers modeled non-linearly using
+spline terms. Figure \@ref(fig:ch3sfig3) summarizes the results
+of this procedure. The optimal caps were found to be 0.6--55 mg/dl for bilirubin,
+0.8--2.5 mg/dl for serum 
+creatinine, and 1.0--3.0 for the INR.
+
+```{r ch3sfig3, fig.cap = chuck(CH3_FIG_CAPTIONS, 'SFIG3'), out.width = "100%", fig.pos="h"}
+FIG <- chuck(CH3_FIG_LIST, 'SFIG3')
+
+if (knitr::is_html_output()) {
+  knitr::include_graphics(paste0(FIG, '.png'))
+} else if (knitr::is_latex_output()) {
+  knitr::include_graphics(paste0(FIG, '.pdf'))
+}
+```
+
+`\FloatBarrier`{=latex}
+
+#### Coefficients revised from registration 
+
+Panel A of Table \@ref(tab:ch3tab2) shows MELD coefficients revised *"from
+registration"*. The first column shows that parameter estimates are
+jointly not significantly different from 0
+($\chi_{3}^{2}$ = 4.1,p = 0.25) when using ReMELD's prognostic
+index as an offset. The insignificance of these estimates confirms
+that ReMELD adequately predicts 90-day mortality *"from registration"* for all cirrhotic
+patients. IPCW changes the biomarker
+coefficients only slightly (by less than a standard error).
+
+#### Coefficients revised from cross-section
+
+Panel B of Table \@ref(tab:ch3tab2) shows MELD coefficients revised *"from
+cross-section"*. The first column shows that coefficients are jointly
+significantly different from 0 with ReMELD used as an offset
+($\chi_{3}^{2}$ = 801,p < 0.001). Hence, ReMELD does not adequately
+predict 90-day mortality from cross-section. Estimated coefficients
+suggest ReMELD underestimates the effect of creatinine
+($z$= 5.2, p < 0.001) and bilirubin ($z$ = 6.1, p < 0.001), but not
+the INR ($z = 0.3,p = 0.76$). IPCW appears to increase MELD
+biomarker coefficients slightly (by less than a standard deviation).
+
+Table \@ref(tab:ch3tab2relweights) shows the relative weights put on the MELD
+components by the equation revised from cross-section with IPCW.
+These weights, originally defined by Sharma et al. [@sharmaReweightingModelEndStage2008],
+quantify the increase in MELD score resulting from a one-standard deviation increase
+in a given biomarker, relative to a one-standard deviation increase in all biomarkers.
+These weights also show that the refitted equation puts more weight on bilirubin (41%)
+than UNOS-MELD (36%) and ReMELD (37%), and puts less weight on the INR
+(28% vs. 32% for UNOS-MELD and 34% for ReMELD).
+
+`\begingroup`{=latex}
+`\setlength{\aboverulesep}{0.2ex}`{=latex}
+`\setlength{\belowrulesep}{0.3ex}`{=latex}
+
+```{r ch3tab2, tab.cap=chuck(CH3_TABLE_CAPTIONS, 'TAB2'), results='asis'}
+d_tabs <- map(
+  list(`panel A - from registration` = 'TAB2A', `panel B - from cross-section` = 'TAB2B'),
+  ~ chuck(CH3_TAB_FILES, .x)
+) |>
+  map(
+    ~ read_excel(.x[[1]], sheet=.x[[2]]) |>
+  janitor::remove_empty(which='rows') |>
+  mutate(
+    #group = if_else(group=='', NA_character_, group) |> zoo::na.locf(na.rm=FALSE),
+    across(where(is.character), replace_na, ''),
+    across(where(is.character), format_dates),
+    across(where(is.character), trimws),
+    across(1, firstlow)
+  ) |>
+    dplyr::rename_with(function(.x) str_replace(.x, 'Refitted', 'refitted'))
+)
+
+FOOTNOTE_TEXT <- 'set to 1.0 mg/dl in case of biweekly dialysis'
+
+if (knitr::is_html_output()) {
+  FOOTNOTE_TEXT <- paste0(FOOTNOTE_TEXT)
+  d_tabs |>
+    imap(
+      function(.x, .y) {
+        kbl <- kable(plyr::rename(.x, c(`...1` = ' ')), 
+                     caption = ifelse(str_detect(.y, 'A'), chuck(CH3_TABLE_CAPTIONS, 'TAB2'), ''),
+                     format='html', escape=FALSE,
+                     align='lccc') |>
+          kable_styling() |>
+          collapse_rows(columns=1) |>
+          add_header_above(
+            4 |> setNames(.y),
+            align='l'
+          )
+        if (str_detect(.y, 'B')) {
+          kbl |> 
+            add_footnote(FOOTNOTE_TEXT, notation='number')
+        } else {
+          kbl
+        }
+      }
+      
+    ) |>
+    reduce(c) |>
+    cat()
+
+} else if (knitr::is_latex_output()) {
+  FOOTNOTE_TEXT <- paste0('$\\qquad^1$ ', FOOTNOTE_TEXT)
+  
+   d_tabs |>
+    imap(~ kable(plyr::rename(.x, c(`...1` = ' ')), caption=NULL, format='latex', booktabs=TRUE, escape=FALSE) |>
+      kable_styling(latex_options = "hold_position", font_size = 10) |>
+      collapse_rows(columns=1) |>
+      add_header_above(
+        4 |> setNames(.y),
+        align='l'
+      )
+    ) |>
+    reduce(c) |>
+    paste0(collapse = '\n') |>
+    str_replace("\\\\bottomrule[\\s\\S]+?\\\\toprule", '\\[0.5cm]') |> 
+    str_replace(fixed('\\toprule'), '') |>
+    str_split('\n') |>
+    unlist() |> head(-2) |> tail(-2) |>
+    wrap_table(
+      my_label = 'tab:ch3tab2',
+      my_caption = chuck(CH3_TABLE_CAPTIONS, 'TAB2'),
+      scale_down=TRUE,
+      scale_factor=.9
+    ) |>
+    insert_footnote_manually(
+      .text = FOOTNOTE_TEXT
+    ) |>
+    cat()
+}
+```
+`\endgroup`{=latex}
+
+```{r ch3tab2relweights, tab.cap=chuck(CH3_TABLE_CAPTIONS, 'TAB2relweights'), out.width="75%", results='asis'}
+df_tab <- read_excel('raw_tables/ch3/table1_dynremeld_relativeweights.xlsx') |>
+  janitor::remove_empty(which='rows') |>
+  mutate_all(replace_na, '')
+
+df_tab$biomarker <- firstlow(df_tab$biomarker)
+
+if (knitr::is_html_output()) {
+  df_tab |>
+    kable(format='html', caption=CH3_TABLE_CAPTIONS[['TAB2relweights']], align='lcccc') |>
+    collapse_rows(columns = 1, valign = "middle") 
+} else if (knitr::is_latex_output()) {
+  df_tab |>
+    kable(format='latex', caption=CH3_TABLE_CAPTIONS[['TAB2relweights']], booktabs=TRUE, align='llccl') |>
+    kable_styling(
+      latex_options = c("scale_down", "hold_position"), font_size=10
+    ) |>
+    collapse_rows(columns = 1, valign = "middle", ) |>
+    cat()
+  }
+```
+
+### Definition of the DynReMELD score
+
+Quantile matching of UNOS-MELD to the linear predictor revised *"from
+cross-section"* with IPCW (Table \@ref(tab:ch3tab2), panel B) yielded the following
+equation for *DynReMELD:*
+$$
+4.14 \ln(\text{bilirubin}) + 9.12 \ln(\text{creatinine}) + 9.42 \ln(\text{INR}) + 8.50
+$$
+with creatinine bounded between 0.8 and 2.5 mg/dl, bilirubin between 0.6 and 55 mg/dl, and
+the INR between 1.0 and 3.0. We calculate DynReMELD scores by setting
+creatinine to the upper cap (2.5 mg/dl) for patients on dialysis. This choice
+was made to keep DynReMELD in line with existing clinical implementations of
+MELD, and is relatively harmless because the creatinine level required
+to attain the same priority as biweekly dialysis is
+$\exp\left( \frac{1.86}{2.15} \right)\  \approx 2.4\ $mg/dl (Table \@ref(tab:ch3tab2),
+Panel B, third column).
+
+`\FloatBarrier`{=latex}
+
+### Predictive performance
+
+Table \@ref(tab:ch3tab3) shows estimates of Gerd's c-index for UNOS-MELD, ReMELD
+and DynReMELD, for (a) predicting 90-day waiting list survival from listing
+based on biomarkers reported at listing, and (b) predicting 90-day
+waiting list survival from calendar-time cross-sections based on the biomarkers
+that were last reported for the candidate. The first panel shows c-indices evaluated for predicting 90-day waiting list
+survival from listing based on biomarkers reported at listing for
+UNOS-MELD, ReMELD and DynReMELD. Point estimates appear to slightly
+favor DynReMELD, but bootstrapped pairwise differences are not
+statistically significant. The second panel shows that DynReMELD
+outperforms UNOS-MELD and ReMELD when predicting 90-day waiting list
+survival based on candidates' last reported biomarkers, with DynReMELD
+attaining higher c-indices (p < 0.001) in both development and
+validation cohorts. In the validation cohort, the c-index of DynReMELD
+(0.7895) is approximately 0.0040 higher than UNOS-MELD (0.7855), and
+0.0015 higher than ReMELD (0.7879).
+
+`\FloatBarrier`{=latex}
+
+`\begingroup`{=latex}
+`\setlength{\aboverulesep}{0.2ex}`{=latex}
+`\setlength{\belowrulesep}{0.3ex}`{=latex}
+```{r ch3tab3, tab.cap=chuck(CH3_TABLE_CAPTIONS, 'TAB3'), fig.pos='ht'}
+file_and_sheet <- chuck(CH3_TAB_FILES, 'TAB3')
+
+d_tab <- read_excel(
+  file_and_sheet[[1]],
+  sheet=file_and_sheet[[2]],
+  col_names = c('score', 'empty1', 'development', 'empty2', 'validation')
+) |>
+  janitor::remove_empty(which='cols') |>
+  mutate(
+   # group = if_else(group=='', NA_character_, group) |> zoo::na.locf(na.rm=FALSE),
+    across(where(is.character), replace_na, ''),
+    across(where(is.character), format_dates),
+    across(where(is.character), trimws)
+  )
+
+if (knitr::is_html_output()) {
+                  
+  d_tab |>
+    kable(format='html') |>
+    kable_styling() |>
+    pack_rows(
+      index = c(`time-until-death from listing, based on biomarkers at listing` = 3,
+                `remaining time-until-death from cross-sections, based on last reported biomarkers` = 3)
+    ) |>
+    add_p_value_footnote(extra_text=', compared to UNOS-MELD') |>
+    add_p_value_footnote(symbol='dagger', extra_text=', compared to ReMELD')
+
+} else if (knitr::is_latex_output()) {
+  replace_annotations <- function(x) {
+    x |>
+      # Step 1: Protect asterisk groups
+      str_replace_all("\\*\\*\\*", "__AST3__") |>
+      str_replace_all("\\*\\*", "__AST2__") |>
+      str_replace_all("\\*", "__AST1__") |>
+      
+      # Step 2: Replace dagger symbols directly (no recursion risk)
+      str_replace_all("†††", "$^{\\\\dagger\\\\dagger\\\\dagger}$") |>
+      str_replace_all("††", "$^{\\\\dagger\\\\dagger}$") |>
+      str_replace_all("†", "$^{\\\\dagger}$") |>
+      
+      # Step 3: Now safely substitute placeholders
+      str_replace_all("__AST3__", "$^{***}$") |>
+      str_replace_all("__AST2__", "$^{**}$") |>
+      str_replace_all("__AST1__", "$^{*}$")
+  }
+
+  
+   d_tab |>
+    mutate(
+      across(
+        c(development, validation),
+        replace_annotations
+         
+      )
+    ) |>
+    kable(format='latex', booktabs=TRUE, escape=FALSE) |>
+    kable_styling(latex_options = "hold_position", font_size = 10) |>
+    pack_rows(
+      index = c(`time-until-death from listing, based on biomarkers at listing` = 3,
+                `remaining time-until-death from cross-sections, based on last reported biomarkers` = 3)
+    ) |>
+    add_p_value_footnote(extra_text=', compared to UNOS-MELD') |>
+    add_p_value_footnote(symbol='dagger', extra_text=', compared to ReMELD') |>
+     str_replace('remaining time-until-death from cross-sections, based on last reported biomarkers', '\\\\makecell[l]{remaining time-until-death from cross-sections, based on \\\\\\\\ last reported biomarkers}') |>
+    knitr::asis_output() 
+}
+```
+`\endgroup`{=latex}
+
+`\vspace*{-1em}`{=latex}
+
+### Estimated absolute survival risk per MELD Score
+
+This section reports absolute 90-day mortality risks for UNOS-MELD and
+DynReMELD estimated *"from cross-section"*. The estimation of mortality
+risks *"from cross-section"* is complicated by the fact that most
+individuals contribute multiple, correlated observations to the Cox
+model. In principle, this dependence can be broken by reporting cross-section-specific estimates of 90-day waiting list survival, but such estimates are
+imprecise. To partially break the dependence, we chose to estimate
+90-day survival on a data set that included, for each reported set of
+biomarkers, only the first cross-section where the patient had an active
+waiting list status. Table \@ref(tab:ch3tab4) shows 90-day
+mortality risks estimated in this way.
+
+The table shows that inverse probability censoring weighting increases
+estimates of absolute 90-day mortality risks by almost 10 percentage
+points. Failing to correct for informative censoring therefore results in
+mortality equivalents that understate the counterfactual mortality
+risk. This is of interest to Eurotransplant, as these mortality equivalents
+are used by Eurotransplant to assign exception points.
+
+Candidates with multiple sets of biomarkers still contribute multiple observations
+to estimating 90-day mortality risks *from cross-section*. Dependence between 
+such observations can bias estimates of the 90-day mortality risks. It is reassuring 
+that point estimates of 90-day mortality risks *from registration* 
+(see Table \@ref(tab:ch3stab3)) are close to estimates *from
+cross-section* (generally less than 5 percentage point differences are
+observed).
+
+```{r ch3tab4, tab.cap=chuck(CH3_TABLE_CAPTIONS, 'TAB4')}
+file_and_sheet <- chuck(CH3_TAB_FILES, 'TAB4')
+
+d_tab <- read_excel(
+  file_and_sheet[[1]],
+  sheet=file_and_sheet[[2]]
+) |>
+  janitor::remove_empty(which='cols') |>
+  mutate(
+   # group = if_else(group=='', NA_character_, group) |> zoo::na.locf(na.rm=FALSE),
+    across(where(is.character), replace_na, ''),
+    across(where(is.character), format_dates),
+    across(where(is.character), trimws)
+  )
+names(d_tab)[2:5] <- str_extract(names(d_tab[2:5]), '\\(.+\\)') |>
+    trimws(whitespace='[\\)|\\(]') 
+names(d_tab)[1] <- tolower(names(d_tab))
+if (knitr::is_html_output()) {
+  d_tab |>
+    kable(format='html', align='lcccc') |>
+    kable_styling('striped') |>
+    add_header_above(
+      c(` ` = 1, `UNOS-MELD` = 2, `DynReMELD` = 2)
+    )
+
+} else if (knitr::is_latex_output()) {
+   d_tab |>
+    kable(format='latex', align='ccccc', booktabs=TRUE, align = 'lcccc') |>
+    kable_styling(latex_options=c('scale_down', 'hold_position'), font_size=10) |>
+    add_header_above(
+      c(` ` = 1, `UNOS-MELD` = 2, `DynReMELD` = 2)
+    )
+}
+```
+
+
+```{r ch3stab3, tab.cap=chuck(CH3_TABLE_CAPTIONS, 'STAB3')}
+file_and_sheet <- chuck(CH3_TAB_FILES, 'STAB3')
+
+d_tab <- read_excel(
+  file_and_sheet[[1]],
+  sheet=file_and_sheet[[2]],
+  skip=1
+) |>
+  janitor::remove_empty(which='cols') |>
+  mutate(
+   # group = if_else(group=='', NA_character_, group) |> zoo::na.locf(na.rm=FALSE),
+    across(where(is.character), replace_na, ''),
+    across(where(is.character), format_dates),
+    across(where(is.character), trimws)
+  ) |>
+  filter(Score %% 2 == 0)
+
+d_tab <- select(d_tab, 1, 5, 4, 3, 2)
+
+names(d_tab) <- str_remove(names(d_tab), '^[[A-Z]|[a-z]|-]+\\s')
+names(d_tab)[1] <- tolower(names(d_tab))
+
+HEADER <- c(` ` = 1, `UNOS-MELD` = 2, `DynReMELD` = 2)
+if (knitr::is_html_output()) {
+  
+  d_tab |>
+    kable(format='html', align='ccccc') |>
+    kable_styling('striped') |>
+    add_header_above(
+      HEADER
+    )
+
+} else if (knitr::is_latex_output()) {
+   d_tab |>
+    kable(format='latex', booktabs=TRUE) |>
+    kable_styling(latex_options=c('scale_down', 'hold_position'), font_size=10) |>
+    add_header_above(
+      HEADER
+    )
+}
+```
+
+`\FloatBarrier`{=latex}
+
+## Discussion
+
+Prior literature revised the MELD score with liver waiting list candidate data *"from
+registration"* (e.g., [@kimHyponatremiaMortalityPatients2008a;
+@kimMELD3point0; @goudsmitRefittingModelEndstage2020]), which ignores any
+MELD biomarker measurements that are reported after registration and any
+waiting list death that occurs more than 90 days after registration. We used methodology proposed
+by Gong and Schaubel [@gongPartlyConditionalEstimation2013] to model waiting list
+mortality from calendar-time cross-sections, which can avoid such waste of statistical
+information in revising MELD. Moreover, we assessed how revision of MELD
+was affected by correction for selection bias by transplantation or delisting with inverse
+probability censoring weighting. 
+
+We showed that the *"from cross-section"* approach uses waiting list
+registry data substantially more efficiently, with the number of
+waiting list deaths and MELD scores informing revision of MELD increasing
+sevenfold compared to revision *"from registration"*. DynReMELD, the
+score obtained by quantile matching UNOS-MELD to the risk equation that
+was developed *"from cross-section"* with IPCW, attains significantly higher
+c-indices than ReMELD and UNOS-MELD in a geographical validation cohort
+for predicting remaining time-until-death based on last reported MELD
+biomarkers (p < 0.001). This is important for Eurotransplant, as
+Eurotransplant liver allocation prioritizes candidates based on their
+last reported MELD scores and not MELD at listing. In magnitude,
+the improvements in c-indices (0.0015 compared to ReMELD, and 0.0040
+compared to UNOS-MELD) are comparable to the addition of serum sodium to
+ReMELD (approx. delta c-index of 0.0030)
+[@goudsmitRefittingModelEndstage2020] and the addition of serum albumin to 
+MELD 3.0 (delta c-index of 0.0028) [@kimMELD3point0]. MELD revision from
+cross-section with IPCW can thus improve urgency-based risk
+stratification. Our results suggest that the improvement is due to
+modeling time-remaining-until-death from cross-sections and not IPCW,
+as IPCW changed estimated coefficients only slightly.
+
+We believe the main reason why DynReMELD outperforms ReMELD in
+geographical validation is that revision *"from cross-section"* uses Eurotransplant
+registry data substantially more efficiently than revision *"from
+registration"*, as the latter method only uses the MELD biomarkers that were reported
+at listing and the first 90 days of waiting list survival. This raises the
+question whether revision *"from registration"* cannot also be improved
+upon by using available registry data more efficiently. One way of doing
+this would be to include MELD biomarkers as time-varying covariates. However,
+because MELD biomarkers also increase inherently as part of the death process, 
+use of biomarkers as time-varying covariates leads to issues of reverse causality. Follow-up data could,
+in principle, also be used more efficiently by not restricting revision *"from
+registration"* to the first 90 days after listing. However, we found
+that this leads to violations of the proportional hazards assumption for
+MELD biomarkers.
+`\newpage`{=latex}
+We also assessed how estimates of the 90-day mortality risks are affected
+by (a) revision *"from cross-section"* and (b) correcting for dependent
+censoring with IPCW. Revision *"from cross-section"* does not
+meaningfully change estimated 90-day mortality risks, with risks
+estimated *"from cross-section"* differing by less than 5 percent points
+from risks estimated *"from registration"*. This means that we do not
+find that there are meaningful differences in 90-day mortality risks between
+a candidate who reported a particular MELD score at listing and another
+one who reported that same score as part of a MELD
+recertification. Mitigation of selection bias with IPCW did increase
+estimated 90-day waiting list mortality risks for both UNOS-MELD and
+DynReMELD by 10 percentage points. Failure to account for informative censoring by transplantation/delisting thus leads to an underestimation of
+90-day mortality equivalents, which can be problematic as Eurotransplant uses
+these estimates to assign MELD scores for candidates who receive exception points.
+
+Eurotransplant currently consists of 38 liver transplant centers
+located in seven European countries. These centers differ structurally in
+terms of patient populations, liver transplantation volumes, and willingness to accept
+donors of marginal quality. A strength of our study is that we assigned
+candidates to either the development or validation cohort based on their
+center of listing, which means that the predictive performance of
+DynReMELD was evaluated in a cohort independent from the centers on
+which the score was developed. 
+
+A limitation of our work is that revision of MELD *"from cross-section"* 
+only uses the last MELD biomarkers reported before the cross-section date.
+Eurotransplant
+uses these same biomarker measurements for allocation, but they may be outdated
+representations of a patient's health status. Alternatively, one could
+model the evolution of MELD biomarkers over time with linear mixed
+models, and use a best linear unbiased
+predictions (BLUP) of biomarkers at every cross-section time. This BLUP
+approach was first proposed by Maziarz et al.
+[@maziarzLongitudinalPredictionTimetoEvent2017] for landmarking, a
+statistical technique which bears similarities to Gong and Schaubel's
+approach. We did not use a BLUP approach to revise MELD, since irregular
+spacing of MELD measurements complicates modeling the biomarker process. Deployment of BLUP models would also be practically challenging for
+Eurotransplant. Moreover, MELD scores for patients with significant
+90-day mortality risks are rarely outdated as Eurotransplant requires
+frequent re-certification of MELD scores for sicker patients. For example,
+MELD scores are on average 12 days old at cross-section for candidates with
+MELD scores ranging between 20 and 25
+(corresponding to a 90-day mortality risk of 10 to 25%), and 3 days
+old for MELD scores greater than 25 (which corresponds to a mortality risk of
+25\% or greater).
+`\newpage`{=latex}
+A final limitation of our work is that DynReMELD was based only on
+bilirubin, creatinine and the INR, while updated versions of MELD exist that
+use additional biomarkers. Future work could focus on revising these UNOS-MELD
+alternatives *"from cross-section"*. This was not pursued in this chapter,
+because serum sodium and albumin are unavailable in Eurotransplant registry data
+for most patients on the liver waiting list. 
+
+`\FloatBarrier`{=latex}

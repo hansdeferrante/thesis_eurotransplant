@@ -1,0 +1,379 @@
+
+# The way forward {#CHdiscussion}
+
+In Chapters \@ref(CHintroduction), \@ref(CHprefaceliver), and \@ref(CHprefacekidney),
+we have placed the liver and kidney allocation systems in their historical context. 
+A common thread throughout these chapters is that fairness mechanisms 
+have become a central component of Eurotransplant's allocation
+systems. In fact, Eurotransplant's member countries have identified
+equality of opportunity as _"the most important factor for allocation"_ [@ETMan2025].
+
+This motivated the first goal of this thesis: the investigation of research
+questions relating to equality of opportunity. In Chapter \@ref(CHsexdisparity), 
+we assess
+whether, and why, female candidates for liver transplantation are 
+more likely than male candidates to
+have an adverse waiting list outcome in Eurotransplant. In Chapter \@ref(CHvpra), 
+we examine whether immunized candidates are adequately prioritized in ETKAS. 
+The findings of these chapters highlight
+that both the liver and kidney allocation systems have room for improvement. 
+
+An important barrier to implementing such improvements has been that Eurotransplant
+did not have tools available to quantify the impact of allocation policy changes.
+To overcome this barrier, a second goal of this thesis was to develop tools that
+provide insight into the adequacy and the unintended consequences of allocation policy
+changes. In Chapters \@ref(CHelassimulator) and \@ref(CHetkidneysimulator), 
+we have provided detailed 
+descriptions of the ELAS and ETKidney simulators. These simulators mimic the 
+liver and kidney allocation processes in Eurotransplant, based on Eurotransplant
+allocation rules and Eurotransplant registry data. To build trust in these tools, we have developed these simulators
+in close collaboration with subject-matter experts. They have been validated
+through input-output validation and are publicly available online. The simulators
+have already become valuable tools for allocation policy development,
+as we illustrated through clinically motivated case studies in 
+Chapters \@ref(CHelassimulator) and \@ref(CHetkidneysimulator).
+
+In this chapter, we reflect on the findings of this thesis, and what is needed
+to advance Eurotransplant's liver and kidney allocation systems.
+
+## This thesis is a sharp look at familiar problems
+
+The problems studied in this thesis were brought to our attention by clinicians
+affiliated with Eurotransplant's advisory committees and the ETRL, who experience these issues in
+their daily work. The studied problems are therefore not new. In fact, 
+sex disparity in liver transplantation has been a prominent topic for over a decade 
+[@moylanDisparitiesLiverTransplantation2008; @mathurSexBasedDisparitiesLiver2011; 
+@laiHeightContributesGender2010], and disadvantages for immunized candidates 
+have previously been reported in both Germany [@ziemannUnacceptableHumanLeucocyte2017; 
+@zecherImpactSensitizationWaiting2022a] and the United States [@stewartSmoothingItOut2012].
+
+This lack of novelty does not mean that these problems are not worth revisiting.
+One reason to re-examine these problems in this thesis is that consensus between
+Eurotransplant's member countries is often required to change allocation policies.
+Investigating disparities using Eurotransplant-wide cohorts can help build such consensus.
+In some cases, Eurotransplant-wide cohorts are also needed to achieve sufficient
+statistical power. For example, the disadvantages faced by female candidates 
+on the liver waiting list (Chapter \@ref(CHsexdisparity)) are likely too
+subtle to be detectable in single-center studies or even those conducted at the 
+national level.
+
+Eurotransplant's expertise on the allocation systems can also be essential to
+contextualize any observed disparities. For instance, disparities 
+may vary between countries due to heterogeneity in national 
+allocation policies, or they may evolve over time as the allocation rules 
+change. An important realization is also that disparities in waiting list outcomes
+need not be the result of allocation. For example, they can also arise through
+the offer acceptance behavior of transplant centers. Eurotransplant's expertise
+on the allocation systems was critical in designing informative sensitivity
+checks relating to its allocation mechanisms 
+(standard vs. non-standard allocation; center-driven vs. patient-driven offers),
+time periods, and countries (see Chapters \@ref(CHsexdisparity) and \@ref(CHvpra)).
+
+A final motivation to revisit these existing problems is that the existing literature
+relies too heavily on the standard assumptions of the Cox proportional hazards model,
+which are implausible in the context of the transplantation waiting list. For example, in 
+liver transplantation, dependent censoring due to transplantation is typically
+ignored, which introduces bias when modeling waiting list mortality 
+(see Chapters \@ref(CHdynremeld) and \@ref(CHsexdisparity)). In kidney
+allocation, the modeling of access to transplantation is complicated by the relevance
+of two timescales: time since waiting list registration and time on dialysis.
+In our analyses, we have preferred to use dialysis as the timescale, as candidates
+are prioritized by dialysis time and not waiting time. However, care must then 
+be taken to ensure that the adjustment variables are predetermined to the outcome (see Chapter \@ref(CHvpra)).
+
+`\vfill`{=latex}
+
+## We need to look beyond survival models for allocation
+
+In transplantation research, efforts to improve allocation models often narrowly 
+focus on the improvement of the statistical models that predict medical urgency, 
+medical utility, or transplant benefit. In the literature on liver transplantation, 
+for example, a plethora of refinements to MELD have been proposed, which 
+include delta-MELD [@merionLongitudinalAssessmentMortality2003], integrated 
+MELD [@Luca2007], Updated MELD [@sharmaReweightingModelEndStage2008], 
+ReFit MELD [@leiseRevisedModelEndstage2011], MELD excluding INR [@Heuman2006], 
+UKELD [@Neuberger2007], MELD-Na [@kimHyponatremiaMortalityPatients2008a], 
+MELD-Plus [@Kartoun2017], MELD lactate [@Sarmast2020], ReMELD and ReMELD-Na 
+[@goudsmitValidationModelEndstage2020a], MELD 3.0 [@kimMELD3point0], 
+and GEMA-Na [@rodriguezPeralvarezDevelopmentValidationGenderEquity2023].
+
+Few of these models have been implemented for organ allocation, and
+those that were implemented have had a limited impact on the number of waiting list deaths.
+For example, in the United States, only MELD-Na and MELD 3.0 have been adopted for
+liver allocation. MELD-Na was introduced because LSAM simulations suggested 
+that the score could prevent 40 to 60 waiting list deaths annually. MELD 3.0 was
+primarily introduced to rectify sex disparity, but was also projected to reduce 
+waiting list mortality by up to 20 deaths per year [@kimMELD3point0]. These 
+projections meant that MELD-Na could avert 2 to 3% of liver waiting list deaths in the
+United States, whereas 
+MELD 3.0 was projected to reduce mortality by less than 1%. Although this is an 
+improvement, it also shows that revising MELD is not a magic bullet in preventing
+liver waiting list deaths.
+
+In Chapter \@ref(CHelassimulator), we quantified the impacts of introducing
+ReMELD-Na on liver waiting list outcomes in Eurotransplant. We find that ReMELD-Na 
+could avert between 5 and 20 waiting list deaths per year, which corresponds to 1 to 4
+percent of the waiting list deaths in Eurotransplant. Partially based on these 
+findings, liver allocation in Eurotransplant has become based on ReMELD-Na since March 25, 2025.
+Eurotransplant is currently examining whether allocation can be improved further with 
+MELD 3.0 or GEMA-Na. Although these efforts are worthwhile, it should be 
+realized that further refinements to MELD may have diminishing returns, and
+could also reduce the number of waiting list deaths by less than one percent.
+
+Other approaches are thus necessary to meaningfully reduce mortality on the
+liver waiting list. These approaches should look beyond the refinement of survival
+models for waiting list mortality. One approach -- which is under-explored for
+liver allocation in Eurotransplant
+-- is to reconsider the priority for candidates with exception points. In a second case 
+study in Chapter \@ref(CHelassimulator), we show that modifying the 
+exception point system in Belgium could reduce the number of Belgian waiting 
+list deaths by up to 10\%. Based on this information, BeLIAC asked 
+Eurotransplant in February 2025 to cap all exception points in Belgium by 28
+points. Similar revisions of the exception point systems should be explored with 
+other national competent authorities. A different approach to reducing the number of
+waiting list deaths -- which was not explored in this thesis -- 
+is to increase geographical sharing for candidates with extreme MELD scores, 
+as is done in the United States for MELD scores exceeding 35 [@massieEarlyChangesLiver2015]
+and in Italy for MELD scores exceeding 30 [@Ravaioli2022]. A
+simulation study could be conducted that examines the effects of broader
+geographic sharing in Eurotransplant.
+
+Liver allocation can also be improved by making it fairer. In Chapter \@ref(CHsexdisparity)
+we describe that the smaller stature of females limits their access to
+transplantation, which indirectly increases the number of waiting list deaths
+in females. This finding suggests that waiting list outcomes between males and females cannot
+be equalized by only revising MELD using a Cox proportional hazards model with
+waiting list death as the outcome; such models cannot compensate for the
+disparities in waiting list outcomes that are indirectly due to access to
+transplantation. Instead, we suggest in Chapter \@ref(CHsexdisparity)
+that a simulation study should be conducted to assess how many
+extra points small-statured candidates would need to rectify sex disparity. 
+
+While the inclusion of factors that are not directly related to survival may appear 
+arbitrary, it is important to note that the current allocation system already 
+includes such factors. For example, pediatric patients are already prioritized based on
+exception points, and blood group O candidates are protected by the
+restricted ABO blood group rules. Ultimately, we believe that there is no 
+compelling reason for basing liver allocation _solely_ on MELD. We note that this
+idea already appears to have been accepted by policymakers in the United States, 
+where a policy-making process is underway to award points for factors other than 
+pre-transplant mortality (quantified by MELD) [@kimMELD3point0]. Explicitly included among these factors
+is candidate height.
+
+## We should look beyond aggregate outcomes
+
+ELIAC and national competent authorities have been hesitant to introduce
+MELD-Na for liver allocation because the literature indicates that this score has exacerbated sex disparity in liver allocation (e.g., [@allenReducedAccessLiver2018]). 
+Our results in Chapter \@ref(CHsexdisparity) are compatible with this finding
+and suggest that females indeed have a slightly higher waiting list mortality rate 
+than males when at the same MELD-Na score. This disadvantage corresponds to a 0.5 
+to 1 point difference on the MELD scale. The ReMELD-Na case study in Chapter \@ref(CHelassimulator) also
+shows that introducing ReMELD-Na would primarily prevent waiting list deaths 
+among male candidates. Although this confirms concerns that ReMELD-Na would increase sex
+disparity, it should not be interpreted as an argument against ReMELD-Na per se; 
+our analysis shows that ReMELD-Na would reduce the number of 
+waiting list deaths for both sexes (albeit insignificantly for females).
+`\newpage`{=latex}
+This illustrates that new allocation policies should not be introduced or rejected
+based on a single summary statistic. Instead, simulation studies should be
+conducted that quantify the impact of allocation policy changes on several
+subgroups, as we do in Chapter \@ref(CHelassimulator) for several vulnerable
+patient groups. Policymakers can then make
+rational decisions about whether the improvements for some patient groups can justify
+the unintended consequences these policy changes inevitably have on others. Not doing such a simulation
+can also harm certain patient groups. A cautionary example appears to have been
+the 2018 introduction of the Transplant Benefit Score (TBS) in the United Kingdom. While this scheme improved overall survival benefit [@Allen2024], the policy has been controversial because it inadvertently reduced access to
+transplantation for young liver transplant candidates, as well as for those
+with hepatocellular carcinoma (HCC) [@Attia2023; @Attia2024].
+
+Policymakers should also be aware that using statistical models in allocation
+results in statistical discrimination. In a retrospective cohort of liver transplantation 
+recipients from Eurotransplant (_unpublished_), we find that the sickest 3% of 
+candidates for liver transplantation still have a graft survival probability two years
+after transplantation that exceeds 60%. These patients were on average 50 years old, had MELD scores
+exceeding 30 at listing, were admitted to the ICU before transplantation, and
+presented with grade 3
+acute-on-chronic liver failure (ACLF), which alone is associated with a 28-day
+mortality exceeding 80% [@Arroyo2020]. A benefits-based allocation could deny
+these patients access to liver transplantation. This would mean that the six out of ten
+patients who would survive more than two years with a functioning graft could be
+denied a liver transplantation, because four others would not survive. 
+Whether such an allocation is 
+ethically acceptable is a normative question that cannot be answered based on 
+aggregate statistics.
+
+## Scientific evidence is rarely the bottleneck
+
+The recommendations that are prepared by Eurotransplant's advisory committees require approval
+from the Eurotransplant Board and the national competent authorities before
+they are implemented. A frequently mentioned barrier to obtaining approval from
+the national competent authorities is that any change to allocation has to be
+based on scientific evidence.
+
+In our view, the availability of scientific evidence is rarely the bottleneck --
+at least not for the case studies included in this thesis. For example, there is 
+broad consensus that kidneys from young donors should be preferentially allocated to young
+candidates [@waiserAgeMatchingRenal2000; @pippiasYoungDeceasedDonor2020; @vanittersumIncreasedRiskGraft2017; @coemansCompetingRisksModel2024; 
+@keithEffectDonorRecipient2004b], there is consensus that HLA-DR matching
+is more important than HLA-A or HLA-B matching in kidney allocation [@vereerstraetenExperienceWujciakOpelzAllocation1998;
+@Roberts2004], and ample evidence exists that hyponatremia is associated
+with an increased mortality on the liver waiting list [@kimHyponatremiaMortalityPatients2008a;
+@goudsmitValidationModelEndstage2020a].
+
+`\newpage`{=latex}
+We think that the primary bottleneck lies in translating these findings into 
+allocation policies that are acceptable to all stakeholders. Significant 
+progress could be made if national competent authorities are willing to accept 
+the results of the ELAS and ETKidney simulators as scientific evidence. In the
+United States, discrete-event simulation already plays such a role; tools 
+such as LSAM and KPSAM have been instrumental in shaping the liver and kidney
+allocation policies in OPTN, the organ-sharing network of the United States.
+
+Another issue has been that proposals to improve the allocation systems are
+sometimes too radical. The fact that ETKAS still gives equal priority to
+HLA matching at the A, B, and DR loci is not because emphasizing matching
+at the HLA-DR locus has not been explored. In fact, several policies have 
+been proposed that emphasize matching on the HLA-DR locus. However, these proposals
+introduced new tiers for DR-matching (e.g., [@doxiadisSimplerEquitableAllocation2007]),
+which represents a radical overhaul of the current points-based system.
+National competent authorities could not agree to this overhaul, for example
+because it strongly increased the number of international transplantations [@heemskerkRegionalKidneyAllocation2009]. A more fruitful approach to 
+improving the allocation system is to consider incremental changes that are 
+supported by solid evidence and backed by a broad set of stakeholders.
+We see giving relatively more points to matching on the HLA-DR locus than
+the HLA-A locus -- a policy explored in Chapter \@ref(CHetkidneysimulator) -- 
+as an example of such an incremental approach. 
+
+## The "chicken-and-egg" problem in allocation development
+
+A persistent "chicken-and-egg" problem in Eurotransplant is that the transplant
+centers are reluctant to report information to Eurotransplant that is not required 
+for allocation, while policymakers are reluctant to introduce new allocation
+policies that have not been validated in Eurotransplant. We encountered such
+a problem in the ReMELD-Na case study in Chapter \@ref(CHelassimulator); serum sodium
+is absent in the Eurotransplant database for most candidates, which complicates 
+studying the impact of ReMELD-Na for liver allocation. 
+
+It is important to note 
+that serum sodium is virtually always measured alongside the other MELD biomarkers,
+which makes missingness of serum sodium a reporting issue, not a data 
+availability issue. 
+The same issue exists for serum albumin, which is required for MELD 3.0, 
+and serum urea, which is required for GEMA-Na. This severely
+limits the utility of the Eurotransplant database for developing and validating
+liver allocation scores, especially when the SRTR makes data from the United
+States available for research, where the reporting of these biomarkers has been
+mandatory for years. For example, centers in the United States have been required
+to report serum sodium with every MELD update since 2004, twelve years before
+MELD-Na was introduced for allocation [@unos2014liver]. To develop liver allocation scores
+specifically for Eurotransplant, more prospective data collection is needed
+in Eurotransplant.
+
+In kidney allocation, a similar "chicken-and-egg" problem complicates the study 
+the impact of epitope matching. Such epitope matching has been described as a promising 
+alternative to HLA matching at the serological level because (i) epitopes
+provide a more precise assessment of immunological compatibility that could
+improve post-transplant outcomes [@Niemann2021], and (ii) epitope
+matching can be more equitable than HLA matching [@Mankowski2024]. However, studying
+whether epitope matching would improve outcomes after kidney transplantation
+requires high-resolution HLA typings, and such typings are not yet routinely reported
+to Eurotransplant [@Karahan2025].
+
+Transplant centers express valid concerns over the increase in workload associated
+with prospective data collection. A task for Eurotransplant 
+is to minimize this workload by limiting any prospective data collection to 
+information that is deemed necessary for allocation development. For liver transplantation,
+the burden can be reduced by mandating the collection of specific biomarkers only
+at listing, which would enable external validation of new liver allocation scores
+using a "from registration" approach (see Chapter \@ref(CHdynremeld)). 
+An ELIAC recommendation in this direction is currently awaiting approval from 
+the national competent authorities. 
+
+The workload for the transplant centers can also be reduced through automated
+data reporting. A success story in this regard is the introduction of
+the virtual crossmatch in January 2023, after which donor procurement 
+organizations no longer need to manually enter the HLA typings of their donors. 
+As a result, HLA typings of donors are now routinely available at Eurotransplant 
+at an intermediate resolution. Implementing a similar automated reporting system
+for candidate HLA data has been requested by HLA typing laboratories, and
+should be a priority for Eurotransplant.
+
+Special attention should also be given to the collection of follow-up 
+information. The simulation of listing for repeat transplantation in the
+ETKidney and ELAS simulators depends on this information. Such information
+is also required to quantify the impact of allocation policy changes on post-transplant
+outcomes, a matter that is regularly inquired about by the advisory committees.
+A growing concern is that several centers within Eurotransplant have stopped
+reporting follow-up information to the Eurotransplant registry. Long-term
+follow-up information is therefore not available for many transplant
+recipients.
+
+## We need more constructive dialogue
+
+The core principles of Eurotransplant's current liver and kidney allocation 
+systems have changed little since their respective introductions in 2007 and the 1990s. 
+This stagnation stands in contrast to other regions and is
+surprising given the demographic shifts of our patient and donor populations, 
+and clinical advancements in the field. The work presented in this thesis has 
+described several areas for improvement in kidney and liver allocation.
+The primary challenge lies in translating these findings into
+allocation policies acceptable to Eurotransplant, national competent authorities,
+transplant centers, and ultimately, the patients who wait for a transplant.
+
+Over the past two decades, allocation development has become a slow and tedious
+process. This has, at times, strained the relationships of Eurotransplant with its
+stakeholders. Some member countries even question whether there is a role for
+Eurotransplant in allocation development. These stakeholders should recognize -- as is
+highlighted by this thesis -- that Eurotransplant allocation systems are highly 
+complex and must balance multiple, competing objectives. 
+Improving these systems is not as straightforward
+as proposing a new statistical or machine learning model to score medical
+urgency, medical utility, or transplant benefit, and solely focusing on such
+solutions can harm vulnerable patient groups. In my view, 
+Eurotransplant's expert knowledge on these allocation systems makes it deserving
+of a seat at the table when new allocation policies are discussed.
+
+At the same time, it is important that Eurotransplant listens to the clinical
+experts who on a daily basis experience the limitations of the current allocation 
+systems. The topics studied in this thesis were motivated by conversations
+with these experts; for example, the size mismatch hypothesis in
+Chapter \@ref(CHsexdisparity) was raised (off-topic) by a BeLIAC 
+representative, and several nephrologists have expressed frustrations about the fact
+that the immunized candidates who are ineligible for the AM program are falling through the cracks
+in ETKAS (which we confirm in Chapter \@ref(CHvpra)). It is true that Eurotransplant's
+allocation systems feature mechanisms to help address these disparities. 
+For example, livers from donors weighing less than 46 kg 
+are offered with priority to candidates weighing less than 55 kg, and immunized candidates receive some extra
+priority through mismatch probability points. It can simultaneously be true that these
+mechanisms fall short of realizing equality of opportunity, and Eurotransplant
+should be more open to recognizing this.
+
+Historically, the main forums to develop new allocation policies in Eurotransplant
+have been the organ advisory committees. With the introduction of legal frameworks
+in the 1990s, national competent authorities now also have a strong say. A source
+of frustration appears to be that Eurotransplant submits finalized recommendations
+to national competent authorities, sometimes without prior consultation. To avoid
+this, Eurotransplant should engage these and other stakeholders earlier in policy discussions.
+An obstacle to playing such a role is that Eurotransplant has limited capacity 
+for allocation development, employing only two full-time biostatisticians and 
+seven medical doctors who have to spend most of their time on operational duties.
+`\newpage`{=latex}
+This stands in stark contrast to other regions where dedicated research 
+departments or organizations have been established that focus exclusively
+on allocation development. Notable is the SRTR in the
+United States, which was established in 1984 to support statistical analyses
+relating to solid organ donation and which has developed the SAM family of
+simulators. SRTR operates on an annual budget of 7 million USD. Because of
+this investment gap, it not surprising that the heart, lung, and liver allocation systems
+used in Eurotransplant were developed in the United States. If we want to
+develop allocation systems tailored to our European patients, Eurotransplant's 
+member countries should be open to providing long-term funding for allocation 
+research and development.
+
+In the end, meaningful progress on the organ allocation policies can only be
+achieved through more constructive dialogue among Eurotransplant, the national
+competent authorities, and subject-matter experts affiliated with the transplantation
+centers. Together, these stakeholders should carefully consider how to weigh 
+the ethical trade-offs involved in the allocation of deceased-donor organs. The
+simulators presented in this thesis can contribute to these discussions
+by making the associated trade-offs explicit.

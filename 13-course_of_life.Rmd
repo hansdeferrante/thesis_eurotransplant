@@ -1,0 +1,41 @@
+# Course of Life {-}
+
+```{=latex}
+\addcontentsline{toc}{chapter}{Course of Life}
+\markboth{COURSE OF LIFE}{COURSE OF LIFE}
+```
+Hans de Ferrante was born on March 20, 1995 in 's-Gravenhage, the Netherlands. He completed his secondary education at St. Odulphus-Lyceum in Tilburg.
+
+In 2013, Hans began his academic journey at Eindhoven University of Technology, where he pursued a Bachelor of Science in Biomedical Engineering. For this degree, he focused on molecular biology, organic chemistry, and computational biology. In 2014, Hans started a second Bachelor of Science in Econometrics and Operations Research at Tilburg University. He graduated cum laude for these degrees in 2017 and 2018, respectively. During his undergraduate studies, Hans took part in the iGEM competition in Boston, spent a semester abroad at the University of Hong Kong, and participated in the Netherlands-Asia Honours Summer School (NAHSS) in Chengdu, China.
+
+Hans continued his studies with a Master of Science in Systems Biology and Bioinformatics at the Vrije Universiteit and Universiteit van Amsterdam. For this degree, he wrote a master's thesis on protein-protein interface prediction from amino acid sequence, and he served as a teaching assistant for several bioinformatics courses. Parallel to this, Hans pursued a Master of Science in Econometrics and Mathematical Economics at Tilburg University. Hans wrote his master's thesis for Econometrics and Mathematical Economics while working as a data science intern at Pacmed in Amsterdam. The topic of this thesis was causal inference for the treatment of breast cancer, using national registry data maintained by Integraal Kankercentrum Nederland (IKNL). He graduated cum laude for both degrees in 2020. From 2018 to 2020, Hans also worked as a part-time research assistant in data science at CentERdata in Tilburg.
+
+Hans started his PhD project at Eindhoven University of Technology under the 
+supervision of dr. Bart Smeulders and prof.dr. Frits Spieksma in September 2020. 
+His research focuses on liver and kidney allocation in Eurotransplant. This
+thesis presents results of this research.
+
+Hans will defend his thesis at Eindhoven University of Technology on July 3rd, 2025.
+
+# List of publications {-}
+
+```{=latex}
+\addcontentsline{toc}{chapter}{Publications}
+\markboth{PUBLICATIONS}{PUBLICATIONS}
+```
+
+#### Journal articles {-}
+
+- Hans de Ferrante, Marieke de Rosner-van Rosmalen, Bart M.L. Smeulders, Frits C.R. Spieksma, and Serge Vogelaar (2025). *A discrete event simulator for policy evaluation in deceased-donor liver allocation in Eurotransplant*. In: *Operations Research, Data Analytics and Logistics*.  
+  
+- Hans de Ferrante, Marieke de Rosner-van Rosmalen, Bart M.L. Smeulders, Serge Vogelaar, and Frits C.R. Spieksma (2025).  
+  Sex disparity in liver allocation within Eurotransplant. In: *American Journal of Transplantation*.  
+  
+- Hans de Ferrante, Bart Smeulders, Ineke Tieken, Sebastiaan Heidt, Geert W. Haasnoot, Frans H.J. Claas, Serge Vogelaar, and Frits Spieksma (2023). *Immunized Patients Face Reduced Access to Transplantation in the Eurotransplant Kidney Allocation System*. In:
+  *Transplantation*.  
+  
+- Hans de Ferrante, Marieke de Rosner-van Rosmalen, Bart M.L. Smeulders, Serge Vogelaar, Frits C.R. Spieksma (2024). *Revising model for end-stage liver disease from calendar-time cross-sections with correction for selection bias*. In: *BMC Medical Research Methodology*.
+  
+#### Pre-prints {-}
+
+- Hans de Ferrante, Rocio Laguna Goya, Bart M.L. Smeulders, Frits C.R. Spieksma, and Ineke Tieken (2025). *The ETKidney simulator: a discrete event simulator to assess the impact of alternative kidney allocation rules in Eurotransplant*. *arXiv:2502.15001*.

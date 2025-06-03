@@ -1,0 +1,23 @@
+book_filename: "thesis"
+output_dir: _book
+delete_merged_file: false
+language:
+  ui:
+    chapter_name: "Chapter "
+rmd_files: [
+  "index.Rmd",
+  "acknowledgments.Rmd",
+  "01-introduction.Rmd",
+  "02-preface-liver.Rmd",
+  "03-dynremeld.Rmd",
+  "04-sexdisparity.Rmd",
+  "05-elas_simulator.Rmd",
+  "06-preface-kidney.Rmd",
+  "07-immunized.Rmd",
+  "08-etkidney-simulator.Rmd",
+  "09-Discussion.Rmd",
+  "10-appendix.Rmd",
+  "12-summary.Rmd",
+  "13-course_of_life.Rmd"
+]
+

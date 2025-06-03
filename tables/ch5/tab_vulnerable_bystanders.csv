@@ -1,0 +1,13 @@
+Group,Category,UNOS-MELD,ReMELD-Na,ReMELD-Na - UNOS-MELD,Per year
+Pediatric cand. (<18 yrs),Transplantations,220 [205-235],209 [196-220],-11,-2.8
+Pediatric cand. (<18 yrs),Waitlist deaths,24 [20-28],25 [20-31],1,0.25
+Adolescents (18-29 yrs),Transplantations,232 [216-247],219 [206-232],-13,-3.3
+Adolescents (18-29 yrs),Waitlist deaths,25 [21-29],27 [21-33],2,0.5
+liver + kidney candidates,Transplantations,236 [225-246],204 [192-217],-32,-8.0
+liver + kidney candidates,Waitlist deaths,57 [50-64],68 [59-77],11,2.8
+Candidates on dialysis,Transplantations,442 [414-470],376 [352-401],-66,-16.5
+Candidates on dialysis,Waitlist deaths,257 [237-276],275 [253-297],18,4.5
+Females,Transplantations,1599 [1562-1637],1586 [1557-1614],-13,-3.3
+Females,Waitlist deaths,524 [497-551],522 [500-544],-2, -0.5
+Males,Transplantations,3698 [3652-3744],3718 [3671-3765],20,5.0
+Males,Waitlist deaths,876 [845-907],850 [819-882],-26,-6.5

@@ -1,0 +1,58 @@
+\documentclass{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage[paperwidth=170mm,paperheight=240mm]{geometry}
+\geometry{left=2.53cm, right=2cm, top=2.53cm, bottom=2.1cm}
+\begin{document}
+	
+	\begin{tcolorbox}[
+		colback=gray!5!white,
+		colframe=black,
+		title={\textbf{Algorithm B.1: status completion procedure}},
+		fonttitle=\bfseries,
+		width=1.1\textwidth,
+		sharp corners=south,
+		boxrule=0.8pt
+		]
+		\begin{enumerate}[leftmargin=*, itemsep=0.7em]
+			\item \textbf{Estimate the counterfactual survival function $S^{\text{IPCW}}_T(t)$:}
+			\begin{enumerate}[label=(\alph*)]
+				\item fit an extended Cox model for transplantation,
+				\item predict probability of transplant in order to construct IPCW weights,
+				\item estimate the survival function with Kaplan-Meier, using IPCW weights.
+			\end{enumerate}
+			
+			\item \textbf{Construct pseudo-observations:} \\
+			For every status update, reported by patient $i$ at time $t$, construct pseudo-observations $PO_{it}$ for the log restricted remaining survival time, i.e. for $$\log(T^*_{it}) = \log(\min(T_{it}, \tau)),$$ where $T_{it}$ is defined as the remaining survival time of candidate $i$ at time $t$. The pseudo-observations $PO_{it}$ can be computed solely based on $\hat{S}^{\text{IPCW}}_T(t)$, using formula (2) that appears in Tayob and Murray (2017).
+			
+			\item \textbf{Estimate a model for the log remaining survival time:} \\
+			With pseudo-observations $PO_{it}$ as the outcome, fit the model
+			\[
+			\mathbb{E}[\log(T^*_{it}) | Z_i(t)] = \beta^\intercal Z_i(t),
+			\]
+			where each status update is paired with the covariate vector $Z_i(t)$, i.e. the covariates of patient $i$ at time $t$. To account for within-patient correlations, $\beta$ is estimated with Quasi-Least Squares using a Markov correlation matrix. This yields estimates $\hat{\beta}^{\text{PO}}$. 
+			
+			\item \textbf{For every transplant recipient $i$'s last status update:}
+			\begin{enumerate}[label*=\arabic*.]
+				\item construct a risk set $R_i$ of comparable patients, who
+				\begin{enumerate}[label=(\alph*)]
+					\item who have a later censoring time than patient $i$,\footnote{This requirement is relaxed when very few such candidates exist}
+					\item have similar predicted expected log survival as patient $i$, i.e. \[|\hat{\beta}^{\text{PO}}\ ^\intercal Z_k(C_{i}) - 
+					\hat{\beta}^{\text{PO}}\ ^\intercal Z_i(C_{i})| < \epsilon\]
+					for some \(\epsilon\), where \(Z_k(C_{i})\) are covariates of
+					patient \(k\) at \(i\)'s censoring time \(C_i\),
+					\item match with candidate $i$ on a set of pre-determined characteristics.
+				\end{enumerate}
+				\item Within candidate's $i$ risk set $R_i$, estimate a risk-set-specific conditional counterfactual survival curve $S^{\texttt{IPCW}}(t|R_i)$. Use inverse transform sampling from this function to match candidate $i$ to a specific candidate $k \in R_i$.
+				\item Copy over the future statuses of matched patient $k$ to candidate $i$.
+				\item Repeat steps 4.1 to 4.3 until candidate's $i$ spell ends with a waiting list removal or waiting list death.
+			\end{enumerate}
+			
+		\end{enumerate}
+	\end{tcolorbox}
+	
+\end{document}

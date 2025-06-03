@@ -1,0 +1,50 @@
+/* Change internal link styling for figure references */
+a[href^="#"]:not(.toc) {
+color: blue;
+text-decoration: none;
+font-weight: bold;
+}
+
+.fig-ref {
+display: inline;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+
+body {
+    font-family: "PT Sans", sans-serif;
+}
+
+h1, h2, h3 {
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700; /* Use bold for headers */
+}
+
+p {
+  font-family: "PT Sans", sans-serif;
+}
+
+span {
+  font-family: "PT Sans", sans-serif;
+}
+
+.part-title {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 2em;
+    color: #2c3e50; /* Change to any color you prefer */
+    text-transform: uppercase;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  width: 100%;
+}
+.table-scroll table {
+  width: 100%;
+  /* white-space: normal; */ /* let cells wrap lines naturally */
+}
+

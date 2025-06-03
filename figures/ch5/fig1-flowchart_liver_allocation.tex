@@ -1,0 +1,124 @@
+\sffamily
+\usetikzlibrary{arrows.meta}
+\tikzset{
+	>={Latex[width=2mm, length=1mm]}
+}
+\tikzstyle{decision}=[diamond, draw, fill=yellow!20, aspect=2,
+text width=7em, text badly centered, node distance=2cm,
+inner sep=0pt]
+\tikzstyle{block}=[rectangle, draw, fill=blue!10, 
+text width=8em, text badly centered, rounded corners, minimum height=3.5em]
+\tikzstyle{line}=[draw, line width=.7pt, color=black!75, -{Latex[width=2.5mm,length=1mm]}]
+\tikzstyle{input}=[trapezium, trapezium left angle=84, trapezium right angle=96, draw, fill=green!20, text width=8em,
+minimum height=3em]
+
+
+\usetikzlibrary{positioning}
+
+\begin{tikzpicture}[node distance=2cm, every node/.style={font=\fontsize{11.5pt}{13pt}\selectfont}, auto]
+	% nodes
+	\node [block, text width=8em] (init) {initialize FES, waiting list and obligations};
+	\node [decision] (next_event) [below of=init, xshift=1.8cm, yshift=0cm, text width = 5.8em] {next FES event};
+	
+	% donor events
+	\node [block] (matchlist) [right of=next_event, xshift=3.2cm, yshift=1.35cm, text width = 13em] {advance clock \& create ELAS match list of blood group compatible candidates with active waiting list status};
+	\node [block] (offering) [right of=matchlist, xshift=2.5cm, text width = 9em] {offer graft based on lexicographical ordering of ELAS match code};
+	\node [decision] (offer_acceptance) [below of=offering, yshift=-0cm, text width=4.5em] {graft\\accepted?};
+	\node [block] (sim_relist) [below of=offer_acceptance, text width=10em, yshift=-.85cm, xshift=-4.3cm] {generate re-listing date and post-transplant failure date for accepting patient};
+	\node [decision] (relist_within_sim) [below of=sim_relist, yshift=-.90cm, text width=6em] {relist within simulation?};
+	\node [block] (synth_reg) [right of=relist_within_sim, xshift=2.5cm, text width=8.5em] {add a synthetic re-registration to the simulation};
+	\node [block] (record_transplant) [below of=relist_within_sim, yshift=-0.6cm, text width = 10.8em] {record transplantation, remove the recipient's events from FES};
+	\node [decision] (split_available) [below of=record_transplant, yshift=-.3cm, text width = 5.5em] {whole liver split?};
+	\node [block] (update_obligations) [below of=split_available, yshift=-.25cm] {update obligations};
+	
+	\node [block] (nonuse) at ([yshift=1.2cm, xshift=-2.8cm]update_obligations -| matchlist) [text width = 5em] {record nonuse};
+	
+	% inputs
+	\node [input] (inputs) [above of=init, text width=13em, yshift=.5cm, xshift=0.3cm] {
+		simulation inputs:
+		\vspace{-.3cm}\hspace*{-.5cm}
+		\begin{itemize}[noitemsep, leftmargin=*, itemsep=-.5ex]
+			\item simulation settings
+			\item donor stream
+			\item candidate streams:
+			\vspace*{-.2cm}
+			\begin{itemize}[noitemsep, leftmargin=*, itemsep=-.5ex]
+				\item static information
+				\item status updates
+			\end{itemize}
+			%\item existing obligations
+		\end{itemize}
+	};
+	
+	\node [input] (rules) [above of=matchlist, text width=11em, yshift=1.31 cm, xshift=-1.5cm] {
+		match list module\vspace{-.3cm}\hspace*{-.5cm}
+		\begin{itemize}[noitemsep, leftmargin=*]
+			\item match code rules
+			\item (N)SE exceptions
+			\item S-curve formula
+			\item lab-MELD formula
+		\end{itemize}
+	};
+	\node [input] (accmodule) [above of=offering, text width=17.5em, yshift=1.27 cm, xshift=-0.2cm] {
+		acceptance module, odds ratios for\vspace{-.3cm}\hspace*{-.5cm}
+		\begin{itemize}[noitemsep, leftmargin=*]
+			\item center-driven offer acceptance
+			\item recipient-driven offer acceptance
+			\item split liver transplantation
+			\item pediatric offer acceptance
+		\end{itemize}
+	};
+	\node [input] (posttxp) [above of=synth_reg, text width=13em, yshift=0.70cm, xshift=.35cm] {
+		post-transplant module\vspace{-.3cm}\hspace*{-.5cm}
+		\begin{itemize}[noitemsep, leftmargin=*]
+			\item Weibull shape \& scale parameters for post-transplant survival
+			\item actual re-registrations
+			\item re-listing probabilities
+		\end{itemize}
+	};
+	
+	
+	% patient events
+	\node [block] (patient_update) at (next_event |- sim_relist) {advance clock, update patient information};
+	\node [decision] (patient_remains_waiting)[text width=4.5em] at (patient_update |- relist_within_sim) {patient remains waiting};
+	\node [block, text width=6em] (schedule_new_event) at ([xshift=-1cm]init |- record_transplant) {schedule patient's next status update in the FES};
+	\node [block] (exit) at (next_event |- record_transplant) [text width = 5.5em] {record patient exit (D/R)};
+	
+	% simulation end event
+	\node[decision] at ([xshift=.4cm]init |- update_obligations) (time_termination) {time exceeds simulation end time?};
+	\node [block] (termination) [below of=update_obligations, text width=17em, yshift=.5cm, xshift=3cm] {write out system states and other outputs, terminate simulation};
+	
+	% 
+	\draw[densely dotted, line] ([xshift=-.3cm]inputs.south) -- (init.north);
+	\draw[line] (init.east) -| (next_event.north);
+	\draw[line] (next_event.east) -| +(.2, 0) |- (matchlist.west) node[above,left,align=center, yshift=.5cm, xshift=-.2cm] {donor\\event};
+	\draw[line] (next_event.south) -- +(-0, -0.5) -| (patient_update.north) node[midway,left,align=center] {patient\\event};
+	\draw[line] (patient_update) -- (patient_remains_waiting);
+	\draw[line] (patient_remains_waiting.west) -| (schedule_new_event.north) node[midway,above] {yes};
+	\draw[line] (patient_remains_waiting.south) -- (exit.north) node[midway,left] {no};
+	\draw[line] (matchlist) -- (offering);
+	\draw[line] (offering) -- (offer_acceptance);
+	\draw[line] (offer_acceptance.west) -- +(-1, 0)  node[midway,above] {no} -| (nonuse);
+	\draw[line] (nonuse.south) |- (time_termination.east);
+	\draw[line] (nonuse.south) -- (nonuse |- time_termination);
+	\draw[line] (offer_acceptance.south) -- +(0, -.2cm) -| (sim_relist.north) node[midway,above, xshift=.5cm] {yes};
+	\draw[line] (sim_relist) -- (relist_within_sim);
+	\draw[line] (relist_within_sim) -- (synth_reg) node[midway,above] {yes};
+	\draw[line] (relist_within_sim) -- (record_transplant) node[midway,left] {no};
+	\draw[line] (synth_reg.south) |- (record_transplant);
+	\draw[line] (record_transplant) -- (split_available);
+	\draw[line] (split_available) -- (update_obligations) node[midway,left] {no};
+	\draw[line] (update_obligations) -> (time_termination.east);
+	\draw[line] (exit.south) |- ([yshift=1.5cm]time_termination.north)  -- (time_termination.north);
+	\draw[line] (schedule_new_event.south) |- ([yshift=1.5cm]time_termination.north)  -- (time_termination.north);
+	\draw[line] (time_termination.west) -- +(-.5,0) node[midway,below] {no} |- (next_event.west);
+	\draw[<-] ([xshift=-2.05cm]matchlist.south) |- (split_available.west) node[midway,right,yshift=.5cm] {yes};
+	\draw[line] (time_termination.south) |- (termination.west) node[midway,left] {yes};
+	\draw[densely dotted, -] (rules.south) |- ([xshift=-.3cm, yshift=.5cm]offering.north);
+	\draw[densely dotted, line] (rules.south) -- (rules.south |- matchlist.north);
+	\draw[densely dotted, -] ([xshift=.2cm]accmodule.south) |- ([yshift=.5cm]offering.north);
+	\draw[densely dotted, line] ([yshift=.5cm]offering.north) -- (offering.north);
+	\draw[densely dotted, line] ([yshift=.5cm, xshift=-.3cm]offering.north) -- ([xshift=-.3cm]offering.north);
+	\draw[densely dotted,->] (posttxp.south -| synth_reg.north) -- (synth_reg.north);
+	\draw[densely dotted,->] (posttxp.west |- sim_relist.east) -- (sim_relist.east);
+\end{tikzpicture}
