@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Kidney allocation in Eurotransplant | Organ allocation models in Eurotransplant</title>
+  <meta name="description" content="This is the PhD thesis of H.C. de Ferrante" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Kidney allocation in Eurotransplant | Organ allocation models in Eurotransplant" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="/cover/thesis_cover.png" />
+  <meta property="og:description" content="This is the PhD thesis of H.C. de Ferrante" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Kidney allocation in Eurotransplant | Organ allocation models in Eurotransplant" />
+  
+  <meta name="twitter:description" content="This is the PhD thesis of H.C. de Ferrante" />
+  <meta name="twitter:image" content="/cover/thesis_cover.png" />
+
+<meta name="author" content="Hans Christiaan de Ferrante" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="CHelassimulator.html"/>
+<link rel="next" href="CHvpra.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="dankwoord.html"><a href="dankwoord.html"><i class="fa fa-check"></i>Dankwoord</a></li>
+<li class="chapter" data-level="1" data-path="CHintroduction.html"><a href="CHintroduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="CHintroduction.html"><a href="CHintroduction.html#eurotransplant"><i class="fa fa-check"></i><b>1.1</b> Eurotransplant</a></li>
+<li class="chapter" data-level="1.2" data-path="CHintroduction.html"><a href="CHintroduction.html#objective-medical-criteria-for-organ-allocation"><i class="fa fa-check"></i><b>1.2</b> Objective medical criteria for organ allocation</a></li>
+<li class="chapter" data-level="1.3" data-path="CHintroduction.html"><a href="CHintroduction.html#fairness-in-organ-allocation"><i class="fa fa-check"></i><b>1.3</b> Fairness in organ allocation</a></li>
+<li class="chapter" data-level="1.4" data-path="CHintroduction.html"><a href="CHintroduction.html#challenges-in-improving-organ-allocation-systems"><i class="fa fa-check"></i><b>1.4</b> Challenges in improving organ allocation systems</a></li>
+<li class="chapter" data-level="1.5" data-path="CHintroduction.html"><a href="CHintroduction.html#outline-of-this-thesis"><i class="fa fa-check"></i><b>1.5</b> Outline of this thesis</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html"><i class="fa fa-check"></i><b>2</b> Liver allocation in Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#liver-allocation-prior-to-meld"><i class="fa fa-check"></i><b>2.1</b> Liver allocation prior to MELD</a></li>
+<li class="chapter" data-level="2.2" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#meld-based-liver-allocation-in-the-united-states"><i class="fa fa-check"></i><b>2.2</b> MELD-based liver allocation in the United States</a></li>
+<li class="chapter" data-level="2.3" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#meld-based-liver-allocation-in-eurotransplant"><i class="fa fa-check"></i><b>2.3</b> MELD-based liver allocation in Eurotransplant</a></li>
+<li class="chapter" data-level="2.4" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#areas-for-improvement-in-meld-based-allocation-systems"><i class="fa fa-check"></i><b>2.4</b> Areas for improvement in MELD-based allocation systems</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="CHdynremeld.html"><a href="CHdynremeld.html"><i class="fa fa-check"></i><b>3</b> Revising MELD from calendar-time cross-sections with correction for selection bias</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="CHdynremeld.html"><a href="CHdynremeld.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2" data-path="CHdynremeld.html"><a href="CHdynremeld.html#materials-and-methods"><i class="fa fa-check"></i><b>3.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="3.3" data-path="CHdynremeld.html"><a href="CHdynremeld.html#results"><i class="fa fa-check"></i><b>3.3</b> Results</a></li>
+<li class="chapter" data-level="3.4" data-path="CHdynremeld.html"><a href="CHdynremeld.html#discussion"><i class="fa fa-check"></i><b>3.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html"><i class="fa fa-check"></i><b>4</b> Sex disparity in liver allocation within Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#materials-and-methods-1"><i class="fa fa-check"></i><b>4.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="4.3" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#results-1"><i class="fa fa-check"></i><b>4.3</b> Results</a></li>
+<li class="chapter" data-level="4.4" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#discussion-1"><i class="fa fa-check"></i><b>4.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="CHelassimulator.html"><a href="CHelassimulator.html"><i class="fa fa-check"></i><b>5</b> The ELAS simulator</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="CHelassimulator.html"><a href="CHelassimulator.html#introduction-2"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elassystem"><i class="fa fa-check"></i><b>5.2</b> The Eurotransplant Liver Allocation System (ELAS)</a></li>
+<li class="chapter" data-level="5.3" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasdesign"><i class="fa fa-check"></i><b>5.3</b> The design of the ELAS simulator</a></li>
+<li class="chapter" data-level="5.4" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasmodules"><i class="fa fa-check"></i><b>5.4</b> Modules of the ELAS simulator</a></li>
+<li class="chapter" data-level="5.5" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasvv"><i class="fa fa-check"></i><b>5.5</b> Verification and validation</a></li>
+<li class="chapter" data-level="5.6" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elascasestudies"><i class="fa fa-check"></i><b>5.6</b> Case studies: the impact of modifying ELAS rules</a></li>
+<li class="chapter" data-level="5.7" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasconclusion"><i class="fa fa-check"></i><b>5.7</b> Conclusions and discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html"><i class="fa fa-check"></i><b>6</b> Kidney allocation in Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#hla-matching-versus-fairness"><i class="fa fa-check"></i><b>6.1</b> HLA matching versus fairness</a></li>
+<li class="chapter" data-level="6.2" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#kidney-allocation-programs-in-eurotransplant"><i class="fa fa-check"></i><b>6.2</b> Kidney allocation programs in Eurotransplant</a></li>
+<li class="chapter" data-level="6.3" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#contemporary-challenges-in-kidney-allocation"><i class="fa fa-check"></i><b>6.3</b> Contemporary challenges in kidney allocation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="CHvpra.html"><a href="CHvpra.html"><i class="fa fa-check"></i><b>7</b> Access to transplantation for immunized candidates</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="CHvpra.html"><a href="CHvpra.html#introduction-3"><i class="fa fa-check"></i><b>7.1</b> Introduction</a></li>
+<li class="chapter" data-level="7.2" data-path="CHvpra.html"><a href="CHvpra.html#materials-and-methods-2"><i class="fa fa-check"></i><b>7.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="7.3" data-path="CHvpra.html"><a href="CHvpra.html#results-2"><i class="fa fa-check"></i><b>7.3</b> Results</a></li>
+<li class="chapter" data-level="7.4" data-path="CHvpra.html"><a href="CHvpra.html#discussion-2"><i class="fa fa-check"></i><b>7.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html"><i class="fa fa-check"></i><b>8</b> The ETKidney simulator</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#introduction-4"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneyalloc"><i class="fa fa-check"></i><b>8.2</b> The kidney allocation programs of Eurotransplant</a></li>
+<li class="chapter" data-level="8.3" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneydesign"><i class="fa fa-check"></i><b>8.3</b> Purpose and design of the ETKidney Simulator</a></li>
+<li class="chapter" data-level="8.4" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneymodules"><i class="fa fa-check"></i><b>8.4</b> Modules of the ETKidney simulator</a></li>
+<li class="chapter" data-level="8.5" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneyvv"><i class="fa fa-check"></i><b>8.5</b> Verification and validation</a></li>
+<li class="chapter" data-level="8.6" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneycasestudies"><i class="fa fa-check"></i><b>8.6</b> Case studies</a></li>
+<li class="chapter" data-level="8.7" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneydiscussion"><i class="fa fa-check"></i><b>8.7</b> Discussion and conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="CHdiscussion.html"><a href="CHdiscussion.html"><i class="fa fa-check"></i><b>9</b> The way forward</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="CHdiscussion.html"><a href="CHdiscussion.html#this-thesis-is-a-sharp-look-at-familiar-problems"><i class="fa fa-check"></i><b>9.1</b> This thesis is a sharp look at familiar problems</a></li>
+<li class="chapter" data-level="9.2" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-need-to-look-beyond-survival-models-for-allocation"><i class="fa fa-check"></i><b>9.2</b> We need to look beyond survival models for allocation</a></li>
+<li class="chapter" data-level="9.3" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-should-look-beyond-aggregate-outcomes"><i class="fa fa-check"></i><b>9.3</b> We should look beyond aggregate outcomes</a></li>
+<li class="chapter" data-level="9.4" data-path="CHdiscussion.html"><a href="CHdiscussion.html#scientific-evidence-is-rarely-the-bottleneck"><i class="fa fa-check"></i><b>9.4</b> Scientific evidence is rarely the bottleneck</a></li>
+<li class="chapter" data-level="9.5" data-path="CHdiscussion.html"><a href="CHdiscussion.html#the-chicken-and-egg-problem-in-allocation-development"><i class="fa fa-check"></i><b>9.5</b> The “chicken-and-egg” problem in allocation development</a></li>
+<li class="chapter" data-level="9.6" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-need-more-constructive-dialogue"><i class="fa fa-check"></i><b>9.6</b> We need more constructive dialogue</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="APPipcw.html"><a href="APPipcw.html"><i class="fa fa-check"></i><b>A</b> Inverse Probability Censoring Weights</a>
+<ul>
+<li class="chapter" data-level="" data-path="APPipcw.html"><a href="APPipcw.html#definition-of-ipcw-weights"><i class="fa fa-check"></i>Definition of IPCW weights</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="APPimputation.html"><a href="APPimputation.html"><i class="fa fa-check"></i><b>B</b> Completing the status updates streams for transplant recipients</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="APPimputation.html"><a href="APPimputation.html#step-1-and-2-construction-of-the-pseudo-observations"><i class="fa fa-check"></i><b>B.1</b> Step 1 and 2: Construction of the pseudo-observations</a></li>
+<li class="chapter" data-level="B.2" data-path="APPimputation.html"><a href="APPimputation.html#step-3-fitting-a-model-for-the-mean-restricted-survival-time"><i class="fa fa-check"></i><b>B.2</b> Step 3: Fitting a model for the mean restricted survival time</a></li>
+<li class="chapter" data-level="B.3" data-path="APPimputation.html"><a href="APPimputation.html#step-4-constructing-future-statuses"><i class="fa fa-check"></i><b>B.3</b> Step 4: Constructing future statuses</a></li>
+<li class="chapter" data-level="B.4" data-path="APPimputation.html"><a href="APPimputation.html#step-4.2-matching-the-patient-to-a-particular-patient-in-the-risk-set"><i class="fa fa-check"></i><b>B.4</b> Step 4.2: matching the patient to a particular patient in the risk set</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="course-of-life.html"><a href="course-of-life.html"><i class="fa fa-check"></i>Course of Life</a></li>
+<li class="chapter" data-level="" data-path="list-of-publications.html"><a href="list-of-publications.html"><i class="fa fa-check"></i>List of publications</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Organ allocation models in Eurotransplant</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="CHprefacekidney" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Kidney allocation in Eurotransplant<a href="CHprefacekidney.html#CHprefacekidney" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Up to 100 million Europeans have Chronic Kidney Disease (CKD) <span class="citation"><a href="#ref-Vanholder2021">[104]</a></span>.
+CKD is characterized by the progressive loss of kidney function, and its causes
+include diabetes, hypertension, and glomerulonephritis. Patients with CKD
+can eventually progress to End-Stage Renal Disease (ESRD), which means that they
+become dependent on renal replacement therapies (RRTs) such as dialysis or
+kidney transplantation. Whereas other forms of end-stage organ failure cannot
+be managed with therapy, end-stage kidney failure can be managed for extended
+periods with dialysis <span class="citation"><a href="#ref-HaaseKromwijk1999">[7]</a></span>.
+However, kidney transplantation is the preferred treatment option for most
+patients with ESRD because it is associated with a reduction in patient mortality
+and improves the patient’s quality of life <span class="citation"><a href="#ref-Tonelli2011">[105]</a></span>.</p>
+<p>Kidney transplantation became the preferred treatment option for patients with
+ESRD in the 1980s, when substantial improvements were observed in post-transplant
+outcomes <span class="citation"><a href="#ref-HaaseKromwijk1999">[7]</a></span>. As a result, the kidney waiting list in Eurotransplant
+expanded from less than 2,000 patients in 1980
+to approximately 10,500 patients in 1994 <span class="citation"><a href="#ref-eurotransplantAR2005">[106]</a></span>. Since then, the number of patients awaiting kidney transplantation has remained stable in
+Eurotransplant with approximately 10,000 patients currently waiting for a kidney transplant.</p>
+<p>Eurotransplant allocates kidneys from deceased-organ donors to these waiting patients.
+When Eurotransplant was initiated, candidates were prioritized solely based
+on Human Leucocyte Antigen (HLA) matching. Currently,
+Eurotransplant uses an allocation system which tries to balance HLA matching
+with fairness considerations. In this chapter, we describe the history of this
+system and some contemporary challenges in the allocation of deceased-donor kidneys.
+We also briefly describe the work included in this thesis that can inform
+discussions on addressing these challenges.</p>
+<div id="hla-matching-versus-fairness" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> HLA matching versus fairness<a href="CHprefacekidney.html#hla-matching-versus-fairness" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the late 1960s, immunologists observed that the best outcomes after kidney
+transplantation were observed in pairs of siblings who had compatible ABO blood groups
+and matching leukocyte antigen groups <span class="citation"><a href="#ref-vanDorp2001">[107]</a></span>. Anticipating that
+such a matching effect also existed when transplanting kidneys from deceased donors,
+Jon van Rood proposed Eurotransplant, a program in which a central office
+would use a computer to locate the best-matching candidate for the kidneys that
+became available from deceased donors <span class="citation"><a href="#ref-vanRoodET1967">[1]</a></span>.
+Shortly after Eurotransplant was initiated in 1967, similar organizations were
+established in other geographic regions, motivated by the idea that outcomes after
+deceased-donor transplantation could only be improved through collaboration <span class="citation"><a href="#ref-bakJensenShareNotShare2008">[108]</a></span>.</p>
+<p>Already in 1970, this idea became controversial with a strong debate emerging between
+immunologists and clinicians on the actual importance of leukocyte-antigen
+matching in deceased-donor kidney transplantation <span class="citation"><a href="#ref-daussetHLAStory1995">[109]</a>, <a href="#ref-vanRood2004">[110]</a></span>.
+The commitment of immunologists to HLA matching was strengthened in the 1970s
+and 1980s, as they unraveled many complexities of what became known
+as the Human Leucocyte Antigen (HLA) system. The discovery of HLA-DR antigens in 1977
+was particularly important, as these antigens were shown to have a stronger effect
+on prognosis after kidney transplantation than the earlier discovered HLA-A
+and HLA-B antigens <span class="citation"><a href="#ref-bakJensenShareNotShare2008">[108]</a>, <a href="#ref-Persijn1978">[111]</a>, <a href="#ref-Persijn1981">[112]</a></span>.</p>
+<p>At the same time, it was recognized that HLA matching was far from a magic bullet;
+many patients with poorly matched kidneys had good outcomes after
+transplantation <span class="citation"><a href="#ref-vanRood2004">[110]</a>, <a href="#ref-terasaki1990history">[113]</a></span>. Based on such observations,
+clinicians questioned whether HLA matching was worth the effort, especially because
+the practice resulted in disparities in access to transplantation <span class="citation"><a href="#ref-Kjellstrand1988">[114]</a></span>.
+For example, in the United States, it was observed that black patients were waiting
+three times longer than white patients for a kidney transplant.
+Thomas Starzl, who is known as “the father of modern transplantation”, criticized the blind focus
+on HLA matching in kidney allocation, referring to it as <em>“the institutional
+organization of racial bias”</em> <span class="citation"><a href="#ref-vanDorp2001">[107, p. 159]</a></span>. To reduce such disparities,
+Starzl’s transplant center instead used a point system to prioritize candidates
+for transplantation, in which tissue matching played a role that was
+<em>“significant but far from overriding”</em> <span class="citation"><a href="#ref-starzlMultifactorialSystemEquitable1987">[115]</a></span>.</p>
+<p>This criticism of HLA matching intensified in the 1980s with the advent of cyclosporine
+A. This immunosuppressant strongly reduced the incidence of acute rejection of kidney
+transplants, and was responsible for the major improvements in kidney transplant
+outcomes that were observed in the 1980s. Shortly after the introduction of
+cyclosporine A, several single-center studies
+suggested that this immunosuppressant had made HLA matching in kidney transplantation
+redundant <span class="citation"><a href="#ref-greensteinEvidenceThatZero1990">[116]</a>, <a href="#ref-harfmannRenalTransplantationUsing1989">[117]</a></span>.
+These early findings have since been contradicted by multi-center and
+registry-based studies, which showed that HLA matching continues to be strongly
+associated with graft and patient survival <span class="citation"><a href="#ref-opelzCORRELATIONHLAMATCHING1985">[118]</a>, <a href="#ref-Opelz2007">[119]</a></span>.
+Based on these later studies, consensus has arisen that the best outcomes are observed
+in patients who receive transplants with zero mismatches on the HLA-A, HLA-B,
+and HLA-DR loci <span class="citation"><a href="#ref-opelzCORRELATIONHLAMATCHING1985">[118]</a>, <a href="#ref-morrisAnalysisFactorsThat1999">[120]</a></span>. However,
+the extensive polymorphism of the HLA system means that perfectly matched kidneys
+are not available for most candidates. In fact, it was already known in the 1980s
+that only about one in five patients can receive a perfectly matched kidney
+with a waiting list of 10,000 patients <span class="citation"><a href="#ref-CICCIARELLI1987">[121]</a></span>. Most patients
+thus have to settle for a kidney with HLA mismatches. In that case, consensus is
+that HLA-DR matching is more important than HLA-B matching, which in turn is more
+important than HLA-A matching <span class="citation"><a href="#ref-Ting1985">[122]</a>, <a href="#ref-joyseyTissueTypingPolicy1989">[123]</a>, <a href="#ref-thorogood1990">[124]</a></span>.</p>
+<p>Because of the role of HLA matching was contended, kidney allocation first
+became more decentralized in the 1980s <span class="citation"><a href="#ref-bakJensenShareNotShare2008">[108]</a></span>. For example,
+in 1988 Eurotransplant introduced a kidney allocation system that mandated
+exchange of kidneys between centers only for (a) patients who had zero HLA mismatches
+with the kidney and (b) the so-called “<em>hyper-immunized patients</em>” (see Section <a href="CHprefacekidney.html#sec:introam">6.2.2</a>)
+<span class="citation"><a href="#ref-HaaseKromwijk1999">[7]</a></span>. Otherwise, the center responsible for procurement of the kidneys
+could choose patients from their own waiting list for transplantation, subject to blood group
+compatibility rules and minimum HLA match criteria (defined as 2 DR matches, or
+1 B + 1 DR match) <span class="citation"><a href="#ref-HaaseKromwijk1999">[7]</a></span>. Procurement centers also had the option to
+voluntarily offer the kidneys to the Eurotransplant pool. Candidates would then be prioritized by
+compatibility at the HLA-DR locus, followed by compatibility at the HLA-B locus,
+and finally compatibility at the HLA-A locus <span class="citation"><a href="#ref-HaaseKromwijk1999">[7]</a></span>.</p>
+<p>When Eurotransplant evaluated this system in the 1990s, concerns were raised
+over the fact that (i) 10 percent of patients consistently waited more than five years
+for kidney transplantation, (ii) transplant rates were low for candidates with
+rare HLA types or homozygosity at any of the HLA loci, and (iii) procurement
+and transplant rates were imbalanced between the centers and countries
+<span class="citation"><a href="#ref-DeMeester1998_booksection">[125]</a></span>. These fairness concerns
+eventually led to the adoption of the Eurotransplant Kidney Allocation System
+(ETKAS) in 1996, which was based on a point system that had been proposed by
+Wujciak and Opelz in the years before. Besides this program, Eurotransplant
+has used two other programs to allocate deceased-donor kidneys since the 1990s:
+the Acceptable Mismatch (AM) program for the allocation of kidneys to hyper-immunized candidates (Section
+<a href="CHprefacekidney.html#sec:introam">6.2.2</a>), and the Eurotransplant Senior Program (ESP) for the allocation
+of kidneys from donors aged 65 years or older (Section <a href="CHprefacekidney.html#sec:introesp">6.2.3</a>).</p>
+<p></p>
+</div>
+<div id="kidney-allocation-programs-in-eurotransplant" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Kidney allocation programs in Eurotransplant<a href="CHprefacekidney.html#kidney-allocation-programs-in-eurotransplant" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="the-eurotransplant-kidney-allocation-system-etkas" class="section level3 hasAnchor" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> The Eurotransplant Kidney Allocation System (ETKAS)<a href="CHprefacekidney.html#the-eurotransplant-kidney-allocation-system-etkas" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Wujciak and Opelz tried to address the dilemma between HLA
+matching and fairness by using computer simulations to develop a point system
+for kidney allocation <span class="citation"><a href="#ref-wujciakProposalImprovedCadaver1993a">[126]</a>, <a href="#ref-Opelz1998">[127]</a></span>. This
+system awarded points for the absence of HLA mismatches, but also points for
+a candidate’s waiting time to ensure that no candidate would be left behind.
+Additionally, to avoid extreme waiting times for difficult-to-match patients,
+the system awarded points for the <em>“mismatch probability”</em>, a quantification of
+how common favorably matched kidneys are for the patient.</p>
+<p>Eurotransplant implemented a modified version of this point system for kidney
+allocation in 1996, and the resulting program has become known as the
+Eurotransplant Kidney Allocation System (ETKAS) program. The modifications made
+included that ETKAS awards extra priority to pediatric candidates, and implements
+a mechanism to balance the international transfer of kidneys <span class="citation"><a href="#ref-Opelz1998">[127]</a></span>.</p>
+<p>One year after the introduction of ETKAS, in 1997, it was concluded that ETKAS
+successfully achieved its primary goals; the system had increased the number of transplantations
+among pediatric and long-waiting candidates and it had corrected imbalances in
+the international exchange of kidneys <span class="citation"><a href="#ref-Persijn2006">[8]</a>, <a href="#ref-demeesterNewEurotransplantKidney1998">[15]</a></span>.
+Despite this apparent success, it was also pointed out by Wujciak and Opelz that
+ETKAS <em>“could not be considered a final and unalterable product”</em>, which instead
+would require <em>“continued fine-tuning depending on new developments”</em> <span class="citation"><a href="#ref-Opelz1998">[127]</a></span>.</p>
+<p>In light of these comments, it is not surprising that several refinements have
+been made to ETKAS since 1996. One refinement concerns the definition of
+waiting time. When ETKAS was initiated, waiting time was defined as the number of days
+a candidate had spent on the waiting list, which conferred an advantage to patients
+who were referred early to the kidney waiting list. To address this, Eurotransplant
+redefined waiting time to the number of days a candidate had received dialysis
+in January 2000 <span class="citation"><a href="#ref-DeMeester2000">[128]</a></span>. A second issue was that ABO
+blood group O kidneys could be transplanted in non-O candidates in case of
+a zero mismatch, which led to an increased waiting list mortality and longer
+waiting times for blood group O patients <span class="citation"><a href="#ref-glander2010">[17]</a></span>. In June 2010, this
+issue was addressed by always requiring candidates and donors to have identical
+ABO blood groups in ETKAS.</p>
+<p>Shortcomings of ETKAS have also been identified for which an adequate solution
+has remained elusive. A notable example is that the ETKAS point system places
+equal emphasis on the HLA-A, HLA-B and HLA-DR loci, which has been described to lead to
+additional mismatches on the HLA-DR locus
+<span class="citation"><a href="#ref-demeesterNewEurotransplantKidney1998">[15]</a>, <a href="#ref-vereerstraetenExperienceWujciakOpelzAllocation1998">[129]</a></span>.
+Several proposals have
+been made to instead emphasize HLA-DR matching in ETKAS (e.g., Doxiadis et al. <span class="citation"><a href="#ref-doxiadisSimplerEquitableAllocation2007">[130]</a></span>)
+which have been rejected by national competent authorities (e.g., Heemskerk et al. <span class="citation"><a href="#ref-heemskerkRegionalKidneyAllocation2009">[131]</a></span>).
+As a result, ETKAS still places equal emphasis on HLA matching at the A locus
+as on matching at the DR locus.</p>
+<p>Another example of such a shortcoming are the mismatch
+probability points (MMPPs), which are used to facilitate access to transplantation for
+difficult-to-match candidates. One issue is that MMPPs are calculated using a
+formula that disregards HLA haplotype linkage disequilibrium <span class="citation"><a href="#ref-Wujciak1997">[132]</a></span>.
+A second issue is that at most 100 MMPPs are awarded in ETKAS, which may be
+insufficient to provide immunized patients with equality of opportunity
+<span class="citation"><a href="#ref-susal2015">[133]</a>, <a href="#ref-ziemannUnacceptableHumanLeucocyte2017">[134]</a>, <a href="#ref-zecherImpactSensitizationWaiting2022a">[135]</a></span>.</p>
+</div>
+<div id="sec:introam" class="section level3 hasAnchor" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> Immunized candidates &amp; the Acceptable Mismatch (AM) program<a href="CHprefacekidney.html#sec:introam" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Many kidney transplant candidates have developed
+antibodies against donor HLA antigens before they are listed for a kidney transplant,
+for instance because of a prior blood transfusion, a pregnancy,
+or a previous transplantation. If a donor carries the HLA antigens against which the candidate
+has developed such donor-specific antibodies (DSAs), transplantation can be
+contraindicated because it is likely to result in antibody-mediated rejection
+of the kidney.</p>
+<p>In Eurotransplant, transplant centers have historically been required to conduct
+a complement-dependent cytotoxicity (CDC) crossmatch before transplantation,
+in which the serum of the patient is mixed with lymphocytes isolated from the donor. If such a crossmatch
+leads to the cell death of the lymphocytes, transplantation is strongly contraindicated
+<span class="citation"><a href="#ref-patelSignificancePositiveCrossmatch1969">[136]</a></span>, and even prohibited in Germany.
+In the past, transplantation
+centers were also required to regularly test the sera of their patients against
+a representative panel of donors to determine their candidates’ panel-reactive antibody (PRA) levels.
+Such tests are known as the CDC-PRA tests and the obtained PRA levels quantify
+the percentage of the donor pool against which the candidate has a positive
+crossmatch. CDC testing could also be used to derive
+against which antigens a candidate had developed DSAs, albeit at limited resolution.
+Since the 1980s, centers have been able to report such antigens to Eurotransplant
+as <em>unacceptable antigens</em>,
+which ensures that there candidates would not be offered kidneys that carry those
+antigens.</p>
+<p>Having a pre-existing immunization can thus prevent a candidate from receiving a
+kidney transplant, in particular for candidates with high PRA levels.
+This can lead to an accumulation of immunized patients on the waiting list, which
+was indeed observed in the late 1980s. In 1988, Frans Claas and Jon van Rood proposed to
+strategically select donors for the <em>“hyper-immunized”</em> candidates based on <em>“acceptable antigens”</em>
+<span class="citation"><a href="#ref-Claas1988">[137]</a></span>, which formed the basis of the Acceptable Mismatch (AM) program that
+was initiated in 1989. These acceptable antigens were defined as antigens against which
+an immunized patient had not developed DSAs, and could be identified by crossmatching the candidate’s
+serum against panels of HLA-typed blood donors that carried exactly one antigen
+mismatch with the patient <span class="citation"><a href="#ref-Claas1988">[137]</a>, <a href="#ref-Heidt2015">[138]</a></span>. In the
+AM program, highly immunized candidates (PRA &gt;85%) are given priority
+to donors who carried HLA antigens that were either matching with or acceptable to the
+candidate. Since its initiation, the AM program has continually been updated by
+the Eurotransplant Reference Laboratory (ETRL). For example,
+acceptable antigens were initially only defined for HLA-A and HLA-B, while currently
+five HLA loci are used for AM allocation <span class="citation"><a href="#ref-ETHist2025">[139]</a></span>.</p>
+<p>CDC-PRA assays, in which a candidate’s sera is tested against a panel of donor
+lymphocytes, has thus had an important role in determining a candidate’s degree
+of immunization. In recent years this technology has largely been replaced by solid-phase assays,
+in which the patient’s serum is directly tested against isolated HLA antigens <span class="citation"><a href="#ref-Mamode2022">[140]</a></span>.
+Centers regularly screen the sera of their candidates with these solid-phase assays and
+report the donor-specific antibodies that are identified using solid-phase assays as unacceptable to
+Eurotransplant. Notable is that these solid-phase assays are more sensitive
+than CDC-PRA assays, which means that DSAs can be identified that lack
+CDC-reactivity. Transplantation in the presence of such DSAs is also associated
+with inferior outcomes <span class="citation"><a href="#ref-Amico2009">[141]</a></span>, but not an absolute contraindication <span class="citation"><a href="#ref-Mulley2011">[142]</a></span>.
+Instead, European guidelines recommend that the decision to transplant in the
+presence of such a DSA should be based on an individualized risk assessment.
+This risk assessment should critically evaluate the DSA in light of potential
+sensitization events and should assess the impact of designating it as unacceptable
+on the likelihood of finding an HLA-compatible kidney <span class="citation"><a href="#ref-Mamode2022">[140]</a></span>.</p>
+<p>Since 2016, Eurotransplant calculates a <em>virtual</em> PRA (vPRA) for each candidate
+based on their reported unacceptable antigens. This vPRA is defined
+as the percentage of donors that carry the unacceptable antigens in a database
+of 10,000 donors that is maintained by the ETRL. Advantages of the
+vPRA compared to the PRA are (i) that measurement variability associated with the
+PRA can be avoided, and (ii) that the vPRA is directly based on unacceptable antigens,
+which makes it a better measure of the relative restriction in the
+donor pool faced by immunized candidates. In 2020, the vPRA completely replaced the PRA in
+kidney allocation in Eurotransplant. For example, mismatch probability points have
+been awarded since 2020 based on the vPRA instead of the PRA, and candidates
+with a PRA below 85% but a vPRA exceeding 85% can enter the AM program under specific conditions
+<span class="citation"><a href="#ref-Heidt2015">[138]</a></span>.<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a></p>
+</div>
+<div id="sec:introesp" class="section level3 hasAnchor" number="6.2.3">
+<h3><span class="header-section-number">6.2.3</span> The Eurotransplant Senior Program (ESP)<a href="CHprefacekidney.html#sec:introesp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In 1999, Eurotransplant initiated the Eurotransplant Senior Program (ESP), which
+is used to offer kidneys from donors 65 years or older with priority to candidates
+65 years or older. The aim of ESP was (i) to promote the usage of kidneys from
+older donors and (ii) to reduce waiting times for candidates 65 years or older <span class="citation"><a href="#ref-smitsEvaluationEurotransplantSenior2002">[143]</a></span>. These aims were achieved by
+prioritizing candidates solely based on their accrued dialysis time and by offering kidneys
+only to candidates located in the vicinity of the donor <span class="citation"><a href="#ref-Frei2008">[144]</a></span>. HLA typing
+of ESP donors was not performed in order to maximally reduce cold ischemia times.
+This meant that transplantations within ESP were done
+without consideration of HLA match quality. Because the donor’s HLA typing was
+unknown at the time of allocation, immunized candidates were not allowed
+to participate in ESP.</p>
+<p>Currently, all countries require the HLA typing of ESP donors to be available
+before allocation, which has enabled immunized candidates to participate in
+ESP. A Eurotransplant paired kidney donation study has demonstrated
+that outcomes for patients 65 years or older also improve with HLA-DR matching <span class="citation"><a href="#ref-deFijter2023">[145]</a></span>.
+Based on these findings, proposals to prioritize HLA-DR matching in ESP have
+been made which are scheduled for implementation in 2025.</p>
+</div>
+</div>
+<div id="contemporary-challenges-in-kidney-allocation" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Contemporary challenges in kidney allocation<a href="CHprefacekidney.html#contemporary-challenges-in-kidney-allocation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Since the introduction of ETKAS and ESP in the 1990s, the landscape of kidney
+transplantation has changed substantially. For example, Eurotransplant’s donor and patient
+populations have aged due to demographic developments, and the immunological
+evaluation of transplant candidates has changed with the introduction of
+solid-phase assays. Despite this changing landscape,
+the core principles of Eurotransplant’s kidney allocation systems have remained
+largely unchanged. This raises the question of whether these systems adequately
+address contemporary challenges in kidney transplantation.</p>
+<p>One such challenge concerns the immunized candidates who depend on ETKAS for
+access to transplantation. Transplant professionals from Eurotransplant’s kidney transplantation
+centers have regularly expressed concerns that this patient group is disadvantaged
+in ETKAS. Empirical evidence for such a disadvantage comes from Germany where retrospective analyses have
+shown that patients with vPRAs exceeding 85% are disadvantaged
+<span class="citation"><a href="#ref-ziemannUnacceptableHumanLeucocyte2017">[134]</a>, <a href="#ref-zecherImpactSensitizationWaiting2022a">[135]</a></span>.
+In Chapter <a href="CHvpra.html#CHvpra">7</a>, we examine the relation between the vPRA and the
+transplant rate using retrospective data from all Eurotransplant member
+countries. We indeed find that immunized candidates face reduced access to
+transplantation in ETKAS. European guidelines already recommend that this disparity should be addressed
+by directly awarding points for the vPRA using a sliding scale <span class="citation"><a href="#ref-Mamode2022">[140]</a></span>.
+In Chapter <a href="CHetkidneysimulator.html#CHetkidneysimulator">8</a>, we design such a sliding scale for ETKAS.</p>
+<p>A second challenge comes from the changing patient and donor demographics.
+Since the Eurotransplant Senior Program (ESP) was introduced in 1999, the
+percentage of patients aged 65 years or older at listing has increased from 6%
+in 1999 to 22% in 2024, and the percentage of donors aged 65 years or older has increased
+from 11% to 24%. With this changing demographic, concerns have been voiced over the fairness of
+ESP. For example, in Germany, the median dialysis time at transplantation
+currently differs by more than four years between candidates aged over 65 and
+those under 65 <span class="citation"><a href="#ref-Kolbrink2024">[146]</a></span>. This means that a German candidate who starts
+dialysis at age 60 is unlikely to receive a kidney transplant until their 65th
+birthday, and is expected to be transplanted shortly thereafter.</p>
+<p>Eurotransplant also has not implemented any form of candidate-donor age matching
+within ETKAS, with the exception of pediatric candidates, who have priority to
+kidneys procured from pediatric donors. Organ allocation organizations in France,
+the U.K. and the U.S. have all implemented mechanisms which direct kidneys from
+young donors to young patients <span class="citation"><a href="#ref-Audry2022">[147]</a>, <a href="#ref-watson2020overview">[148]</a>, <a href="#ref-israniNewNationalAllocation2014">[149]</a></span>.
+Calls have been made in the recent literature to also introduce
+such continuous candidate-donor age matching in Eurotransplant <span class="citation"><a href="#ref-vonsamson-himmelstjernaContinuousDonorrecipientAge2024">[150]</a></span>.
+In Chapter <a href="CHetkidneysimulator.html#CHetkidneysimulator">8</a>, we evaluate a form of continuous-donor
+age matching for ETKAS.</p>
+<p>A third challenge is that ETKAS has continued to place equal emphasis on HLA-A,
+HLA-B, and HLA-DR matching, while virtually all other organ exchange organizations
+emphasize matching at the HLA-DR locus, or matching at both the HLA-B and HLA-DR loci
+<span class="citation"><a href="#ref-Wu2017">[151]</a></span>. In Chapter <a href="CHetkidneysimulator.html#CHetkidneysimulator">8</a>, we examine how waiting list
+outcomes are affected if more priority is given to matching at the HLA-B
+and HLA-DR loci.</p>
+<p>This thesis explores several directions in which kidney allocation in
+Eurotransplant could be improved. Instrumental to studying the impact of
+these policy changes is
+the ETKidney simulator, a discrete-event simulator that mimics ETKAS and
+ESP allocation based on data from the Eurotransplant database. We describe and validate this simulator
+in Chapter <a href="CHetkidneysimulator.html#CHetkidneysimulator">8</a>.</p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body" entry-spacing="0">
+<div id="ref-vanRoodET1967" class="csl-entry">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">J. J. van Rood, <span>“A proposal for international cooperation in organ transplantation: <span>Eurotransplant</span>,”</span> in <em>Histocompatibility testing 1967: Report of a conference and workshop, torino and saint-vincent, italy, 14–24 june 1967</em>, R. Curtoni, P. Mattiuz, and R. Tosi, Eds., Copenhagen, Denmark, 1967, pp. 451–452.</div>
+</div>
+<div id="ref-HaaseKromwijk1999" class="csl-entry">
+<div class="csl-left-margin">[7] </div><div class="csl-right-inline">B. J. J. M. Haase-Kromwijk, J. de Meester, and G. G. Persijn, <span>“<span>Eurotransplant Foundation</span>: The original framework of organ exchange,”</span> <em>Best Practice &amp; Research Clinical Anaesthesiology</em>, vol. 13, no. 2, pp. 169–178, 1999, doi: <a href="https://doi.org/10.1053/bean.1999.0018">10.1053/bean.1999.0018</a>.</div>
+</div>
+<div id="ref-Persijn2006" class="csl-entry">
+<div class="csl-left-margin">[8] </div><div class="csl-right-inline">G. G. Persijn, <span>“Allocation of organs, particularly kidneys, within <span>Eurotransplant</span>,”</span> <em>Human Immunology</em>, vol. 67, no. 6, pp. 419–423, 2006, doi: <a href="https://doi.org/10.1016/j.humimm.2006.03.008">10.1016/j.humimm.2006.03.008</a>.</div>
+</div>
+<div id="ref-demeesterNewEurotransplantKidney1998" class="csl-entry">
+<div class="csl-left-margin">[15] </div><div class="csl-right-inline">J. de Meester, G. G. Persijn, T. Wujciak, G. Opelz, and Y. Vanrenterghem, <span>“The new <span>Eurotransplant</span> kidney allocation system: Report one year after implementation.”</span> <em>Transplantation</em>, vol. 66, no. 9, pp. 1154–1159, 1998, doi: <a href="https://doi.org/10.1097/00007890-199811150-00007">10.1097/00007890-199811150-00007</a>.</div>
+</div>
+<div id="ref-glander2010" class="csl-entry">
+<div class="csl-left-margin">[17] </div><div class="csl-right-inline">P. Glander <em>et al.</em>, <span>“The ‘blood group <span>O</span> problem’ in kidney transplantation — time to change?”</span> <em>Nephrology Dialysis Transplantation</em>, vol. 25, no. 6, pp. 1998–2004, 2010, doi: <a href="https://doi.org/10.1093/ndt/gfp779">10.1093/ndt/gfp779</a>.</div>
+</div>
+<div id="ref-Vanholder2021" class="csl-entry">
+<div class="csl-left-margin">[104] </div><div class="csl-right-inline">R. Vanholder <em>et al.</em>, <span>“Fighting the unbearable lightness of neglecting kidney health: The decade of the kidney,”</span> <em>Clinical Kidney Journal</em>, vol. 14, no. 7, pp. 1719–1730, 2021, doi: <a href="https://doi.org/10.1093/ckj/sfab070">10.1093/ckj/sfab070</a>.</div>
+</div>
+<div id="ref-Tonelli2011" class="csl-entry">
+<div class="csl-left-margin">[105] </div><div class="csl-right-inline">M. Tonelli <em>et al.</em>, <span>“Systematic review: Kidney transplantation compared with dialysis in clinically relevant outcomes,”</span> <em>American Journal of Transplantation</em>, vol. 11, no. 10, pp. 2093–2109, 2011, doi: <a href="https://doi.org/10.1111/j.1600-6143.2011.03686.x">10.1111/j.1600-6143.2011.03686.x</a>.</div>
+</div>
+<div id="ref-eurotransplantAR2005" class="csl-entry">
+<div class="csl-left-margin">[106] </div><div class="csl-right-inline">E. I. Foundation, <span>“<span>Annual Report 2005</span>.”</span> 2005. Available: <a href="https://www.eurotransplant.org/wp-content/uploads/2019/12/ar_2005.pdf">https://www.eurotransplant.org/wp-content/uploads/2019/12/ar_2005.pdf</a></div>
+</div>
+<div id="ref-vanDorp2001" class="csl-entry">
+<div class="csl-left-margin">[107] </div><div class="csl-right-inline">M. H. van Dorp, <span>“<span>HLA</span> &amp; <span class="nocase">transplantatie</span>: De ontwikkeling van een matchingspraktijk,”</span> PhD thesis, University of Maastricht, 2001. doi: <a href="https://doi.org/10.26481/dis.20011116md">10.26481/dis.20011116md</a>.</div>
+</div>
+<div id="ref-bakJensenShareNotShare2008" class="csl-entry">
+<div class="csl-left-margin">[108] </div><div class="csl-right-inline">S. Bak-Jensen, <span>“To share or not to <span class="nocase">share? institutional</span> exchange of cadaver kidneys in <span>Denmark</span>,”</span> <em>Medical History</em>, vol. 52, no. 1, pp. 23–46, 2008, doi: <a href="https://doi.org/10.1017/S0025727300002040">10.1017/S0025727300002040</a>.</div>
+</div>
+<div id="ref-daussetHLAStory1995" class="csl-entry">
+<div class="csl-left-margin">[109] </div><div class="csl-right-inline">J. Dausset and F. T. Rapaport, <span>“<span>The</span> <span>HLA</span> <span>Story</span>,”</span> in <em>Immunology</em>, R. B. Gallagher, J. Gilder, G. J. V. Nossal, and G. Salvatore, Eds., London: Academic Press, 1995, ch. 10, pp. 111–120. doi: <a href="https://doi.org/10.1016/B978-012274020-6/50011-8">10.1016/B978-012274020-6/50011-8</a>.</div>
+</div>
+<div id="ref-vanRood2004" class="csl-entry">
+<div class="csl-left-margin">[110] </div><div class="csl-right-inline">J. J. van Rood, <span>“Weighing optimal graft survival through <span>HLA</span> matching against the equitable distribution of kidney allografts,”</span> <em>New England Journal of Medicine</em>, vol. 350, no. 6, pp. 535–536, 2004, doi: <a href="https://doi.org/10.1056/nejmp030011">10.1056/nejmp030011</a>.</div>
+</div>
+<div id="ref-Persijn1978" class="csl-entry">
+<div class="csl-left-margin">[111] </div><div class="csl-right-inline">G. G. Persijn, B. W. Gabb, A. van Leeuwen, A. Nagtegaal, J. Hoogeboom, and J. J. van Rood, <span>“Matching for <span>HLA</span> of <span>A,</span> <span>B,</span> and <span>DR</span> loci in renal transplantation by <span>Eurotransplant</span>,”</span> <em>The Lancet</em>, vol. 311, no. 8077, pp. 1278–1281, 1978, doi: <a href="https://doi.org/10.1016/s0140-6736(78)91266-7">10.1016/s0140-6736(78)91266-7</a>.</div>
+</div>
+<div id="ref-Persijn1981" class="csl-entry">
+<div class="csl-left-margin">[112] </div><div class="csl-right-inline">G. G. Persijn <em>et al.</em>, <span>“<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2385780">Improved kidney graft survival in <span>Eurotransplant</span> by <span>HLA-DR</span> matching and prospectively given blood transfusions</a>,”</span> <em>The Ulster Medical Journal</em>, vol. 50, no. Suppl 1, pp. 54–61, 1981.</div>
+</div>
+<div id="ref-terasaki1990history" class="csl-entry">
+<div class="csl-left-margin">[113] </div><div class="csl-right-inline">P. I. Terasaki <em>et al.</em>, <span>“History of <span>HLA</span>: <span>A</span> personalized view,”</span> in <em>History of <span>HLA</span>: <span>Ten</span> <span>Recollections</span></em>, UCLA Tissue Typing Laboratory, 1990, ch. 10, pp. 232–233. Available: <a href="http://www.piterasaki.org/HistoryOfHLA.pdf">http://www.piterasaki.org/HistoryOfHLA.pdf</a></div>
+</div>
+<div id="ref-Kjellstrand1988" class="csl-entry">
+<div class="csl-left-margin">[114] </div><div class="csl-right-inline">C. M. Kjellstrand, <span>“Age, sex, and race inequality in renal transplantation,”</span> <em>Archives of Internal Medicine</em>, vol. 148, no. 6, p. 1305, 1988, doi: <a href="https://doi.org/10.1001/archinte.1988.00380060069016">10.1001/archinte.1988.00380060069016</a>.</div>
+</div>
+<div id="ref-starzlMultifactorialSystemEquitable1987" class="csl-entry">
+<div class="csl-left-margin">[115] </div><div class="csl-right-inline">T. E. Starzl <em>et al.</em>, <span>“<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2949292">A multifactorial system for equitable selection of cadaver kidney recipients</a>,”</span> <em>JAMA</em>, vol. 257, no. 22, pp. 3073–3075, 1987.</div>
+</div>
+<div id="ref-greensteinEvidenceThatZero1990" class="csl-entry">
+<div class="csl-left-margin">[116] </div><div class="csl-right-inline">S. M. Greenstein <em>et al.</em>, <span>“Evidence that zero antigen-matched cyclosporine-treated renal transplant recipients have graft survival equal to that of matched recipients. Reevaluation of points,”</span> <em>Transplantation</em>, vol. 49, no. 2, pp. 332–336, 1990, doi: <a href="https://doi.org/10.1097/00007890-199002000-00021">10.1097/00007890-199002000-00021</a>.</div>
+</div>
+<div id="ref-harfmannRenalTransplantationUsing1989" class="csl-entry">
+<div class="csl-left-margin">[117] </div><div class="csl-right-inline">P. Harfmann, R. Dittmer, R. Busch, R. Arndt, H. Krämer-Hansen, and H. Huland, <span>“Renal transplantation using cyclosporine with and without regard to <span>HLA</span> matching: A randomized prospective unicenter study,”</span> <em>The Journal of Urology</em>, vol. 142, no. 3, pp. 691–693, 1989, doi: <a href="https://doi.org/10.1016/S0022-5347(17)38854-7">10.1016/S0022-5347(17)38854-7</a>.</div>
+</div>
+<div id="ref-opelzCORRELATIONHLAMATCHING1985" class="csl-entry">
+<div class="csl-left-margin">[118] </div><div class="csl-right-inline">G. Opelz, <span>“Correlation of <span>HLA</span> matching with kidney graft survival in patients with or without cyclosporine treatment: For the <span>Collaborative Transplant Study</span>,”</span> <em>Transplantation</em>, vol. 40, no. 3, p. 240, 1985, doi: <a href="https://doi.org/10.1097/00007890-198509000-00003">10.1097/00007890-198509000-00003</a>.</div>
+</div>
+<div id="ref-Opelz2007" class="csl-entry">
+<div class="csl-left-margin">[119] </div><div class="csl-right-inline">G. Opelz and B. Döhler, <span>“Effect of human leukocyte antigen compatibility on kidney graft survival: Comparative analysis of two decades,”</span> <em>Transplantation</em>, vol. 84, no. 2, pp. 137–143, 2007, doi: <a href="https://doi.org/10.1097/01.tp.0000269725.74189.b9">10.1097/01.tp.0000269725.74189.b9</a>.</div>
+</div>
+<div id="ref-morrisAnalysisFactorsThat1999" class="csl-entry">
+<div class="csl-left-margin">[120] </div><div class="csl-right-inline">P. J. Morris, R. J. Johnson, S. V. Fuggle, M. A. Belger, and J. D. Briggs, <span>“Analysis of factors that affect outcome of primary cadaveric renal transplantation in the <span>UK.</span> <span>HLA</span> task force of the kidney advisory group of the <span>United Kingdom</span> transplant support service authority <span>(UKTSSA)</span>,”</span> <em>The Lancet</em>, vol. 354, no. 9185, pp. 1147–1152, 1999, doi: <a href="https://doi.org/10.1016/s0140-6736(99)01104-6">10.1016/s0140-6736(99)01104-6</a>.</div>
+</div>
+<div id="ref-CICCIARELLI1987" class="csl-entry">
+<div class="csl-left-margin">[121] </div><div class="csl-right-inline">J. Cicciarelli, P. I. Terasaki, and M. R. Mickey, <span>“The effect of zero <span>HLA</span> class <span>I</span> and <span>II</span> mismatching in cyclosporine-treated kidney transplant patients,”</span> <em>Transplantation</em>, vol. 43, no. 5, pp. 636–640, 1987, doi: <a href="https://doi.org/10.1097/00007890-198705000-00006">10.1097/00007890-198705000-00006</a>.</div>
+</div>
+<div id="ref-Ting1985" class="csl-entry">
+<div class="csl-left-margin">[122] </div><div class="csl-right-inline">A. Ting and P. J. Morris, <span>“The role of <span>HLA</span> matching in renal transplantation,”</span> <em>Tissue Antigens</em>, vol. 25, no. 5, pp. 225–234, 1985, doi: <a href="https://doi.org/10.1111/j.1399-0039.1985.tb00445.x">10.1111/j.1399-0039.1985.tb00445.x</a>.</div>
+</div>
+<div id="ref-joyseyTissueTypingPolicy1989" class="csl-entry">
+<div class="csl-left-margin">[123] </div><div class="csl-right-inline">V. C. Joysey, <span>“Tissue typing policy,”</span> in <em>Transplantation</em>, G. R. D. Catto, Ed., Dordrecht, 1989, pp. 59–93. doi: <a href="https://doi.org/10.1007/978-94-009-0855-0_3">10.1007/978-94-009-0855-0_3</a>.</div>
+</div>
+<div id="ref-thorogood1990" class="csl-entry">
+<div class="csl-left-margin">[124] </div><div class="csl-right-inline">J. Thorogood <em>et al.</em>, <span>“The effect of <span>HLA</span> matching on kidney graft survival in separate posttransplantation intervals,”</span> <em>Transplantation</em>, vol. 50, no. 1, p. 146, 1990, doi: <a href="https://doi.org/10.1097/00007890-199007000-00027">10.1097/00007890-199007000-00027</a>.</div>
+</div>
+<div id="ref-DeMeester1998_booksection" class="csl-entry">
+<div class="csl-left-margin">[125] </div><div class="csl-right-inline">J. de Meester and G. G. Persijn, <span>“Allocation of cadaver organs to transplant recipients in <span>Eurotransplant:</span> Principles and policies, anno 1998,”</span> in <em>Organ <span>Allocation</span>: <span>Proceedings</span> of the 30th <span>Conference</span> on <span>Transplantation</span> and <span>Clinical</span> <span>Immunology</span>, 2–4 <span>June</span>, 1998</em>, J. L. Touraine, J. Traeger, H. Bétuel, J. M. Dubernard, J. P. Revillard, and C. Dupuy, Eds., Dordrecht, 1998, pp. 61–66. doi: <a href="https://doi.org/10.1007/978-94-011-4984-6_8">10.1007/978-94-011-4984-6_8</a>.</div>
+</div>
+<div id="ref-wujciakProposalImprovedCadaver1993a" class="csl-entry">
+<div class="csl-left-margin">[126] </div><div class="csl-right-inline">T. Wujciak and G. Opelz, <span>“A proposal for improved cadaver kidney allocation,”</span> <em>Transplantation</em>, vol. 56, no. 6, pp. 1513–1517, 1993, doi: <a href="https://doi.org/10.1097/00007890-199312000-00044">10.1097/00007890-199312000-00044</a>.</div>
+</div>
+<div id="ref-Opelz1998" class="csl-entry">
+<div class="csl-left-margin">[127] </div><div class="csl-right-inline">G. Opelz and T. Wujciak, <span>“What to expect from a good kidney allocation system,”</span> in <em>Organ allocation: <span>Proceedings</span> of the 30th conference on transplantation and clinical immunology, 2–4 june, 1998</em>, J. L. Touraine, J. Traeger, H. Bétuel, J. M. Dubernard, J. P. Revillard, and C. Dupuy, Eds., Dordrecht, 1998, pp. 57–60. doi: <a href="https://doi.org/10.1007/978-94-011-4984-6_7">10.1007/978-94-011-4984-6_7</a>.</div>
+</div>
+<div id="ref-DeMeester2000" class="csl-entry">
+<div class="csl-left-margin">[128] </div><div class="csl-right-inline">J. de Meester, G. G. Persijn, F. H. J. Claas, and U. Frei, <span>“In the queue for a cadaver donor kidney transplant: New rules and concepts in the <span>Eurotransplant</span>,”</span> <em>Nephrology Dialysis Transplantation</em>, vol. 15, no. 3, pp. 333–338, 2000, doi: <a href="https://doi.org/10.1093/ndt/15.3.333">10.1093/ndt/15.3.333</a>.</div>
+</div>
+<div id="ref-vereerstraetenExperienceWujciakOpelzAllocation1998" class="csl-entry">
+<div class="csl-left-margin">[129] </div><div class="csl-right-inline">P. Vereerstraeten, D. Abramowicz, L. De Pauw, and P. Kinnaert, <span>“Experience with the <span>Wujciak-Opelz</span> allocation system in a single center: An increase in <span>HLA-DR</span> mismatching and in early occurring acute rejection episodes,”</span> <em>Transplant International</em>, vol. 11, no. 5, pp. 378–381, 1998, doi: <a href="https://doi.org/10.1007/s001470050161">10.1007/s001470050161</a>.</div>
+</div>
+<div id="ref-doxiadisSimplerEquitableAllocation2007" class="csl-entry">
+<div class="csl-left-margin">[130] </div><div class="csl-right-inline">I. I. N. Doxiadis <em>et al.</em>, <span>“Simpler and equitable allocation of kidneys from postmortem donors primarily based on full <span>HLA-DR</span> compatibility,”</span> <em>Transplantation</em>, vol. 83, no. 9, p. 1207, 2007, doi: <a href="https://doi.org/10.1097/01.tp.0000261108.27421.bc">10.1097/01.tp.0000261108.27421.bc</a>.</div>
+</div>
+<div id="ref-heemskerkRegionalKidneyAllocation2009" class="csl-entry">
+<div class="csl-left-margin">[131] </div><div class="csl-right-inline">M. B. A. Heemskerk <em>et al.</em>, <span>“Regional kidney allocation based only on full <span>HLA-DR</span> compatibility is not feasible,”</span> <em>Transplantation</em>, vol. 88, no. 4, p. 600, 2009, doi: <a href="https://doi.org/10.1097/TP.0b013e3181b16174">10.1097/TP.0b013e3181b16174</a>.</div>
+</div>
+<div id="ref-Wujciak1997" class="csl-entry">
+<div class="csl-left-margin">[132] </div><div class="csl-right-inline">T. Wujciak and G. Opelz, <span>“Matchability as an important factor for kidney allocation according to the <span>HLA</span> match,”</span> <em>Transplantation Proceedings</em>, vol. 29, no. 1–2, pp. 1403–1405, 1997, doi: <a href="https://doi.org/10.1016/s0041-1345(96)00610-0">10.1016/s0041-1345(96)00610-0</a>.</div>
+</div>
+<div id="ref-susal2015" class="csl-entry">
+<div class="csl-left-margin">[133] </div><div class="csl-right-inline">C. Süsal and C. Morath, <span>“Virtual <span>PRA</span> replaces traditional pra: Small change but significantly more justice for sensitized patients,”</span> <em>Transplant International</em>, vol. 28, no. 6, pp. 708–709, 2015, doi: <a href="https://doi.org/10.1111/tri.12572">10.1111/tri.12572</a>.</div>
+</div>
+<div id="ref-ziemannUnacceptableHumanLeucocyte2017" class="csl-entry">
+<div class="csl-left-margin">[134] </div><div class="csl-right-inline">M. Ziemann <em>et al.</em>, <span>“Unacceptable human leukocyte antigens for organ offers in the era of organ shortage: Influence on waiting time before kidney transplantation,”</span> <em>Nephrology Dialysis Transplantation</em>, vol. 32, no. 5, pp. 880–889, 2017, doi: <a href="https://doi.org/10.1093/ndt/gfw462">10.1093/ndt/gfw462</a>.</div>
+</div>
+<div id="ref-zecherImpactSensitizationWaiting2022a" class="csl-entry">
+<div class="csl-left-margin">[135] </div><div class="csl-right-inline">D. Zecher <em>et al.</em>, <span>“Impact of sensitization on waiting time prior to kidney transplantation in <span>Germany</span>,”</span> <em>Transplantation</em>, vol. 106, no. 12, p. 2448, 2022, doi: <a href="https://doi.org/10.1097/TP.0000000000004238">10.1097/TP.0000000000004238</a>.</div>
+</div>
+<div id="ref-patelSignificancePositiveCrossmatch1969" class="csl-entry">
+<div class="csl-left-margin">[136] </div><div class="csl-right-inline">R. Patel and P. I. Terasaki, <span>“Significance of the positive crossmatch test in kidney transplantation,”</span> <em>The New England Journal of Medicine</em>, vol. 280, no. 14, pp. 735–739, 1969, doi: <a href="https://doi.org/10.1056/NEJM196904032801401">10.1056/NEJM196904032801401</a>.</div>
+</div>
+<div id="ref-Claas1988" class="csl-entry">
+<div class="csl-left-margin">[137] </div><div class="csl-right-inline">F. H. J. Claas and J. J. van Rood, <span>“The hyperimmunized patient: From sensitization toward transplantation,”</span> <em>Transplant International</em>, vol. 1, no. 2, pp. 53–57, 1988, doi: <a href="https://doi.org/10.1007/bf00353819">10.1007/bf00353819</a>.</div>
+</div>
+<div id="ref-Heidt2015" class="csl-entry">
+<div class="csl-left-margin">[138] </div><div class="csl-right-inline">S. Heidt, M. D. Witvliet, G. W. Haasnoot, and F. H. J. Claas, <span>“The 25th anniversary of the <span>Eurotransplant</span> <span class="nocase">Acceptable Mismatch program</span> for highly sensitized patients,”</span> <em>Transplant Immunology</em>, vol. 33, no. 2, pp. 51–57, 2015, doi: <a href="https://doi.org/10.1016/j.trim.2015.08.006">10.1016/j.trim.2015.08.006</a>.</div>
+</div>
+<div id="ref-ETHist2025" class="csl-entry">
+<div class="csl-left-margin">[139] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant Manual</span>. <span>Chapter 10: Histocompatibility Testing</span>.”</span> Available: <a href="https://www.eurotransplant.org/allocation/eurotransplant-manual/">https://www.eurotransplant.org/allocation/eurotransplant-manual/</a></div>
+</div>
+<div id="ref-Mamode2022" class="csl-entry">
+<div class="csl-left-margin">[140] </div><div class="csl-right-inline">N. Mamode <em>et al.</em>, <span>“<span>European</span> guideline for the management of kidney transplant patients with <span>HLA</span> antibodies: By the <span>European</span> society for organ transplantation working group,”</span> <em>Transplant International</em>, vol. 35, 2022, doi: <a href="https://doi.org/10.3389/ti.2022.10511">10.3389/ti.2022.10511</a>.</div>
+</div>
+<div id="ref-Amico2009" class="csl-entry">
+<div class="csl-left-margin">[141] </div><div class="csl-right-inline">P. Amico, G. Hönger, M. Mayr, J. Steiger, H. Hopfer, and S. Schaub, <span>“Clinical relevance of pretransplant donor-specific <span>HLA</span> antibodies detected by single-antigen flow-beads,”</span> <em>Transplantation</em>, vol. 87, no. 11, pp. 1681–1688, 2009, doi: <a href="https://doi.org/10.1097/tp.0b013e3181a5e034">10.1097/tp.0b013e3181a5e034</a>.</div>
+</div>
+<div id="ref-Mulley2011" class="csl-entry">
+<div class="csl-left-margin">[142] </div><div class="csl-right-inline">W. R. Mulley and J. Kanelles, <span>“Understanding crossmatch testing in organ transplantation: A case-based guide for the general nephrologist,”</span> <em>Nephrology</em>, vol. 16, no. 2, pp. 125–133, 2011, doi: <a href="https://doi.org/10.1111/j.1440-1797.2010.01414.x">10.1111/j.1440-1797.2010.01414.x</a>.</div>
+</div>
+<div id="ref-smitsEvaluationEurotransplantSenior2002" class="csl-entry">
+<div class="csl-left-margin">[143] </div><div class="csl-right-inline">J. M. A. Smits, G. G. Persijn, J. C. van Houwelingen, F. H. J. Claas, and U. Frei, <span>“Evaluation of the <span>Eurotransplant</span> <span>Senior Program</span>. The results of the first year,”</span> <em>American Journal of Transplantation</em>, vol. 2, no. 7, pp. 664–670, 2002, doi: <a href="https://doi.org/10.1034/j.1600-6143.2002.20713.x">10.1034/j.1600-6143.2002.20713.x</a>.</div>
+</div>
+<div id="ref-Frei2008" class="csl-entry">
+<div class="csl-left-margin">[144] </div><div class="csl-right-inline">U. Frei <em>et al.</em>, <span>“Prospective age-matching in elderly kidney transplant recipients - a 5-year analysis of the <span>Eurotransplant</span> <span>Senior Program</span>,”</span> <em>American Journal of Transplantation</em>, vol. 8, no. 1, pp. 50–57, 2008, doi: <a href="https://doi.org/10.1111/j.1600-6143.2007.02014.x">10.1111/j.1600-6143.2007.02014.x</a>.</div>
+</div>
+<div id="ref-deFijter2023" class="csl-entry">
+<div class="csl-left-margin">[145] </div><div class="csl-right-inline">J. de Fijter <em>et al.</em>, <span>“A paired-kidney allocation study found superior survival with <span>HLA-DR</span> compatible kidney transplants in the <span>Eurotransplant</span> <span>Senior Program</span>,”</span> <em>Kidney International</em>, vol. 104, no. 3, pp. 552–561, 2023, doi: <a href="https://doi.org/10.1016/j.kint.2023.05.025">10.1016/j.kint.2023.05.025</a>.</div>
+</div>
+<div id="ref-Kolbrink2024" class="csl-entry">
+<div class="csl-left-margin">[146] </div><div class="csl-right-inline">B. Kolbrink <em>et al.</em>, <span>“Allocation rules and age-dependent waiting times for kidney transplantation,”</span> <em>Deutsches Ärzteblatt international</em>, 2024, doi: <a href="https://doi.org/10.3238/arztebl.m2024.0137">10.3238/arztebl.m2024.0137</a>.</div>
+</div>
+<div id="ref-Audry2022" class="csl-entry">
+<div class="csl-left-margin">[147] </div><div class="csl-right-inline">B. Audry <em>et al.</em>, <span>“The new <span>French</span> kidney allocation system for donations after brain death: Rationale, implementation, and evaluation,”</span> <em>American Journal of Transplantation</em>, vol. 22, no. 12, pp. 2855–2868, 2022, doi: <a href="https://doi.org/10.1111/ajt.17180">10.1111/ajt.17180</a>.</div>
+</div>
+<div id="ref-watson2020overview" class="csl-entry">
+<div class="csl-left-margin">[148] </div><div class="csl-right-inline">C. J. E. Watson, R. J. Johnson, and L. Mumford, <span>“Overview of the evolution of the <span>UK</span> kidney allocation schemes,”</span> <em>Current Transplantation Reports</em>, vol. 7, no. 2, pp. 140–144, 2020, doi: <a href="https://doi.org/10.1007/s40472-020-00270-6">10.1007/s40472-020-00270-6</a>.</div>
+</div>
+<div id="ref-israniNewNationalAllocation2014" class="csl-entry">
+<div class="csl-left-margin">[149] </div><div class="csl-right-inline">A. K. Israni <em>et al.</em>, <span>“New national allocation policy for deceased donor kidneys in the <span>United States</span> and possible effect on patient outcomes,”</span> <em>Journal of the American Society of Nephrology</em>, vol. 25, no. 8, pp. 1842–1848, 2014, doi: <a href="https://doi.org/10.1681/ASN.2013070784">10.1681/ASN.2013070784</a>.</div>
+</div>
+<div id="ref-vonsamson-himmelstjernaContinuousDonorrecipientAge2024" class="csl-entry">
+<div class="csl-left-margin">[150] </div><div class="csl-right-inline">F. A. von Samson-Himmelstjerna, B. Kolbrink, K. Budde, R. Schmitt, and K. Schulte, <span>“Continuous donor-recipient age matching: A chance for kidney allocation in the <span>Eurotransplant</span> region,”</span> <em>American Journal of Transplantation</em>, 2024, doi: <a href="https://doi.org/10.1016/j.ajt.2024.11.022">10.1016/j.ajt.2024.11.022</a>.</div>
+</div>
+<div id="ref-Wu2017" class="csl-entry">
+<div class="csl-left-margin">[151] </div><div class="csl-right-inline">D. A. Wu, C. J. Watson, J. A. Bradley, R. J. Johnson, J. L. Forsythe, and G. C. Oniscu, <span>“Global trends and challenges in deceased donor kidney allocation,”</span> <em>Kidney International</em>, vol. 91, no. 6, pp. 1287–1299, 2017, doi: <a href="https://doi.org/10.1016/j.kint.2016.09.054">10.1016/j.kint.2016.09.054</a>.</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="10">
+<li id="fn10"><p>For the AM program,
+unacceptable antigens either require CDC
+reactivity, or documentation that links the DSA to a sensitizing event.<a href="CHprefacekidney.html#fnref10" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="CHelassimulator.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="CHvpra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["thesis.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

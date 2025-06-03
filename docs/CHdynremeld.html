@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Revising MELD from calendar-time cross-sections with correction for selection bias | Organ allocation models in Eurotransplant</title>
+  <meta name="description" content="This is the PhD thesis of H.C. de Ferrante" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Revising MELD from calendar-time cross-sections with correction for selection bias | Organ allocation models in Eurotransplant" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="/cover/thesis_cover.png" />
+  <meta property="og:description" content="This is the PhD thesis of H.C. de Ferrante" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Revising MELD from calendar-time cross-sections with correction for selection bias | Organ allocation models in Eurotransplant" />
+  
+  <meta name="twitter:description" content="This is the PhD thesis of H.C. de Ferrante" />
+  <meta name="twitter:image" content="/cover/thesis_cover.png" />
+
+<meta name="author" content="Hans Christiaan de Ferrante" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="CHprefaceliver.html"/>
+<link rel="next" href="CHsexdisparity.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="dankwoord.html"><a href="dankwoord.html"><i class="fa fa-check"></i>Dankwoord</a></li>
+<li class="chapter" data-level="1" data-path="CHintroduction.html"><a href="CHintroduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="CHintroduction.html"><a href="CHintroduction.html#eurotransplant"><i class="fa fa-check"></i><b>1.1</b> Eurotransplant</a></li>
+<li class="chapter" data-level="1.2" data-path="CHintroduction.html"><a href="CHintroduction.html#objective-medical-criteria-for-organ-allocation"><i class="fa fa-check"></i><b>1.2</b> Objective medical criteria for organ allocation</a></li>
+<li class="chapter" data-level="1.3" data-path="CHintroduction.html"><a href="CHintroduction.html#fairness-in-organ-allocation"><i class="fa fa-check"></i><b>1.3</b> Fairness in organ allocation</a></li>
+<li class="chapter" data-level="1.4" data-path="CHintroduction.html"><a href="CHintroduction.html#challenges-in-improving-organ-allocation-systems"><i class="fa fa-check"></i><b>1.4</b> Challenges in improving organ allocation systems</a></li>
+<li class="chapter" data-level="1.5" data-path="CHintroduction.html"><a href="CHintroduction.html#outline-of-this-thesis"><i class="fa fa-check"></i><b>1.5</b> Outline of this thesis</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html"><i class="fa fa-check"></i><b>2</b> Liver allocation in Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#liver-allocation-prior-to-meld"><i class="fa fa-check"></i><b>2.1</b> Liver allocation prior to MELD</a></li>
+<li class="chapter" data-level="2.2" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#meld-based-liver-allocation-in-the-united-states"><i class="fa fa-check"></i><b>2.2</b> MELD-based liver allocation in the United States</a></li>
+<li class="chapter" data-level="2.3" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#meld-based-liver-allocation-in-eurotransplant"><i class="fa fa-check"></i><b>2.3</b> MELD-based liver allocation in Eurotransplant</a></li>
+<li class="chapter" data-level="2.4" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#areas-for-improvement-in-meld-based-allocation-systems"><i class="fa fa-check"></i><b>2.4</b> Areas for improvement in MELD-based allocation systems</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="CHdynremeld.html"><a href="CHdynremeld.html"><i class="fa fa-check"></i><b>3</b> Revising MELD from calendar-time cross-sections with correction for selection bias</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="CHdynremeld.html"><a href="CHdynremeld.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2" data-path="CHdynremeld.html"><a href="CHdynremeld.html#materials-and-methods"><i class="fa fa-check"></i><b>3.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="3.3" data-path="CHdynremeld.html"><a href="CHdynremeld.html#results"><i class="fa fa-check"></i><b>3.3</b> Results</a></li>
+<li class="chapter" data-level="3.4" data-path="CHdynremeld.html"><a href="CHdynremeld.html#discussion"><i class="fa fa-check"></i><b>3.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html"><i class="fa fa-check"></i><b>4</b> Sex disparity in liver allocation within Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#materials-and-methods-1"><i class="fa fa-check"></i><b>4.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="4.3" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#results-1"><i class="fa fa-check"></i><b>4.3</b> Results</a></li>
+<li class="chapter" data-level="4.4" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#discussion-1"><i class="fa fa-check"></i><b>4.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="CHelassimulator.html"><a href="CHelassimulator.html"><i class="fa fa-check"></i><b>5</b> The ELAS simulator</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="CHelassimulator.html"><a href="CHelassimulator.html#introduction-2"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elassystem"><i class="fa fa-check"></i><b>5.2</b> The Eurotransplant Liver Allocation System (ELAS)</a></li>
+<li class="chapter" data-level="5.3" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasdesign"><i class="fa fa-check"></i><b>5.3</b> The design of the ELAS simulator</a></li>
+<li class="chapter" data-level="5.4" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasmodules"><i class="fa fa-check"></i><b>5.4</b> Modules of the ELAS simulator</a></li>
+<li class="chapter" data-level="5.5" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasvv"><i class="fa fa-check"></i><b>5.5</b> Verification and validation</a></li>
+<li class="chapter" data-level="5.6" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elascasestudies"><i class="fa fa-check"></i><b>5.6</b> Case studies: the impact of modifying ELAS rules</a></li>
+<li class="chapter" data-level="5.7" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasconclusion"><i class="fa fa-check"></i><b>5.7</b> Conclusions and discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html"><i class="fa fa-check"></i><b>6</b> Kidney allocation in Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#hla-matching-versus-fairness"><i class="fa fa-check"></i><b>6.1</b> HLA matching versus fairness</a></li>
+<li class="chapter" data-level="6.2" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#kidney-allocation-programs-in-eurotransplant"><i class="fa fa-check"></i><b>6.2</b> Kidney allocation programs in Eurotransplant</a></li>
+<li class="chapter" data-level="6.3" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#contemporary-challenges-in-kidney-allocation"><i class="fa fa-check"></i><b>6.3</b> Contemporary challenges in kidney allocation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="CHvpra.html"><a href="CHvpra.html"><i class="fa fa-check"></i><b>7</b> Access to transplantation for immunized candidates</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="CHvpra.html"><a href="CHvpra.html#introduction-3"><i class="fa fa-check"></i><b>7.1</b> Introduction</a></li>
+<li class="chapter" data-level="7.2" data-path="CHvpra.html"><a href="CHvpra.html#materials-and-methods-2"><i class="fa fa-check"></i><b>7.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="7.3" data-path="CHvpra.html"><a href="CHvpra.html#results-2"><i class="fa fa-check"></i><b>7.3</b> Results</a></li>
+<li class="chapter" data-level="7.4" data-path="CHvpra.html"><a href="CHvpra.html#discussion-2"><i class="fa fa-check"></i><b>7.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html"><i class="fa fa-check"></i><b>8</b> The ETKidney simulator</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#introduction-4"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneyalloc"><i class="fa fa-check"></i><b>8.2</b> The kidney allocation programs of Eurotransplant</a></li>
+<li class="chapter" data-level="8.3" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneydesign"><i class="fa fa-check"></i><b>8.3</b> Purpose and design of the ETKidney Simulator</a></li>
+<li class="chapter" data-level="8.4" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneymodules"><i class="fa fa-check"></i><b>8.4</b> Modules of the ETKidney simulator</a></li>
+<li class="chapter" data-level="8.5" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneyvv"><i class="fa fa-check"></i><b>8.5</b> Verification and validation</a></li>
+<li class="chapter" data-level="8.6" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneycasestudies"><i class="fa fa-check"></i><b>8.6</b> Case studies</a></li>
+<li class="chapter" data-level="8.7" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneydiscussion"><i class="fa fa-check"></i><b>8.7</b> Discussion and conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="CHdiscussion.html"><a href="CHdiscussion.html"><i class="fa fa-check"></i><b>9</b> The way forward</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="CHdiscussion.html"><a href="CHdiscussion.html#this-thesis-is-a-sharp-look-at-familiar-problems"><i class="fa fa-check"></i><b>9.1</b> This thesis is a sharp look at familiar problems</a></li>
+<li class="chapter" data-level="9.2" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-need-to-look-beyond-survival-models-for-allocation"><i class="fa fa-check"></i><b>9.2</b> We need to look beyond survival models for allocation</a></li>
+<li class="chapter" data-level="9.3" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-should-look-beyond-aggregate-outcomes"><i class="fa fa-check"></i><b>9.3</b> We should look beyond aggregate outcomes</a></li>
+<li class="chapter" data-level="9.4" data-path="CHdiscussion.html"><a href="CHdiscussion.html#scientific-evidence-is-rarely-the-bottleneck"><i class="fa fa-check"></i><b>9.4</b> Scientific evidence is rarely the bottleneck</a></li>
+<li class="chapter" data-level="9.5" data-path="CHdiscussion.html"><a href="CHdiscussion.html#the-chicken-and-egg-problem-in-allocation-development"><i class="fa fa-check"></i><b>9.5</b> The “chicken-and-egg” problem in allocation development</a></li>
+<li class="chapter" data-level="9.6" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-need-more-constructive-dialogue"><i class="fa fa-check"></i><b>9.6</b> We need more constructive dialogue</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="APPipcw.html"><a href="APPipcw.html"><i class="fa fa-check"></i><b>A</b> Inverse Probability Censoring Weights</a>
+<ul>
+<li class="chapter" data-level="" data-path="APPipcw.html"><a href="APPipcw.html#definition-of-ipcw-weights"><i class="fa fa-check"></i>Definition of IPCW weights</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="APPimputation.html"><a href="APPimputation.html"><i class="fa fa-check"></i><b>B</b> Completing the status updates streams for transplant recipients</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="APPimputation.html"><a href="APPimputation.html#step-1-and-2-construction-of-the-pseudo-observations"><i class="fa fa-check"></i><b>B.1</b> Step 1 and 2: Construction of the pseudo-observations</a></li>
+<li class="chapter" data-level="B.2" data-path="APPimputation.html"><a href="APPimputation.html#step-3-fitting-a-model-for-the-mean-restricted-survival-time"><i class="fa fa-check"></i><b>B.2</b> Step 3: Fitting a model for the mean restricted survival time</a></li>
+<li class="chapter" data-level="B.3" data-path="APPimputation.html"><a href="APPimputation.html#step-4-constructing-future-statuses"><i class="fa fa-check"></i><b>B.3</b> Step 4: Constructing future statuses</a></li>
+<li class="chapter" data-level="B.4" data-path="APPimputation.html"><a href="APPimputation.html#step-4.2-matching-the-patient-to-a-particular-patient-in-the-risk-set"><i class="fa fa-check"></i><b>B.4</b> Step 4.2: matching the patient to a particular patient in the risk set</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="course-of-life.html"><a href="course-of-life.html"><i class="fa fa-check"></i>Course of Life</a></li>
+<li class="chapter" data-level="" data-path="list-of-publications.html"><a href="list-of-publications.html"><i class="fa fa-check"></i>List of publications</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Organ allocation models in Eurotransplant</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="CHdynremeld" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Revising MELD from calendar-time cross-sections with correction for selection bias<a href="CHdynremeld.html#CHdynremeld" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p></p>
+<hr />
+<p>
+An article based on this chapter has appeared in <em>BMC Medical Research Methodology</em>, de Ferrante, H.C., De Rosner-van Rosmalen M., Smeulders, B.M.L., Vogelaar, S., Spieksma, F.C.R., 2024, <a href="https://doi.org/10.1186/s12874-024-02176-8">10.1186/s12874-024-02176-8</a>,
+<span class="citation"><a href="#ref-deFerranteDynremeld">[55]</a></span></p>
+<p>
+</p>
+<p><p><strong>Abstract</strong></p>
+</p>
+<p>Eurotransplant allocates livers using the MELD score as originally proposed
+by UNOS. Several studies have revised this UNOS-MELD score using retrospective
+data on liver transplant candidates. The standard approach taken in such studies is to model 90-day
+waiting list mortality from the time of listing, based on biomarkers reported at
+listing, while censoring candidates at delisting or transplantation. This approach
+ignores a candidate’s biomarkers that were reported after registration, and ignores informative
+censoring by transplantation and delisting.</p>
+<p>We study how MELD revision is affected by using calendar-time
+cross-sections and by correcting for informative censoring with inverse
+probability censoring weighting (IPCW). To this end, we revised UNOS-MELD
+on patients with cirrhosis who were on the Eurotransplant waiting list
+between 2007 and 2019 (n=13,274) with Cox models with as endpoints
+90-day survival (a) from registration and (b) from weekly drawn
+calendar-time cross-sections. We refer to the score revised from
+cross-section with IPCW as <em>DynReMELD</em>. We compare DynReMELD to
+UNOS-MELD and ReMELD, a prior revision of UNOS-MELD for Eurotransplant,
+in a geographical validation.</p>
+<p>Our results show that revising MELD from calendar-time cross-sections leads to significantly
+different MELD coefficients. IPCW increases estimates of absolute 90-day
+waiting list mortality risks by approximately 10 percentage points.
+DynReMELD shows improved discrimination compared to UNOS-MELD (delta c-index:
+0.0040, p&lt;0.001) and ReMELD (delta c-index: 0.0015, p&lt;0.01), with
+differences comparable in magnitude to the addition of an extra
+biomarker to MELD (delta c-index: ±0.0030).</p>
+<p>Correction for selection bias by transplantation or delisting with inverse
+probability censoring weighting does not
+improve the discrimination of revised MELD scores, but does substantially
+increase estimates of absolute 90-day mortality risks. Revision from
+cross-section uses waiting list data more efficiently, and improves
+discrimination compared to revision of MELD exclusively based on
+the information available at listing.</p>
+<p></p>
+<div id="introduction" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Introduction<a href="CHdynremeld.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Eurotransplant calculates MELD scores with a formula originally introduced by
+UNOS in 2002. We refer to this score as UNOS-MELD. Various limitations of UNOS-MELD
+have been described, including that</p>
+<ol style="list-style-type: decimal">
+<li><p>it was not developed to predict mortality on the liver waiting list <span class="citation"><a href="#ref-malinchocModelPredictPoor2000">[33]</a></span>,</p></li>
+<li><p>it overemphasizes renal dysfunction
+<span class="citation"><a href="#ref-sharmaReweightingModelEndStage2008">[40]</a></span>,</p></li>
+<li><p>it uses biomarker caps that are not evidence-based
+<span class="citation"><a href="#ref-leiseRevisedModelEndstage2011">[41]</a></span>,</p></li>
+<li><p>it is poorly calibrated for specific subgroups, such as
+patients with hyponatremia <span class="citation"><a href="#ref-kimHyponatremiaMortalityPatients2008a">[37]</a></span>.</p></li>
+</ol>
+<p>These limitations have motivated several studies to revise MELD, either
+by re-estimating the equation’s coefficients using registry data on
+liver transplant candidates (e.g., <span class="citation"><a href="#ref-sharmaReweightingModelEndStage2008">[40]</a>, <a href="#ref-leiseRevisedModelEndstage2011">[41]</a></span>), or by expanding the scoring system
+with new biomarkers (e.g., MELD-Na
+<span class="citation"><a href="#ref-kimHyponatremiaMortalityPatients2008a">[37]</a></span> or MELD 3.0
+<span class="citation"><a href="#ref-kimMELD3point0">[20]</a></span>). In 2020, the equation’s coefficients and caps of MELD
+were revised by Goudsmit et al. using retrospective data from Eurotransplant.
+The resulting score is referred to as the “ReMELD” score <span class="citation"><a href="#ref-goudsmitRefittingModelEndstage2020">[42]</a></span>.</p>
+<p>MELD revision typically proceeds by modeling waiting list mortality up to
+90 days after waiting list registration based on biomarkers reported at
+registration (e.g., <span class="citation"><a href="#ref-kimMELD3point0">[20]</a>, <a href="#ref-kimHyponatremiaMortalityPatients2008a">[37]</a>, <a href="#ref-leiseRevisedModelEndstage2011">[41]</a>, <a href="#ref-goudsmitRefittingModelEndstage2020">[42]</a></span>). This <em>“from registration”</em> approach
+poorly aligns with the clinical use of MELD: in allocation, candidates are prioritized
+on their last reported MELD score, and not on the MELD score that was reported at listing. Moreover, revising MELD <em>“from registration”</em> ignores
+waiting list deaths that occur more than 90 days after listing, which are
+two-thirds of all liver waiting list deaths within Eurotransplant.</p>
+<p>Previously, such waste of statistical information was avoided by
+adjusting for MELD biomarkers as time-varying covariates
+(<span class="citation"><a href="#ref-merionLongitudinalAssessmentMortality2003">[39]</a>, <a href="#ref-sharmaReweightingModelEndStage2008">[40]</a></span>).
+However, MELD biomarkers also increase as part of the death process
+<span class="citation"><a href="#ref-bambhaPredictingSurvivalPatients2004">[56]</a></span>, such that use of
+MELD biomarkers as time-varying covariates leads to issues of reverse
+causality. This reverse causality problem is exacerbated by the fact that MELD scores can be updated voluntarily at any time and by the fact that sicker patients are required
+to update their MELD scores more frequently.</p>
+<p>To prevent these issues, we propose revising MELD <em>“from cross-section”</em>
+using methodology developed by Gong and Schaubel
+<span class="citation"><a href="#ref-gongPartlyConditionalEstimation2013">[57]</a></span>. With this approach MELD is
+revised by modeling the remaining time-until-death from pre-specified
+calendar-time cross-sections rather than from registration. Biomarkers
+measured after listing and deaths recorded more than 90
+days after listing thereby inform MELD revision. To prevent issues of reverse
+causality, adjustment at each cross-section is for historical biomarker
+information only. The evolution of biomarkers after the cross-section
+date affects survival, transplantation and delisting rates, which makes
+transplantation and delisting informative censoring mechanisms. Prior revisions
+of MELD censor patients at transplantation or delisting, which introduces
+bias. We study how MELD revision is
+affected by correcting for dependent censoring with inverse
+probability censoring weighting, which was first proposed by Gong and Schaubel <span class="citation"><a href="#ref-gongPartlyConditionalEstimation2013">[57]</a></span>.</p>
+</div>
+<div id="materials-and-methods" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Materials and methods<a href="CHdynremeld.html#materials-and-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="study-population-and-data" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Study population and data<a href="CHdynremeld.html#study-population-and-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Adult patients with any active waiting list status on the Eurotransplant
+waiting list between December 16, 2006, and December 31, 2019, were extracted from
+the Eurotransplant database. Only patients with cirrhosis were included
+in the study, which is the patient group on which UNOS-MELD was originally
+validated. Patients with other diagnoses, those prioritized through exception
+points, and those awaiting a repeat transplantation or combined transplantation
+were excluded (except combined liver-kidney transplantation
+candidates). Patients with impossible values for MELD biomarkers (e.g., all
+zeroes for bilirubin, creatinine, and the INR) were excluded.</p>
+<p>To activate a candidate on the liver waiting list, centers have to report MELD
+biomarkers to Eurotransplant. Reported MELD scores are valid for a maximum of one
+year, and expire in a shorter time window for sicker patients (within seven days for MELD scores greater than 25
+<span class="citation"><a href="#ref-ETLiverMan2025">[58]</a></span>). Failure to update the MELD score results in the
+lowest possible MELD score of 6 being used for allocation. Consequently,
+MELD updates are available for most transplant candidates in the Eurotransplant
+database. Centers can set
+candidates to non-transplantable (NT) if they are temporarily not available
+for transplantation, which ensures that the transplant center is not
+contacted with offers for these patients.</p>
+</div>
+<div id="meld-scores-unos-meld-and-remeld" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> MELD scores, UNOS-MELD and ReMELD<a href="CHdynremeld.html#meld-scores-unos-meld-and-remeld" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We define a MELD scoring system as a system that calculates a score based
+on serum bilirubin, serum creatinine and the INR, using the following formula:</p>
+<p><span class="math display">\[\text{intercept}\  + \text{coef}_{\text{bili}}\ln\left( \text{bili} \right) + \ \text{coef}_{\text{crea}}\ln\left( \text{crea} \right) +
+\text{coef}_{\text{INR}}\ln\left( \text{INR} \right),\]</span></p>
+<p>with serum bilirubin and serum creatinine measured in mg/dl. A specific MELD
+score proposes values for the intercept and coefficients, and bounds for the
+values of MELD biomarkers. A MELD score also has to propose how to calculate
+MELD scores for candidates who received dialysis twice in the week before
+measurement of MELD biomarkers (henceforth “patients on biweekly dialysis”),
+since dialysis reduces measured creatinine levels. Eurotransplant currently uses UNOS-MELD for allocation, i.e.</p>
+<p><span class="math display">\[6.43\  + 3.78\ln\left( \text{bilirubin} \right) + 9.57\ln\left( \text{creatinine} \right) + 11.20\ln\left( \text{INR} \right),\]</span></p>
+<p>in which creatinine is capped at 4.0 mg/dl, a lower limit of 1.0 is imposed on
+all biomarkers, and creatinine is set to 4.0 mg/dl for patients on biweekly
+dialysis.</p>
+<p>Various revisions of MELD have been proposed (e.g., see
+<span class="citation"><a href="#ref-leiseRevisedModelEndstage2011">[41]</a>, <a href="#ref-goudsmitRefittingModelEndstage2020">[42]</a>, <a href="#ref-bambhaPredictingSurvivalPatients2004">[56]</a></span>).
+One alternative – that was
+developed specifically for Eurotransplant – is ReMELD
+<span class="citation"><a href="#ref-goudsmitRefittingModelEndstage2020">[42]</a></span>, which calculates the score as</p>
+<p><span class="math display">\[8.422\  + 7.728\ln\left( \text{bili} \right) + \ 3.446\ \ln\left( \text{crea} \right) + 10.597\ln\left( \text{INR} \right).\]</span></p>
+<p>In calculating ReMELD scores, bilirubin is bounded between 0.3 and 27 mg/dl, the INR is
+bounded between 0.1 and 2.6, and creatinine is bounded between 0.7 and 2.5 mg/dl. Creatinine is
+also set to the upper cap of 2.5 mg/dl for patients on biweekly dialysis.</p>
+</div>
+<div id="revision-from-registration-vs.-revision-from-cross-section" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Revision <em>“from registration” vs. “revision from cross-section”</em><a href="CHdynremeld.html#revision-from-registration-vs.-revision-from-cross-section" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In revising MELD, authors typically re-estimate MELD coefficients <em>“from
+registration”</em>. By this, we mean that authors use Cox proportional hazards models
+to model 90-day waiting list mortality after registration with adjustment
+for MELD biomarkers that were reported at listing. Coefficients for the MELD scoring system are then commonly derived by rescaling the estimated regression coefficients (<span class="math inline">\(\widehat{\beta}\)</span>) to the UNOS-MELD scale. This rescaling is typically achieved by matching quantiles of the linear predictor to corresponding quantiles of UNOS-MELD scores (e.g., <span class="citation"><a href="#ref-leiseRevisedModelEndstage2011">[41]</a>, <a href="#ref-goudsmitRefittingModelEndstage2020">[42]</a></span>).
+This <em>“from registration”</em> approach ignores any MELD measurements recorded after registration, as
+well as patient deaths recorded more than 90 days after registration. We
+propose to avoid such waste of statistical information by revising
+MELD with a <em>“from cross-section”</em> approach. The key differences between these
+approaches are illustrated in Figure <a href="CHdynremeld.html#fig:ch3fig1">3.1</a>.</p>
+<p>The <em>“from cross-section”</em> approach uses methodology developed by Gong and Schaubel
+<span class="citation"><a href="#ref-gongPartlyConditionalEstimation2013">[57]</a></span>, and models the remaining
+time-until-death from pre-specified calendar-time cross-sections (see
+right panel, Figure <a href="CHdynremeld.html#fig:ch3fig1">3.1</a>). This approach uses cross-section calendar
+times as the time origin, and the time elapsed since the cross-section date as
+the timescale. The coefficients are estimated with a Cox proportional hazards model
+that is stratified by the cross-section. At each cross-section only
+patients with an active registration (i.e., without non-transplantable
+status) are included in the analysis, and Cox models adjust only for
+biomarker information reported <em>before</em> the cross-section. We point out
+that patients waiting at multiple calendar-time cross-sections
+contribute multiple observations to the Cox model fit (right panel,
+Figure <a href="CHdynremeld.html#fig:ch3fig1">3.1</a>). Thereby, revision of MELD is also affected by (i)
+waiting list deaths that occur more than 90 days after listing, and (ii)
+biomarker measurements taken after listing.</p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch3fig1"></span>
+<img src="figures/ch3/figure1.png" alt="Illustration of from “registration” and “from cross-section” approaches to modeling waiting list mortality. For revision of MELD, typically 90-day time-stopped Cox models are used. The “from registration” approach (left) uses time since registration as the timescale and adjusts for biomarkers reported at registration. The “from cross-section” approach (right) models time-until-death from cross-section dates, pre-specified in calendar time, and adjusts for MELD biomarkers reported before the cross-section date. WL, waiting list." width="87%" />
+<p class="caption">
+Figure 3.1: Illustration of from “registration” and “from cross-section” approaches to modeling waiting list mortality. For revision of MELD, typically 90-day time-stopped Cox models are used. The “from registration” approach (left) uses time since registration as the timescale and adjusts for biomarkers reported at registration. The “from cross-section” approach (right) models time-until-death from cross-section dates, pre-specified in calendar time, and adjusts for MELD biomarkers reported before the cross-section date. WL, waiting list.
+</p>
+</div>
+<p>
+</p>
+<p>In this chapter, we compare revision of MELD <em>“from
+registration”</em> to revision <em>“from cross-section”</em>. In revising MELD
+<em>“from registration”</em>, we stratify models by country of listing. For the
+<em>“from cross-section”</em> approach, we use weekly cross-sections from
+December 22, 2006 to December 31, 2019 and stratify Cox models by the
+candidate’s country of listing and
+by cross-section. The candidate survival status 90 days after the cross-section date is
+used as an endpoint, and adjustment at each cross-section is for the
+last reported MELD biomarker values before the cross-section date.</p>
+</div>
+<div id="outcome-definition" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Outcome definition<a href="CHdynremeld.html#outcome-definition" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Time-until-death is modeled with 90-day time-stopped Cox PH
+models. Delisted patients who die within 90 days of deregistration are
+treated as if they had died on waiting list exit (as in
+<span class="citation"><a href="#ref-goudsmitRefittingModelEndstage2020">[42]</a></span>). Patients who were
+transplanted or delisted within 90 days are censored.
+Inverse probability censoring weighting (IPCW) is used to correct for
+selection bias due to transplantation and delisting.</p>
+</div>
+<div id="inverse-probability-censoring-weighting-to-correct-for-dependent-censoring" class="section level3 hasAnchor" number="3.2.5">
+<h3><span class="header-section-number">3.2.5</span> Inverse probability censoring weighting to correct for dependent censoring<a href="CHdynremeld.html#inverse-probability-censoring-weighting-to-correct-for-dependent-censoring" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consistent estimation of parameters <span class="math inline">\(\beta\)</span> with a standard Cox PH model
+requires that the censoring process is independent of survival,
+conditional on covariates. This independent censoring
+assumption is violated for both the <em>“from registration”</em> and <em>“from
+cross-section”</em> approaches, because only MELD biomarkers
+reported at listing (or before the cross-section date) are included as covariates, while MELD biomarkers
+reported after listing (or cross-section) affect patient survival and transplantation/delisting rates.
+Gong and Schaubel proposed a procedure
+that can correct for the bias introduced by dependent censoring due to transplantation.
+This procedure weighs candidates by their inverse probability of having been transplanted
+between the cross-section and exit date (IPCW-T weights, T for transplantation).
+Such probabilities can be estimated using an extended Cox proportional hazards model, which
+uses the candidate’s transplantation status as the outcome.</p>
+<p>We expand in this chapter on Gong and Schaubel’s approach by also
+constructing inverse probability censoring weights for delisting
+(IPCW delisting (IPCW-D) weights). Under the assumption that delisting
+and transplantation are conditionally independent, a joint inverse
+probability censoring weight can then be obtained by multiplying
+IPCW-T and IPCW-D weights (see also <span class="citation"><a href="#ref-schnellingerMitigatingSelectionBias2021">[59]</a></span>). Details on how weights
+were constructed are included in Appendix <a href="APPipcw.html#APPipcw">A</a>. In this chapter, we assess
+how IPCW affects revised MELD coefficients both <em>“from registration”</em>
+and <em>“from cross-section”</em>.</p>
+<p></p>
+</div>
+<div id="adjustment-variables-caps-and-functional-forms" class="section level3 hasAnchor" number="3.2.6">
+<h3><span class="header-section-number">3.2.6</span> Adjustment variables, caps, and functional forms<a href="CHdynremeld.html#adjustment-variables-caps-and-functional-forms" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Cox PH models adjust for variables present in MELD, i.e., serum bilirubin,
+serum creatinine, and the INR. Spline terms are used to assess
+whether the relation between log-transformed biomarkers and the
+mortality rate is approximately linear. Final models use
+logarithmic transformations for the biomarkers, with lower and upper
+limits for biomarkers optimized over regions where violation of
+log-linearity was visually apparent (as in
+Leise et al. <span class="citation"><a href="#ref-leiseRevisedModelEndstage2011">[41]</a></span> and Goudsmit et al. 
+<span class="citation"><a href="#ref-goudsmitRefittingModelEndstage2020">[42]</a></span>).</p>
+<p>On the Eurotransplant liver waiting list, more than 10% of patients receive biweekly dialysis, and
+measured creatinine is not used to calculate lab-MELD scores for these patients.
+To also ignore measured creatinine in revising MELD for these patients, we set
+creatinine to 1.0 mg/dl for patients on dialysis (leading to <span class="math inline">\(\ln(1.0) = 0\)</span> MELD points).
+Instead, we use whether the patient receives biweekly dialysis as an adjustment variable.</p>
+</div>
+<div id="development-and-validation-cohorts" class="section level3 hasAnchor" number="3.2.7">
+<h3><span class="header-section-number">3.2.7</span> Development and validation cohorts<a href="CHdynremeld.html#development-and-validation-cohorts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To enable revision and geographical validation for all Eurotransplant countries,
+we aimed to use a 70%/30% center-based split per country. Such a
+split was feasible for Germany (70%/30%), Belgium (70.1%/29.9%)
+Austria (62.6%/37.4%), and the Netherlands (74.3%/25.7%), but not for
+Hungary (1 center), Slovenia (1 center), and Croatia (1 large center, 2
+very small centers). Therefore, Hungarian, Slovenian and Croatian
+patients (11% of the total cohort) were randomly split into 70%/30%
+development/validation cohorts.</p>
+<p>All models – including those used to estimate inverse probability
+weights – were fitted on the development cohort only. The validation
+cohort was used to compare the newly developed score – which we name <em>DynReMELD</em> – to
+ReMELD and UNOS-MELD.</p>
+</div>
+<div id="comparison-to-unos-meld-and-remeld" class="section level3 hasAnchor" number="3.2.8">
+<h3><span class="header-section-number">3.2.8</span> Comparison to UNOS-MELD and ReMELD<a href="CHdynremeld.html#comparison-to-unos-meld-and-remeld" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We revised MELD <em>“from registration”</em> and <em>“from cross-section”</em> both
+with and without IPCW. Without IPCW, MELD was also revised with ReMELD’s
+linear predictor used as an offset. This enables assessment of whether
+revision of MELD on all cirrhotic patients yields a significantly
+different equation from ReMELD. We define <em>DynReMELD</em> as the equation
+obtained by quantile matching the linear predictor revised <em>“from
+cross-section”</em> with IPCW to quantiles of UNOS-MELD.
+We compare the discrimination of MELD, ReMELD and DynReMELD using the c-index
+in the validation cohort. This c-index quantifies the degree to which patients with a
+higher score die earlier on the Eurotransplant waiting list. In the literature,
+the c-index is most commonly estimated with Harrell’s c-index, which is a
+consistent estimator of the c-index in case of independent censoring. Because
+this assumption is implausible in liver transplantation, we use Gerd’s c-index <span class="citation"><a href="#ref-gerdsEstimatingTimedependentConcordance2012">[60]</a></span>.
+This c-index is a consistent estimator for the c-index provided that a consistent
+estimator of the conditional probability of remaining uncensored is available
+<span class="citation"><a href="#ref-gerdsEstimatingTimedependentConcordance2012">[60]</a>, <a href="#ref-Hartman2025">[61]</a></span>.
+We estimate Gerd’s c-indices for two separate prediction tasks,
+namely (i) prediction of time-until-death from listing based on biomarkers
+reported at listing,
+and (ii) prediction of remaining time-until-death from calendar-time
+cross-sections based on the last reported MELD biomarkers.</p>
+<p>Assessment of calibration for <em>DynReMELD</em> is complicated by the fact
+that models developed with IPCW are counterfactual prediction models,
+and it is not clear how to assess calibration for such models
+<span class="citation"><a href="#ref-linScopingReviewCausal2021">[62]</a></span>. Instead of assessing calibration, we report estimates
+of absolute 90-day survival risks for <em>DynReMELD</em> estimated with and
+without IPCW. These 90-day survival estimates are of interest to Eurotransplant,
+as Eurotransplant uses them to convert awarded exception scores to the MELD scale.</p>
+</div>
+</div>
+<div id="results" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Results<a href="CHdynremeld.html#results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This study included 13,343 liver waiting list registrations for 13,274
+patients<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> with cirrhosis waiting for a first
+liver transplant. We note that candidates with exception points (for example,
+HCC) were not included in our study cohort. We excluded 107 patients (&lt;1%)
+because they reported impossible MELD biomarker values (e.g., zeroes for all
+biomarkers). Baseline characteristics of development and validation cohorts
+are included in Table <a href="CHdynremeld.html#tab:ch3tab1baseline">3.1</a>.</p>
+<table class="table" style="font-size: 15px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:ch3tab1baseline">Table 3.1: </span>Baseline characteristics and observed waiting list outcomes for the development and validation cohorts.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+variable
+</th>
+<th style="text-align:left;">
+level
+</th>
+<th style="text-align:center;">
+development (n=9,288)
+</th>
+<th style="text-align:center;">
+validation (n=4,055)
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+UNOS-MELD<br>at listing
+</td>
+<td style="text-align:left;">
+mean (Q1-Q3)
+</td>
+<td style="text-align:center;">
+21.0 (13.0-28.0)
+</td>
+<td style="text-align:center;">
+20.3 (12.0-28.0)
+</td>
+<td style="text-align:left;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bilirubin (mg/dl)<br>at listing
+</td>
+<td style="text-align:left;">
+mean (Q1-Q3)
+</td>
+<td style="text-align:center;">
+7.53 (1.63-8.54)
+</td>
+<td style="text-align:center;">
+7.06 (1.43-8.00)
+</td>
+<td style="text-align:left;">
+0.009
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+creatinine (mg/dl)<br>at listing
+</td>
+<td style="text-align:left;">
+mean (Q1-Q3)
+</td>
+<td style="text-align:center;">
+1.54 (0.810-1.75)
+</td>
+<td style="text-align:center;">
+1.46 (0.803-1.60)
+</td>
+<td style="text-align:left;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+INR
+</td>
+<td style="text-align:left;">
+mean (Q1-Q3)
+</td>
+<td style="text-align:center;">
+1.79 (1.29-2.00)
+</td>
+<td style="text-align:center;">
+1.75 (1.21-1.91)
+</td>
+<td style="text-align:left;">
+0.024
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+biweekly dialysis
+</td>
+<td style="text-align:left;">
+yes
+</td>
+<td style="text-align:center;">
+1096 (11.8%)
+</td>
+<td style="text-align:center;">
+504 (12.4%)
+</td>
+<td style="text-align:left;">
+0.318
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:center;">
+8192 (88.2%)
+</td>
+<td style="text-align:center;">
+3551 (87.6%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+patient sex
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:center;">
+6226 (67.0%)
+</td>
+<td style="text-align:center;">
+2761 (68.1%)
+</td>
+<td style="text-align:left;">
+0.239
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:center;">
+3062 (33.0%)
+</td>
+<td style="text-align:center;">
+1294 (31.9%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+age<br>at listing
+</td>
+<td style="text-align:left;">
+mean (Q1-Q3)
+</td>
+<td style="text-align:center;">
+53.8 (49.0-61.0)
+</td>
+<td style="text-align:center;">
+54.4 (49.0-61.0)
+</td>
+<td style="text-align:left;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="5">
+cirrhosis aetiology
+</td>
+<td style="text-align:left;">
+alcoholic
+</td>
+<td style="text-align:center;">
+4949 (53.3%)
+</td>
+<td style="text-align:center;">
+2292 (56.5%)
+</td>
+<td style="text-align:left;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+autoimmune/cryptogenic
+</td>
+<td style="text-align:center;">
+1596 (17.2%)
+</td>
+<td style="text-align:center;">
+619 (15.3%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hepatitic
+</td>
+<td style="text-align:center;">
+1712 (18.4%)
+</td>
+<td style="text-align:center;">
+528 (13.0%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+metabolic/other
+</td>
+<td style="text-align:center;">
+669 (7.2%)
+</td>
+<td style="text-align:center;">
+484 (11.9%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NAFLD
+</td>
+<td style="text-align:center;">
+362 (3.9%)
+</td>
+<td style="text-align:center;">
+132 (3.3%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="5">
+outcome by<br>Dec 31, 2019
+</td>
+<td style="text-align:left;">
+waiting list death
+</td>
+<td style="text-align:center;">
+2265 (24.4%)
+</td>
+<td style="text-align:center;">
+980 (24.2%)
+</td>
+<td style="text-align:left;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+transplanted
+</td>
+<td style="text-align:center;">
+5068 (54.6%)
+</td>
+<td style="text-align:center;">
+2105 (51.9%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+removed (other)
+</td>
+<td style="text-align:center;">
+700 (7.5%)
+</td>
+<td style="text-align:center;">
+278 (6.9%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+recovered
+</td>
+<td style="text-align:center;">
+610 (6.6%)
+</td>
+<td style="text-align:center;">
+327 (8.1%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+waiting
+</td>
+<td style="text-align:center;">
+645 (6.9%)
+</td>
+<td style="text-align:center;">
+365 (9.0%)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> NAFLD; non-alcoholic fatty liver disease.
+</td>
+</tr>
+</tfoot>
+</table>
+<p></p>
+<div id="number-of-meld-scores-informing-the-revision-of-meld" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Number of MELD scores informing the revision of MELD<a href="CHdynremeld.html#number-of-meld-scores-informing-the-revision-of-meld" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>With cross-sections, 8,779 out of 9,288 (95%) patients in the
+development cohort are active at a cross-section date, and inform
+revision of MELD. The remaining 509 patients
+were transplanted, delisted, or marked non-transplantable before a cross-section date
+was reached (which means they exited the waiting list within at most 7 days of listing). We note that these 509 candidates do not inform revision of
+MELD from cross-section.</p>
+<p>Biomarker measurements taken after listing are ignored by the <em>“from registration”</em> approach,
+while these measurements inform revision of MELD with a <em>“from cross-section”</em> approach.
+Table <a href="CHdynremeld.html#tab:ch3tab1">3.2</a> shows that the number of unique MELD scores
+informing MELD revision increases about sevenfold with a <em>“from
+cross-section”</em> approach, from 9,264 to 67,433.
+The number of observed waiting list deaths and event rates also increase
+substantially with the <em>“from cross-section”</em> approach. For example, <em>“from
+cross-section”</em> the number of included MELD scores between 36 and 40
+triples from 456 to 1,248, with 47% of these patients dying 90 days
+after cross-section, compared to only 31% <em>“from registration”</em>.</p>
+<p>
+</p>
+<table class="table" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:ch3tab1">Table 3.2: </span>Number of UNOS-MELD scores used for the model fit in the “from registration” approach, and “from cross-section” approach.
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="3">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+outcome within 90 days
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+group
+</th>
+<th style="text-align:center;">
+dataset
+</th>
+<th style="text-align:center;">
+# usable MELD scores
+</th>
+<th style="text-align:center;">
+death or removed unfit
+</th>
+<th style="text-align:center;">
+transplanted
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+from registration
+</td>
+<td style="text-align:center;">
+9264
+</td>
+<td style="text-align:center;">
+846 (9.1%)
+</td>
+<td style="text-align:center;">
+2598 (28.0%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+from cross-section
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+67433
+</td>
+<td style="text-align:center;">
+5906 (8.8%)
+</td>
+<td style="text-align:center;">
+11071 (16.4%)
+</td>
+</tr>
+<tr grouplength="8">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>by MELD</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;padding-left: 2em;" rowspan="2" indentlevel="1">
+6-14
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+from registration
+</td>
+<td style="text-align:center;">
+3291
+</td>
+<td style="text-align:center;">
+67 (2.0%)
+</td>
+<td style="text-align:center;">
+389 (11.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+from cross-section
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+28192
+</td>
+<td style="text-align:center;">
+454 (1.6%)
+</td>
+<td style="text-align:center;">
+1565 (5.6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;padding-left: 2em;" rowspan="2" indentlevel="1">
+15-24
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+from registration
+</td>
+<td style="text-align:center;">
+4355
+</td>
+<td style="text-align:center;">
+382 (8.8%)
+</td>
+<td style="text-align:center;">
+1199 (27.5%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+from cross-section
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+30806
+</td>
+<td style="text-align:center;">
+2938 (9.5%)
+</td>
+<td style="text-align:center;">
+5766 (18.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;padding-left: 2em;" rowspan="2" indentlevel="1">
+25-35
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+from registration
+</td>
+<td style="text-align:center;">
+1160
+</td>
+<td style="text-align:center;">
+253 (21.8%)
+</td>
+<td style="text-align:center;">
+711 (61.3%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+from cross-section
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+7187
+</td>
+<td style="text-align:center;">
+1922 (26.7%)
+</td>
+<td style="text-align:center;">
+3144 (43.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;padding-left: 2em;" rowspan="2" indentlevel="1">
+36-40
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+from registration
+</td>
+<td style="text-align:center;">
+458
+</td>
+<td style="text-align:center;">
+144 (31.4%)
+</td>
+<td style="text-align:center;">
+299 (65.3%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+from cross-section
+</td>
+<td style="text-align:center;padding-left:0.5em !important;">
+1248
+</td>
+<td style="text-align:center;">
+592 (47.4%)
+</td>
+<td style="text-align:center;">
+596 (47.8%)
+</td>
+</tr>
+</tbody>
+</table>
+<p>
+</p>
+</div>
+<div id="revising-the-meld-formula-using-cox-models" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> Revising the MELD formula using Cox models<a href="CHdynremeld.html#revising-the-meld-formula-using-cox-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Evidence-based caps were derived using the procedure proposed by Leise et al.
+<span class="citation"><a href="#ref-leiseRevisedModelEndstage2011">[41]</a></span>. This procedure involves estimating
+Cox proportional hazard models with different caps applied and
+choosing the caps that result in the maximal log-likelihood. The procedure
+is applied separately for each biomarker, with the biomarker under consideration
+modeled linearly and the other biomarkers modeled non-linearly using
+spline terms. Figure <a href="CHdynremeld.html#fig:ch3sfig3">3.2</a> summarizes the results
+of this procedure. The optimal caps were found to be 0.6–55 mg/dl for bilirubin,
+0.8–2.5 mg/dl for serum
+creatinine, and 1.0–3.0 for the INR.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch3sfig3"></span>
+<img src="figures/ch3/fig_ll.png" alt="Heatmaps of the log-likelihood values for combinations of lower and upper bounds for serum bilirubin (mg/dl), serum creatinine (mg/dl), and the INR. Blue dots represent the optimal caps in the development data; purple dots represent the caps derived for ReMELD." width="100%" />
+<p class="caption">
+Figure 3.2: Heatmaps of the log-likelihood values for combinations of lower and upper bounds for serum bilirubin (mg/dl), serum creatinine (mg/dl), and the INR. Blue dots represent the optimal caps in the development data; purple dots represent the caps derived for ReMELD.
+</p>
+</div>
+<p></p>
+<div id="coefficients-revised-from-registration" class="section level4 hasAnchor" number="3.3.2.1">
+<h4><span class="header-section-number">3.3.2.1</span> Coefficients revised from registration<a href="CHdynremeld.html#coefficients-revised-from-registration" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Panel A of Table <a href="CHdynremeld.html#tab:ch3tab2">3.3</a> shows MELD coefficients revised <em>“from
+registration”</em>. The first column shows that parameter estimates are
+jointly not significantly different from 0
+(<span class="math inline">\(\chi_{3}^{2}\)</span> = 4.1,p = 0.25) when using ReMELD’s prognostic
+index as an offset. The insignificance of these estimates confirms
+that ReMELD adequately predicts 90-day mortality <em>“from registration”</em> for all cirrhotic
+patients. IPCW changes the biomarker
+coefficients only slightly (by less than a standard error).</p>
+</div>
+<div id="coefficients-revised-from-cross-section" class="section level4 hasAnchor" number="3.3.2.2">
+<h4><span class="header-section-number">3.3.2.2</span> Coefficients revised from cross-section<a href="CHdynremeld.html#coefficients-revised-from-cross-section" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Panel B of Table <a href="CHdynremeld.html#tab:ch3tab2">3.3</a> shows MELD coefficients revised <em>“from
+cross-section”</em>. The first column shows that coefficients are jointly
+significantly different from 0 with ReMELD used as an offset
+(<span class="math inline">\(\chi_{3}^{2}\)</span> = 801,p &lt; 0.001). Hence, ReMELD does not adequately
+predict 90-day mortality from cross-section. Estimated coefficients
+suggest ReMELD underestimates the effect of creatinine
+(<span class="math inline">\(z\)</span>= 5.2, p &lt; 0.001) and bilirubin (<span class="math inline">\(z\)</span> = 6.1, p &lt; 0.001), but not
+the INR (<span class="math inline">\(z = 0.3,p = 0.76\)</span>). IPCW appears to increase MELD
+biomarker coefficients slightly (by less than a standard deviation).</p>
+<p>Table <a href="CHdynremeld.html#tab:ch3tab2relweights">3.4</a> shows the relative weights put on the MELD
+components by the equation revised from cross-section with IPCW.
+These weights, originally defined by Sharma et al. <span class="citation"><a href="#ref-sharmaReweightingModelEndStage2008">[40]</a></span>,
+quantify the increase in MELD score resulting from a one-standard deviation increase
+in a given biomarker, relative to a one-standard deviation increase in all biomarkers.
+These weights also show that the refitted equation puts more weight on bilirubin (41%)
+than UNOS-MELD (36%) and ReMELD (37%), and puts less weight on the INR
+(28% vs. 32% for UNOS-MELD and 34% for ReMELD).</p>
+<p>
+</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:ch3tab2">Table 3.3: </span>Comparison of MELD coefficients for different model fits from registration (panel A) and “from cross-section” (panel B), for (1) revision with ReMELD’s prognostic index as an offset, (2) revision without the offset, and (3) revision with IPCW.
+</caption>
+<thead>
+<tr>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: left; " colspan="4">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+panel A - from registration
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+<ol style="list-style-type: decimal">
+<li>ReMELD offset
+</th>
+<th style="text-align:center;">
+<ol start="2" style="list-style-type: decimal">
+<li>refitted, no IPCW
+</th>
+<th style="text-align:center;">
+<ol start="3" style="list-style-type: decimal">
+<li>refitted, IPCW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ln(bilirubin (mg/dL))
+</td>
+<td style="text-align:center;">
+0.03 (0.05)
+</td>
+<td style="text-align:center;">
+0.69 (0.05)
+</td>
+<td style="text-align:center;">
+0.73 (0.06)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ln(creatinine<span class="math inline">\(^1\)</span> (mg/dL))
+</td>
+<td style="text-align:center;">
+0.10 (0.09)
+</td>
+<td style="text-align:center;">
+1.62 (0.01)
+</td>
+<td style="text-align:center;">
+1.61 (0.12)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ln(INR)
+</td>
+<td style="text-align:center;">
+0.12 (0.17)
+</td>
+<td style="text-align:center;">
+2.02 (0.17)
+</td>
+<td style="text-align:center;">
+2.19 (0.21)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+biweekly dialysis
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+1.85 (0.12)
+</td>
+<td style="text-align:center;">
+1.73 (0.13)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LR Test
+</td>
+<td style="text-align:center;">
+4.1 (df = 3)
+</td>
+<td style="text-align:center;">
+1482 (df = 4)
+</td>
+<td style="text-align:center;">
+1883 (df = 4)
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:ch3tab2">Table 3.3: </span>
+</caption>
+<thead>
+<tr>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: left; " colspan="4">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+panel B - from cross-section
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+<ol style="list-style-type: decimal">
+<li>ReMELD offset
+</th>
+<th style="text-align:center;">
+<ol start="2" style="list-style-type: decimal">
+<li>refitted, no IPCW
+</th>
+<th style="text-align:center;">
+<ol start="3" style="list-style-type: decimal">
+<li>refitted, IPCW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ln(bilirubin (mg/dl))
+</td>
+<td style="text-align:center;">
+0.22 (0.04)
+</td>
+<td style="text-align:center;">
+0.92 (0.04)
+</td>
+<td style="text-align:center;">
+0.97 (0.04)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ln(creatinine<span class="math inline">\(^1\)</span> (mg/dl))
+</td>
+<td style="text-align:center;">
+0.40 (0.08)
+</td>
+<td style="text-align:center;">
+2.07 (0.08)
+</td>
+<td style="text-align:center;">
+2.15 (0.08)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ln(INR)
+</td>
+<td style="text-align:center;">
+0.04 (0.13)
+</td>
+<td style="text-align:center;">
+2.06 (0.13)
+</td>
+<td style="text-align:center;">
+2.22 (0.15)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+biweekly dialysis
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+1.87 (0.12)
+</td>
+<td style="text-align:center;">
+1.86 (0.12)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LR Test
+</td>
+<td style="text-align:center;">
+801 (df = 3)
+</td>
+<td style="text-align:center;">
+22 197 (df = 4)
+</td>
+<td style="text-align:center;">
+26 933 (df = 4)
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup>1</sup> set to 1.0 mg/dl in case of biweekly dialysis
+</td>
+</tr>
+</tfoot>
+</table>
+</li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol>
+<table>
+<caption>
+<span id="tab:ch3tab2relweights">Table 3.4: </span>Relative weights put on bilirubin, creatinine and INR by UNOS-MELD, ReMELD and DynReMELD. Relative weights were calculated <span class="math inline">\(w_{i} = \frac{\beta_{i}\text{SD}_{i}}{\sum_{j}^{}{\beta_{j}\text{SD}_{j}}}\)</span>, where <span class="math inline">\(\beta_{i}\)</span> is the coefficient on biomarker <span class="math inline">\(i\)</span> and <span class="math inline">\(\text{SD}_{i}\)</span> its standard deviation in the development cohort.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+biomarker
+</th>
+<th style="text-align:center;">
+standard deviation
+</th>
+<th style="text-align:center;">
+UNOS-MELD
+</th>
+<th style="text-align:center;">
+ReMELD
+</th>
+<th style="text-align:center;">
+DynReMELD
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+bilirubin (mg/dl)
+</td>
+<td style="text-align:center;">
+0.85
+</td>
+<td style="text-align:center;">
+0.36
+</td>
+<td style="text-align:center;">
+0.37
+</td>
+<td style="text-align:center;">
+0.41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+creatinine (mg/dl)
+</td>
+<td style="text-align:center;">
+0.29
+</td>
+<td style="text-align:center;">
+0.32
+</td>
+<td style="text-align:center;">
+0.29
+</td>
+<td style="text-align:center;">
+0.31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+INR
+</td>
+<td style="text-align:center;">
+0.26
+</td>
+<td style="text-align:center;">
+0.32
+</td>
+<td style="text-align:center;">
+0.34
+</td>
+<td style="text-align:center;">
+0.28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="definition-of-the-dynremeld-score" class="section level3 hasAnchor" number="3.3.3">
+<h3><span class="header-section-number">3.3.3</span> Definition of the DynReMELD score<a href="CHdynremeld.html#definition-of-the-dynremeld-score" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Quantile matching of UNOS-MELD to the linear predictor revised <em>“from
+cross-section”</em> with IPCW (Table <a href="CHdynremeld.html#tab:ch3tab2">3.3</a>, panel B) yielded the following
+equation for <em>DynReMELD:</em>
+<span class="math display">\[
+4.14 \ln(\text{bilirubin}) + 9.12 \ln(\text{creatinine}) + 9.42 \ln(\text{INR}) + 8.50
+\]</span>
+with creatinine bounded between 0.8 and 2.5 mg/dl, bilirubin between 0.6 and 55 mg/dl, and
+the INR between 1.0 and 3.0. We calculate DynReMELD scores by setting
+creatinine to the upper cap (2.5 mg/dl) for patients on dialysis. This choice
+was made to keep DynReMELD in line with existing clinical implementations of
+MELD, and is relatively harmless because the creatinine level required
+to attain the same priority as biweekly dialysis is
+<span class="math inline">\(\exp\left( \frac{1.86}{2.15} \right)\  \approx 2.4\ \)</span>mg/dl (Table <a href="CHdynremeld.html#tab:ch3tab2">3.3</a>,
+Panel B, third column).</p>
+<p></p>
+</div>
+<div id="predictive-performance" class="section level3 hasAnchor" number="3.3.4">
+<h3><span class="header-section-number">3.3.4</span> Predictive performance<a href="CHdynremeld.html#predictive-performance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Table <a href="CHdynremeld.html#tab:ch3tab3">3.5</a> shows estimates of Gerd’s c-index for UNOS-MELD, ReMELD
+and DynReMELD, for (a) predicting 90-day waiting list survival from listing
+based on biomarkers reported at listing, and (b) predicting 90-day
+waiting list survival from calendar-time cross-sections based on the biomarkers
+that were last reported for the candidate. The first panel shows c-indices evaluated for predicting 90-day waiting list
+survival from listing based on biomarkers reported at listing for
+UNOS-MELD, ReMELD and DynReMELD. Point estimates appear to slightly
+favor DynReMELD, but bootstrapped pairwise differences are not
+statistically significant. The second panel shows that DynReMELD
+outperforms UNOS-MELD and ReMELD when predicting 90-day waiting list
+survival based on candidates’ last reported biomarkers, with DynReMELD
+attaining higher c-indices (p &lt; 0.001) in both development and
+validation cohorts. In the validation cohort, the c-index of DynReMELD
+(0.7895) is approximately 0.0040 higher than UNOS-MELD (0.7855), and
+0.0015 higher than ReMELD (0.7879).</p>
+<p></p>
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:ch3tab3">Table 3.5: </span>C-indices at 90 days after listing with bootstrapped standard errors shown in brackets.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+score
+</th>
+<th style="text-align:left;">
+development
+</th>
+<th style="text-align:left;">
+validation
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="3">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>time-until-death from listing, based on biomarkers at listing</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+UNOS-MELD
+</td>
+<td style="text-align:left;">
+0.8494 (0.008)
+</td>
+<td style="text-align:left;">
+0.8637 (0.011)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+ReMELD
+</td>
+<td style="text-align:left;">
+0.8503 (0.008)
+</td>
+<td style="text-align:left;">
+0.8623 (0.011)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+DynReMELD
+</td>
+<td style="text-align:left;">
+0.8523† (0.008)
+</td>
+<td style="text-align:left;">
+0.8641 (0.011)
+</td>
+</tr>
+<tr grouplength="3">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>remaining time-until-death from cross-sections, based on last reported biomarkers</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+UNOS-MELD
+</td>
+<td style="text-align:left;">
+0.8099 (0.002)
+</td>
+<td style="text-align:left;">
+0.7855 (0.004)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+ReMELD
+</td>
+<td style="text-align:left;">
+0.8203*** (0.002)
+</td>
+<td style="text-align:left;">
+0.7879 (0.004)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+DynReMELD
+</td>
+<td style="text-align:left;">
+0.8217***††† (0.002)
+</td>
+<td style="text-align:left;">
+0.7895***†† (0.004)
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> <sup>†</sup> p &lt; 0.05, <sup>††</sup> p &lt; 0.01, <sup>†††</sup> p &lt; 0.001, compared to ReMELD
+</td>
+</tr>
+</tfoot>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> <sup>∗</sup> p &lt; 0.05, <sup>∗∗</sup> p &lt; 0.01, <sup>∗∗∗</sup> p &lt; 0.001, compared to UNOS-MELD
+</td>
+</tr>
+</tfoot>
+</table>
+<p></p>
+<p></p>
+</div>
+<div id="estimated-absolute-survival-risk-per-meld-score" class="section level3 hasAnchor" number="3.3.5">
+<h3><span class="header-section-number">3.3.5</span> Estimated absolute survival risk per MELD Score<a href="CHdynremeld.html#estimated-absolute-survival-risk-per-meld-score" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This section reports absolute 90-day mortality risks for UNOS-MELD and
+DynReMELD estimated <em>“from cross-section”</em>. The estimation of mortality
+risks <em>“from cross-section”</em> is complicated by the fact that most
+individuals contribute multiple, correlated observations to the Cox
+model. In principle, this dependence can be broken by reporting cross-section-specific estimates of 90-day waiting list survival, but such estimates are
+imprecise. To partially break the dependence, we chose to estimate
+90-day survival on a data set that included, for each reported set of
+biomarkers, only the first cross-section where the patient had an active
+waiting list status. Table <a href="CHdynremeld.html#tab:ch3tab4">3.6</a> shows 90-day
+mortality risks estimated in this way.</p>
+<p>The table shows that inverse probability censoring weighting increases
+estimates of absolute 90-day mortality risks by almost 10 percentage
+points. Failing to correct for informative censoring therefore results in
+mortality equivalents that understate the counterfactual mortality
+risk. This is of interest to Eurotransplant, as these mortality equivalents
+are used by Eurotransplant to assign exception points.</p>
+<p>Candidates with multiple sets of biomarkers still contribute multiple observations
+to estimating 90-day mortality risks <em>from cross-section</em>. Dependence between
+such observations can bias estimates of the 90-day mortality risks. It is reassuring
+that point estimates of 90-day mortality risks <em>from registration</em>
+(see Table <a href="CHdynremeld.html#tab:ch3stab3">3.7</a>) are close to estimates <em>from
+cross-section</em> (generally less than 5 percentage point differences are
+observed).</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:ch3tab4">Table 3.6: </span>The 90-day mortality equivalents that are used by Eurotransplant, as well as estimates of the 90-day mortality risk per score. These were estimated with Cox models fitted “from cross-section”, with adjustment for the MELD point score.
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+UNOS-MELD
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+DynReMELD
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+score
+</th>
+<th style="text-align:center;">
+no IPCW
+</th>
+<th style="text-align:center;">
+IPCW
+</th>
+<th style="text-align:center;">
+no IPCW
+</th>
+<th style="text-align:center;">
+IPCW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+20
+</td>
+<td style="text-align:center;">
+0.103 [0.098-0.108]
+</td>
+<td style="text-align:center;">
+0.122 [0.117-0.127]
+</td>
+<td style="text-align:center;">
+0.097 [0.092-0.101]
+</td>
+<td style="text-align:center;">
+0.113 [0.108-0.118]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+22
+</td>
+<td style="text-align:center;">
+0.149 [0.142-0.155]
+</td>
+<td style="text-align:center;">
+0.179 [0.171-0.186]
+</td>
+<td style="text-align:center;">
+0.145 [0.139-0.151]
+</td>
+<td style="text-align:center;">
+0.173 [0.166-0.180]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+24
+</td>
+<td style="text-align:center;">
+0.212 [0.202-0.221]
+</td>
+<td style="text-align:center;">
+0.258 [0.247-0.270]
+</td>
+<td style="text-align:center;">
+0.214 [0.205-0.224]
+</td>
+<td style="text-align:center;">
+0.260 [0.249-0.271]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+25
+</td>
+<td style="text-align:center;">
+0.251 [0.239-0.263]
+</td>
+<td style="text-align:center;">
+0.308 [0.294-0.322]
+</td>
+<td style="text-align:center;">
+0.259 [0.247-0.271]
+</td>
+<td style="text-align:center;">
+0.315 [0.301-0.329]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+26
+</td>
+<td style="text-align:center;">
+0.297 [0.282-0.311]
+</td>
+<td style="text-align:center;">
+0.365 [0.348-0.382]
+</td>
+<td style="text-align:center;">
+0.310 [0.295-0.325]
+</td>
+<td style="text-align:center;">
+0.379 [0.361-0.396]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+28
+</td>
+<td style="text-align:center;">
+0.407 [0.385-0.428]
+</td>
+<td style="text-align:center;">
+0.498 [0.473-0.522]
+</td>
+<td style="text-align:center;">
+0.435 [0.413-0.457]
+</td>
+<td style="text-align:center;">
+0.529 [0.503-0.553]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+29
+</td>
+<td style="text-align:center;">
+0.470 [0.444-0.495]
+</td>
+<td style="text-align:center;">
+0.572 [0.544-0.599]
+</td>
+<td style="text-align:center;">
+0.508 [0.482-0.533]
+</td>
+<td style="text-align:center;">
+0.612 [0.583-0.639]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+30
+</td>
+<td style="text-align:center;">
+0.538 [0.508-0.566]
+</td>
+<td style="text-align:center;">
+0.649 [0.617-0.678]
+</td>
+<td style="text-align:center;">
+0.585 [0.555-0.613]
+</td>
+<td style="text-align:center;">
+0.696 [0.664-0.725]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+31
+</td>
+<td style="text-align:center;">
+0.609 [0.576-0.640]
+</td>
+<td style="text-align:center;">
+0.725 [0.691-0.755]
+</td>
+<td style="text-align:center;">
+0.664 [0.632-0.694]
+</td>
+<td style="text-align:center;">
+0.777 [0.744-0.805]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+32
+</td>
+<td style="text-align:center;">
+0.681 [0.645-0.714]
+</td>
+<td style="text-align:center;">
+0.796 [0.762-0.825]
+</td>
+<td style="text-align:center;">
+0.742 [0.708-0.772]
+</td>
+<td style="text-align:center;">
+0.848 [0.817-0.874]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+33
+</td>
+<td style="text-align:center;">
+0.751 [0.714-0.784]
+</td>
+<td style="text-align:center;">
+0.859 [0.827-0.885]
+</td>
+<td style="text-align:center;">
+0.814 [0.780-0.842]
+</td>
+<td style="text-align:center;">
+0.907 [0.880-0.927]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+34
+</td>
+<td style="text-align:center;">
+0.816 [0.780-0.846]
+</td>
+<td style="text-align:center;">
+0.910 [0.883-0.931]
+</td>
+<td style="text-align:center;">
+0.875 [0.845-0.900]
+</td>
+<td style="text-align:center;">
+0.949 [0.929-0.964]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+35
+</td>
+<td style="text-align:center;">
+0.872 [0.839-0.899]
+</td>
+<td style="text-align:center;">
+0.949 [0.927-0.964]
+</td>
+<td style="text-align:center;">
+0.925 [0.899-0.943]
+</td>
+<td style="text-align:center;">
+0.977 [0.963-0.985]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+36
+</td>
+<td style="text-align:center;">
+0.918 [0.890-0.940]
+</td>
+<td style="text-align:center;">
+0.974 [0.960-0.984]
+</td>
+<td style="text-align:center;">
+0.959 [0.941-0.972]
+</td>
+<td style="text-align:center;">
+0.991 [0.984-0.995]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+37
+</td>
+<td style="text-align:center;">
+0.953 [0.930-0.968]
+</td>
+<td style="text-align:center;">
+0.989 [0.980-0.994]
+</td>
+<td style="text-align:center;">
+0.981 [0.969-0.989]
+</td>
+<td style="text-align:center;">
+0.997 [0.994-0.999]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+39
+</td>
+<td style="text-align:center;">
+0.989 [0.979-0.994]
+</td>
+<td style="text-align:center;">
+0.999 [0.997-1.000]
+</td>
+<td style="text-align:center;">
+0.998 [0.995-0.999]
+</td>
+<td style="text-align:center;">
+1.000 [1.000-1.000]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+40
+</td>
+<td style="text-align:center;">
+0.996 [0.991-0.998]
+</td>
+<td style="text-align:center;">
+1.000 [0.999-1.000]
+</td>
+<td style="text-align:center;">
+0.999 [0.998-1.000]
+</td>
+<td style="text-align:center;">
+1.000 [1.000-1.000]
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:ch3stab3">Table 3.7: </span>Estimates of absolute 90-day mortality risks “from registration” and “from cross-section”. Reported risks were estimated without IPCW.
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+UNOS-MELD
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+DynReMELD
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:center;">
+score
+</th>
+<th style="text-align:center;">
+from cross-section
+</th>
+<th style="text-align:center;">
+from registration
+</th>
+<th style="text-align:center;">
+from cross-section
+</th>
+<th style="text-align:center;">
+from registration
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+20
+</td>
+<td style="text-align:center;">
+0.103 [0.098-0.108]
+</td>
+<td style="text-align:center;">
+0.136 [0.127-0.144]
+</td>
+<td style="text-align:center;">
+0.097 [0.092-0.101]
+</td>
+<td style="text-align:center;">
+0.125 [0.116-0.132]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+22
+</td>
+<td style="text-align:center;">
+0.149 [0.142-0.155]
+</td>
+<td style="text-align:center;">
+0.187 [0.176-0.197]
+</td>
+<td style="text-align:center;">
+0.145 [0.139-0.151]
+</td>
+<td style="text-align:center;">
+0.176 [0.166-0.186]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+24
+</td>
+<td style="text-align:center;">
+0.212 [0.202-0.221]
+</td>
+<td style="text-align:center;">
+0.254 [0.240-0.267]
+</td>
+<td style="text-align:center;">
+0.214 [0.205-0.224]
+</td>
+<td style="text-align:center;">
+0.247 [0.233-0.260]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+26
+</td>
+<td style="text-align:center;">
+0.297 [0.282-0.311]
+</td>
+<td style="text-align:center;">
+0.339 [0.321-0.356]
+</td>
+<td style="text-align:center;">
+0.310 [0.295-0.325]
+</td>
+<td style="text-align:center;">
+0.339 [0.321-0.356]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+28
+</td>
+<td style="text-align:center;">
+0.407 [0.385-0.428]
+</td>
+<td style="text-align:center;">
+0.443 [0.420-0.466]
+</td>
+<td style="text-align:center;">
+0.435 [0.413-0.457]
+</td>
+<td style="text-align:center;">
+0.453 [0.429-0.476]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+30
+</td>
+<td style="text-align:center;">
+0.538 [0.508-0.566]
+</td>
+<td style="text-align:center;">
+0.564 [0.535-0.591]
+</td>
+<td style="text-align:center;">
+0.585 [0.555-0.613]
+</td>
+<td style="text-align:center;">
+0.586 [0.556-0.613]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+32
+</td>
+<td style="text-align:center;">
+0.681 [0.645-0.714]
+</td>
+<td style="text-align:center;">
+0.691 [0.657-0.721]
+</td>
+<td style="text-align:center;">
+0.742 [0.708-0.772]
+</td>
+<td style="text-align:center;">
+0.724 [0.690-0.753]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+34
+</td>
+<td style="text-align:center;">
+0.816 [0.780-0.846]
+</td>
+<td style="text-align:center;">
+0.810 [0.776-0.839]
+</td>
+<td style="text-align:center;">
+0.875 [0.845-0.900]
+</td>
+<td style="text-align:center;">
+0.847 [0.815-0.873]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+36
+</td>
+<td style="text-align:center;">
+0.918 [0.890-0.940]
+</td>
+<td style="text-align:center;">
+0.905 [0.877-0.927]
+</td>
+<td style="text-align:center;">
+0.959 [0.941-0.972]
+</td>
+<td style="text-align:center;">
+0.935 [0.912-0.953]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+40
+</td>
+<td style="text-align:center;">
+0.996 [0.991-0.998]
+</td>
+<td style="text-align:center;">
+0.991 [0.983-0.995]
+</td>
+<td style="text-align:center;">
+0.999 [0.998-1.000]
+</td>
+<td style="text-align:center;">
+0.997 [0.993-0.999]
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</div>
+</div>
+<div id="discussion" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Discussion<a href="CHdynremeld.html#discussion" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Prior literature revised the MELD score with liver waiting list candidate data <em>“from
+registration”</em> (e.g., <span class="citation"><a href="#ref-kimMELD3point0">[20]</a>, <a href="#ref-kimHyponatremiaMortalityPatients2008a">[37]</a>, <a href="#ref-goudsmitRefittingModelEndstage2020">[42]</a></span>), which ignores any
+MELD biomarker measurements that are reported after registration and any
+waiting list death that occurs more than 90 days after registration. We used methodology proposed
+by Gong and Schaubel <span class="citation"><a href="#ref-gongPartlyConditionalEstimation2013">[57]</a></span> to model waiting list
+mortality from calendar-time cross-sections, which can avoid such waste of statistical
+information in revising MELD. Moreover, we assessed how revision of MELD
+was affected by correction for selection bias by transplantation or delisting with inverse
+probability censoring weighting.</p>
+<p>We showed that the <em>“from cross-section”</em> approach uses waiting list
+registry data substantially more efficiently, with the number of
+waiting list deaths and MELD scores informing revision of MELD increasing
+sevenfold compared to revision <em>“from registration”</em>. DynReMELD, the
+score obtained by quantile matching UNOS-MELD to the risk equation that
+was developed <em>“from cross-section”</em> with IPCW, attains significantly higher
+c-indices than ReMELD and UNOS-MELD in a geographical validation cohort
+for predicting remaining time-until-death based on last reported MELD
+biomarkers (p &lt; 0.001). This is important for Eurotransplant, as
+Eurotransplant liver allocation prioritizes candidates based on their
+last reported MELD scores and not MELD at listing. In magnitude,
+the improvements in c-indices (0.0015 compared to ReMELD, and 0.0040
+compared to UNOS-MELD) are comparable to the addition of serum sodium to
+ReMELD (approx. delta c-index of 0.0030)
+<span class="citation"><a href="#ref-goudsmitRefittingModelEndstage2020">[42]</a></span> and the addition of serum albumin to
+MELD 3.0 (delta c-index of 0.0028) <span class="citation"><a href="#ref-kimMELD3point0">[20]</a></span>. MELD revision from
+cross-section with IPCW can thus improve urgency-based risk
+stratification. Our results suggest that the improvement is due to
+modeling time-remaining-until-death from cross-sections and not IPCW,
+as IPCW changed estimated coefficients only slightly.</p>
+<p>We believe the main reason why DynReMELD outperforms ReMELD in
+geographical validation is that revision <em>“from cross-section”</em> uses Eurotransplant
+registry data substantially more efficiently than revision <em>“from
+registration”</em>, as the latter method only uses the MELD biomarkers that were reported
+at listing and the first 90 days of waiting list survival. This raises the
+question whether revision <em>“from registration”</em> cannot also be improved
+upon by using available registry data more efficiently. One way of doing
+this would be to include MELD biomarkers as time-varying covariates. However,
+because MELD biomarkers also increase inherently as part of the death process,
+use of biomarkers as time-varying covariates leads to issues of reverse causality. Follow-up data could,
+in principle, also be used more efficiently by not restricting revision <em>“from
+registration”</em> to the first 90 days after listing. However, we found
+that this leads to violations of the proportional hazards assumption for
+MELD biomarkers.
+We also assessed how estimates of the 90-day mortality risks are affected
+by (a) revision <em>“from cross-section”</em> and (b) correcting for dependent
+censoring with IPCW. Revision <em>“from cross-section”</em> does not
+meaningfully change estimated 90-day mortality risks, with risks
+estimated <em>“from cross-section”</em> differing by less than 5 percent points
+from risks estimated <em>“from registration”</em>. This means that we do not
+find that there are meaningful differences in 90-day mortality risks between
+a candidate who reported a particular MELD score at listing and another
+one who reported that same score as part of a MELD
+recertification. Mitigation of selection bias with IPCW did increase
+estimated 90-day waiting list mortality risks for both UNOS-MELD and
+DynReMELD by 10 percentage points. Failure to account for informative censoring by transplantation/delisting thus leads to an underestimation of
+90-day mortality equivalents, which can be problematic as Eurotransplant uses
+these estimates to assign MELD scores for candidates who receive exception points.</p>
+<p>Eurotransplant currently consists of 38 liver transplant centers
+located in seven European countries. These centers differ structurally in
+terms of patient populations, liver transplantation volumes, and willingness to accept
+donors of marginal quality. A strength of our study is that we assigned
+candidates to either the development or validation cohort based on their
+center of listing, which means that the predictive performance of
+DynReMELD was evaluated in a cohort independent from the centers on
+which the score was developed.</p>
+<p>A limitation of our work is that revision of MELD <em>“from cross-section”</em>
+only uses the last MELD biomarkers reported before the cross-section date.
+Eurotransplant
+uses these same biomarker measurements for allocation, but they may be outdated
+representations of a patient’s health status. Alternatively, one could
+model the evolution of MELD biomarkers over time with linear mixed
+models, and use a best linear unbiased
+predictions (BLUP) of biomarkers at every cross-section time. This BLUP
+approach was first proposed by Maziarz et al.
+<span class="citation"><a href="#ref-maziarzLongitudinalPredictionTimetoEvent2017">[63]</a></span> for landmarking, a
+statistical technique which bears similarities to Gong and Schaubel’s
+approach. We did not use a BLUP approach to revise MELD, since irregular
+spacing of MELD measurements complicates modeling the biomarker process. Deployment of BLUP models would also be practically challenging for
+Eurotransplant. Moreover, MELD scores for patients with significant
+90-day mortality risks are rarely outdated as Eurotransplant requires
+frequent re-certification of MELD scores for sicker patients. For example,
+MELD scores are on average 12 days old at cross-section for candidates with
+MELD scores ranging between 20 and 25
+(corresponding to a 90-day mortality risk of 10 to 25%), and 3 days
+old for MELD scores greater than 25 (which corresponds to a mortality risk of
+25% or greater).
+A final limitation of our work is that DynReMELD was based only on
+bilirubin, creatinine and the INR, while updated versions of MELD exist that
+use additional biomarkers. Future work could focus on revising these UNOS-MELD
+alternatives <em>“from cross-section”</em>. This was not pursued in this chapter,
+because serum sodium and albumin are unavailable in Eurotransplant registry data
+for most patients on the liver waiting list.</p>
+<p></p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body" entry-spacing="0">
+<div id="ref-kimMELD3point0" class="csl-entry">
+<div class="csl-left-margin">[20] </div><div class="csl-right-inline">W. R. Kim <em>et al.</em>, <span>“<span>MELD</span> 3.0: The <span class="nocase">Model for End-Stage Liver Disease</span> updated for the modern era,”</span> <em>Gastroenterology</em>, vol. 161, no. 6, pp. 1887–1895.e4, 2021, doi: <a href="https://doi.org/10.1053/j.gastro.2021.08.050">10.1053/j.gastro.2021.08.050</a>.</div>
+</div>
+<div id="ref-malinchocModelPredictPoor2000" class="csl-entry">
+<div class="csl-left-margin">[33] </div><div class="csl-right-inline">M. Malinchoc, P. S. Kamath, F. D. Gordon, C. J. Peine, J. Rank, and P. C. J. ter Borg, <span>“A model to predict poor survival in patients undergoing transjugular intrahepatic portosystemic shunts,”</span> <em>Hepatology</em>, vol. 31, no. 4, pp. 864–871, 2000, doi: <a href="https://doi.org/10.1053/he.2000.5852">10.1053/he.2000.5852</a>.</div>
+</div>
+<div id="ref-kimHyponatremiaMortalityPatients2008a" class="csl-entry">
+<div class="csl-left-margin">[37] </div><div class="csl-right-inline">W. R. Kim <em>et al.</em>, <span>“Hyponatremia and mortality among patients on the liver-transplant waiting list,”</span> <em>The New England Journal of Medicine</em>, vol. 359, no. 10, pp. 1018–1026, 2008, doi: <a href="https://doi.org/10.1056/NEJMoa0801209">10.1056/NEJMoa0801209</a>.</div>
+</div>
+<div id="ref-merionLongitudinalAssessmentMortality2003" class="csl-entry">
+<div class="csl-left-margin">[39] </div><div class="csl-right-inline">R. Merion, <span>“Longitudinal assessment of mortality risk among candidates for liver transplantation,”</span> <em>Liver Transplantation</em>, vol. 9, no. 1, pp. 12–18, 2003, doi: <a href="https://doi.org/10.1053/jlts.2003.50009">10.1053/jlts.2003.50009</a>.</div>
+</div>
+<div id="ref-sharmaReweightingModelEndStage2008" class="csl-entry">
+<div class="csl-left-margin">[40] </div><div class="csl-right-inline">P. Sharma, D. E. Schaubel, C. S. Sima, R. M. Merion, and A. S. F. Lok, <span>“Re-weighting the <span class="nocase">Model for End-Stage Liver Disease</span> score components,”</span> <em>Gastroenterology</em>, vol. 135, no. 5, pp. 1575–1581, 2008, doi: <a href="https://doi.org/10.1053/j.gastro.2008.08.004">10.1053/j.gastro.2008.08.004</a>.</div>
+</div>
+<div id="ref-leiseRevisedModelEndstage2011" class="csl-entry">
+<div class="csl-left-margin">[41] </div><div class="csl-right-inline">M. D. Leise, W. R. Kim, W. K. Kremers, J. J. Larson, J. T. Benson, and T. M. Therneau, <span>“A revised <span class="nocase">Model for End-Stage Liver Disease</span> optimizes prediction of mortality among patients awaiting liver transplantation,”</span> <em>Gastroenterology</em>, vol. 140, no. 7, pp. 1952–1960, 2011, doi: <a href="https://doi.org/10.1053/j.gastro.2011.02.017">10.1053/j.gastro.2011.02.017</a>.</div>
+</div>
+<div id="ref-goudsmitRefittingModelEndstage2020" class="csl-entry">
+<div class="csl-left-margin">[42] </div><div class="csl-right-inline">B. F. J. Goudsmit <em>et al.</em>, <span>“Refitting the <span class="nocase">Model for End-Stage Liver Disease</span> for the <span>Eurotransplant</span> region,”</span> <em>Hepatology</em>, 2020, doi: <a href="https://doi.org/10.1002/hep.31677">10.1002/hep.31677</a>.</div>
+</div>
+<div id="ref-deFerranteDynremeld" class="csl-entry">
+<div class="csl-left-margin">[55] </div><div class="csl-right-inline">H. C. de Ferrante, M. van Rosmalen, B. M. L. Smeulders, S. Vogelaar, and F. C. R. Spieksma, <span>“Revising <span class="nocase">Model for End-Stage Liver Disease</span> from calendar-time cross-sections with correction for selection bias,”</span> <em>BMC Medical Research Methodology</em>, vol. 24, no. 1, 2024, doi: <a href="https://doi.org/10.1186/s12874-024-02176-8">10.1186/s12874-024-02176-8</a>.</div>
+</div>
+<div id="ref-bambhaPredictingSurvivalPatients2004" class="csl-entry">
+<div class="csl-left-margin">[56] </div><div class="csl-right-inline">K. Bambha <em>et al.</em>, <span>“Predicting survival among patients listed for liver transplantation: An assessment of serial <span>MELD</span> measurements,”</span> <em>American Journal of Transplantation</em>, vol. 4, no. 11, pp. 1798–1804, 2004, doi: <a href="https://doi.org/10.1111/j.1600-6143.2004.00550.x">10.1111/j.1600-6143.2004.00550.x</a>.</div>
+</div>
+<div id="ref-gongPartlyConditionalEstimation2013" class="csl-entry">
+<div class="csl-left-margin">[57] </div><div class="csl-right-inline">Q. Gong and D. E. Schaubel, <span>“Partly conditional estimation of the effect of a time-dependent factor in the presence of dependent censoring,”</span> <em>Biometrics</em>, vol. 69, no. 2, pp. 338–347, 2013, doi: <a href="https://doi.org/10.1111/biom.12023">10.1111/biom.12023</a>.</div>
+</div>
+<div id="ref-ETLiverMan2025" class="csl-entry">
+<div class="csl-left-margin">[58] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant Manual</span> manual. Chapter 4: <span>ET Liver Allocation System (ELAS)</span>.”</span> Available: <a href="https://www.eurotransplant.org/allocation/eurotransplant-manual/">https://www.eurotransplant.org/allocation/eurotransplant-manual/</a></div>
+</div>
+<div id="ref-schnellingerMitigatingSelectionBias2021" class="csl-entry">
+<div class="csl-left-margin">[59] </div><div class="csl-right-inline">E. M. Schnellinger, E. Cantu, M. O. Harhay, D. E. Schaubel, S. E. Kimmel, and A. J. Stephens-Shields, <span>“Mitigating selection bias in organ allocation models,”</span> <em>BMC Medical Research Methodology</em>, vol. 21, no. 1, 2021, doi: <a href="https://doi.org/10.1186/s12874-021-01379-7">10.1186/s12874-021-01379-7</a>.</div>
+</div>
+<div id="ref-gerdsEstimatingTimedependentConcordance2012" class="csl-entry">
+<div class="csl-left-margin">[60] </div><div class="csl-right-inline">T. A. Gerds, M. W. Kattan, M. Schumacher, and C. Yu, <span>“Estimating a time-dependent concordance index for survival prediction models with covariate dependent censoring,”</span> <em>Statistics in Medicine</em>, vol. 32, no. 13, pp. 2173–2184, 2012, doi: <a href="https://doi.org/10.1002/sim.5681">10.1002/sim.5681</a>.</div>
+</div>
+<div id="ref-Hartman2025" class="csl-entry">
+<div class="csl-left-margin">[61] </div><div class="csl-right-inline">N. Hartman, <span>“Concordance indices for risk scores with policy evaluations,”</span> <em>Health Services Research</em>, 2025, doi: <a href="https://doi.org/10.1111/1475-6773.14619">10.1111/1475-6773.14619</a>.</div>
+</div>
+<div id="ref-linScopingReviewCausal2021" class="csl-entry">
+<div class="csl-left-margin">[62] </div><div class="csl-right-inline">L. Lin, M. Sperrin, D. A. Jenkins, G. P. Martin, and N. Peek, <span>“A scoping review of causal methods enabling predictions under hypothetical interventions,”</span> <em>Diagnostic and Prognostic Research</em>, vol. 5, no. 1, 2021, doi: <a href="https://doi.org/10.1186/s41512-021-00092-9">10.1186/s41512-021-00092-9</a>.</div>
+</div>
+<div id="ref-maziarzLongitudinalPredictionTimetoEvent2017" class="csl-entry">
+<div class="csl-left-margin">[63] </div><div class="csl-right-inline">M. Maziarz, P. Heagerty, T. Cai, and Y. Zheng, <span>“On longitudinal prediction with time-to-event outcome: Comparison of modeling options,”</span> <em>Biometrics</em>, vol. 73, no. 1, pp. 83–93, 2017, doi: <a href="https://doi.org/10.1111/biom.12562">10.1111/biom.12562</a>.</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>A small group of patients is removed from the waiting list without
+transplant, but later re-registered.<a href="CHdynremeld.html#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="CHprefaceliver.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="CHsexdisparity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["thesis.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

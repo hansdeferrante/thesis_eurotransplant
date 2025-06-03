@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 1 Introduction | Organ allocation models in Eurotransplant</title>
+  <meta name="description" content="This is the PhD thesis of H.C. de Ferrante" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 1 Introduction | Organ allocation models in Eurotransplant" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="/cover/thesis_cover.png" />
+  <meta property="og:description" content="This is the PhD thesis of H.C. de Ferrante" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 Introduction | Organ allocation models in Eurotransplant" />
+  
+  <meta name="twitter:description" content="This is the PhD thesis of H.C. de Ferrante" />
+  <meta name="twitter:image" content="/cover/thesis_cover.png" />
+
+<meta name="author" content="Hans Christiaan de Ferrante" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="dankwoord.html"/>
+<link rel="next" href="CHprefaceliver.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="dankwoord.html"><a href="dankwoord.html"><i class="fa fa-check"></i>Dankwoord</a></li>
+<li class="chapter" data-level="1" data-path="CHintroduction.html"><a href="CHintroduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="CHintroduction.html"><a href="CHintroduction.html#eurotransplant"><i class="fa fa-check"></i><b>1.1</b> Eurotransplant</a></li>
+<li class="chapter" data-level="1.2" data-path="CHintroduction.html"><a href="CHintroduction.html#objective-medical-criteria-for-organ-allocation"><i class="fa fa-check"></i><b>1.2</b> Objective medical criteria for organ allocation</a></li>
+<li class="chapter" data-level="1.3" data-path="CHintroduction.html"><a href="CHintroduction.html#fairness-in-organ-allocation"><i class="fa fa-check"></i><b>1.3</b> Fairness in organ allocation</a></li>
+<li class="chapter" data-level="1.4" data-path="CHintroduction.html"><a href="CHintroduction.html#challenges-in-improving-organ-allocation-systems"><i class="fa fa-check"></i><b>1.4</b> Challenges in improving organ allocation systems</a></li>
+<li class="chapter" data-level="1.5" data-path="CHintroduction.html"><a href="CHintroduction.html#outline-of-this-thesis"><i class="fa fa-check"></i><b>1.5</b> Outline of this thesis</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html"><i class="fa fa-check"></i><b>2</b> Liver allocation in Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#liver-allocation-prior-to-meld"><i class="fa fa-check"></i><b>2.1</b> Liver allocation prior to MELD</a></li>
+<li class="chapter" data-level="2.2" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#meld-based-liver-allocation-in-the-united-states"><i class="fa fa-check"></i><b>2.2</b> MELD-based liver allocation in the United States</a></li>
+<li class="chapter" data-level="2.3" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#meld-based-liver-allocation-in-eurotransplant"><i class="fa fa-check"></i><b>2.3</b> MELD-based liver allocation in Eurotransplant</a></li>
+<li class="chapter" data-level="2.4" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#areas-for-improvement-in-meld-based-allocation-systems"><i class="fa fa-check"></i><b>2.4</b> Areas for improvement in MELD-based allocation systems</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="CHdynremeld.html"><a href="CHdynremeld.html"><i class="fa fa-check"></i><b>3</b> Revising MELD from calendar-time cross-sections with correction for selection bias</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="CHdynremeld.html"><a href="CHdynremeld.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2" data-path="CHdynremeld.html"><a href="CHdynremeld.html#materials-and-methods"><i class="fa fa-check"></i><b>3.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="3.3" data-path="CHdynremeld.html"><a href="CHdynremeld.html#results"><i class="fa fa-check"></i><b>3.3</b> Results</a></li>
+<li class="chapter" data-level="3.4" data-path="CHdynremeld.html"><a href="CHdynremeld.html#discussion"><i class="fa fa-check"></i><b>3.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html"><i class="fa fa-check"></i><b>4</b> Sex disparity in liver allocation within Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#materials-and-methods-1"><i class="fa fa-check"></i><b>4.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="4.3" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#results-1"><i class="fa fa-check"></i><b>4.3</b> Results</a></li>
+<li class="chapter" data-level="4.4" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#discussion-1"><i class="fa fa-check"></i><b>4.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="CHelassimulator.html"><a href="CHelassimulator.html"><i class="fa fa-check"></i><b>5</b> The ELAS simulator</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="CHelassimulator.html"><a href="CHelassimulator.html#introduction-2"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elassystem"><i class="fa fa-check"></i><b>5.2</b> The Eurotransplant Liver Allocation System (ELAS)</a></li>
+<li class="chapter" data-level="5.3" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasdesign"><i class="fa fa-check"></i><b>5.3</b> The design of the ELAS simulator</a></li>
+<li class="chapter" data-level="5.4" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasmodules"><i class="fa fa-check"></i><b>5.4</b> Modules of the ELAS simulator</a></li>
+<li class="chapter" data-level="5.5" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasvv"><i class="fa fa-check"></i><b>5.5</b> Verification and validation</a></li>
+<li class="chapter" data-level="5.6" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elascasestudies"><i class="fa fa-check"></i><b>5.6</b> Case studies: the impact of modifying ELAS rules</a></li>
+<li class="chapter" data-level="5.7" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasconclusion"><i class="fa fa-check"></i><b>5.7</b> Conclusions and discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html"><i class="fa fa-check"></i><b>6</b> Kidney allocation in Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#hla-matching-versus-fairness"><i class="fa fa-check"></i><b>6.1</b> HLA matching versus fairness</a></li>
+<li class="chapter" data-level="6.2" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#kidney-allocation-programs-in-eurotransplant"><i class="fa fa-check"></i><b>6.2</b> Kidney allocation programs in Eurotransplant</a></li>
+<li class="chapter" data-level="6.3" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#contemporary-challenges-in-kidney-allocation"><i class="fa fa-check"></i><b>6.3</b> Contemporary challenges in kidney allocation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="CHvpra.html"><a href="CHvpra.html"><i class="fa fa-check"></i><b>7</b> Access to transplantation for immunized candidates</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="CHvpra.html"><a href="CHvpra.html#introduction-3"><i class="fa fa-check"></i><b>7.1</b> Introduction</a></li>
+<li class="chapter" data-level="7.2" data-path="CHvpra.html"><a href="CHvpra.html#materials-and-methods-2"><i class="fa fa-check"></i><b>7.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="7.3" data-path="CHvpra.html"><a href="CHvpra.html#results-2"><i class="fa fa-check"></i><b>7.3</b> Results</a></li>
+<li class="chapter" data-level="7.4" data-path="CHvpra.html"><a href="CHvpra.html#discussion-2"><i class="fa fa-check"></i><b>7.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html"><i class="fa fa-check"></i><b>8</b> The ETKidney simulator</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#introduction-4"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneyalloc"><i class="fa fa-check"></i><b>8.2</b> The kidney allocation programs of Eurotransplant</a></li>
+<li class="chapter" data-level="8.3" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneydesign"><i class="fa fa-check"></i><b>8.3</b> Purpose and design of the ETKidney Simulator</a></li>
+<li class="chapter" data-level="8.4" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneymodules"><i class="fa fa-check"></i><b>8.4</b> Modules of the ETKidney simulator</a></li>
+<li class="chapter" data-level="8.5" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneyvv"><i class="fa fa-check"></i><b>8.5</b> Verification and validation</a></li>
+<li class="chapter" data-level="8.6" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneycasestudies"><i class="fa fa-check"></i><b>8.6</b> Case studies</a></li>
+<li class="chapter" data-level="8.7" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneydiscussion"><i class="fa fa-check"></i><b>8.7</b> Discussion and conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="CHdiscussion.html"><a href="CHdiscussion.html"><i class="fa fa-check"></i><b>9</b> The way forward</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="CHdiscussion.html"><a href="CHdiscussion.html#this-thesis-is-a-sharp-look-at-familiar-problems"><i class="fa fa-check"></i><b>9.1</b> This thesis is a sharp look at familiar problems</a></li>
+<li class="chapter" data-level="9.2" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-need-to-look-beyond-survival-models-for-allocation"><i class="fa fa-check"></i><b>9.2</b> We need to look beyond survival models for allocation</a></li>
+<li class="chapter" data-level="9.3" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-should-look-beyond-aggregate-outcomes"><i class="fa fa-check"></i><b>9.3</b> We should look beyond aggregate outcomes</a></li>
+<li class="chapter" data-level="9.4" data-path="CHdiscussion.html"><a href="CHdiscussion.html#scientific-evidence-is-rarely-the-bottleneck"><i class="fa fa-check"></i><b>9.4</b> Scientific evidence is rarely the bottleneck</a></li>
+<li class="chapter" data-level="9.5" data-path="CHdiscussion.html"><a href="CHdiscussion.html#the-chicken-and-egg-problem-in-allocation-development"><i class="fa fa-check"></i><b>9.5</b> The “chicken-and-egg” problem in allocation development</a></li>
+<li class="chapter" data-level="9.6" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-need-more-constructive-dialogue"><i class="fa fa-check"></i><b>9.6</b> We need more constructive dialogue</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="APPipcw.html"><a href="APPipcw.html"><i class="fa fa-check"></i><b>A</b> Inverse Probability Censoring Weights</a>
+<ul>
+<li class="chapter" data-level="" data-path="APPipcw.html"><a href="APPipcw.html#definition-of-ipcw-weights"><i class="fa fa-check"></i>Definition of IPCW weights</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="APPimputation.html"><a href="APPimputation.html"><i class="fa fa-check"></i><b>B</b> Completing the status updates streams for transplant recipients</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="APPimputation.html"><a href="APPimputation.html#step-1-and-2-construction-of-the-pseudo-observations"><i class="fa fa-check"></i><b>B.1</b> Step 1 and 2: Construction of the pseudo-observations</a></li>
+<li class="chapter" data-level="B.2" data-path="APPimputation.html"><a href="APPimputation.html#step-3-fitting-a-model-for-the-mean-restricted-survival-time"><i class="fa fa-check"></i><b>B.2</b> Step 3: Fitting a model for the mean restricted survival time</a></li>
+<li class="chapter" data-level="B.3" data-path="APPimputation.html"><a href="APPimputation.html#step-4-constructing-future-statuses"><i class="fa fa-check"></i><b>B.3</b> Step 4: Constructing future statuses</a></li>
+<li class="chapter" data-level="B.4" data-path="APPimputation.html"><a href="APPimputation.html#step-4.2-matching-the-patient-to-a-particular-patient-in-the-risk-set"><i class="fa fa-check"></i><b>B.4</b> Step 4.2: matching the patient to a particular patient in the risk set</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="course-of-life.html"><a href="course-of-life.html"><i class="fa fa-check"></i>Course of Life</a></li>
+<li class="chapter" data-level="" data-path="list-of-publications.html"><a href="list-of-publications.html"><i class="fa fa-check"></i>List of publications</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Organ allocation models in Eurotransplant</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="CHintroduction" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Introduction<a href="CHintroduction.html#CHintroduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p></p>
+<div id="eurotransplant" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Eurotransplant<a href="CHintroduction.html#eurotransplant" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the 1960s, it was observed that kidney transplantation outcomes were
+improved when the donor and recipient were siblings with matching leukocyte antigens.
+Anticipating that leukocyte-antigen compatibility would also improve the outcomes
+of deceased-donor kidney transplantation, the Dutch immunologist Jon van Rood
+proposed an international collaboration he named <em>Eurotransplant</em>, in which kidneys
+from deceased-organ donors would be allocated to kidney transplant candidates on the basis of
+leukocyte-antigen matching <span class="citation"><a href="#ref-vanRoodET1967">[1]</a></span>. In 1967, the first kidney was
+transported internationally, by army helicopter from Leuven, Belgium, to Leiden,
+the Netherlands, which represents the symbolic start of Eurotransplant <span class="citation"><a href="#ref-jubileumboek">[2]</a></span>.
+Over the decades that followed, the scope of Eurotransplant broadened beyond the
+exchange of kidneys, starting with the allocation of livers in the 1970s,
+followed by pancreases and hearts in the 1980s, lungs in 1988,
+and intestines in 1999 <span class="citation"><a href="#ref-Langer2012">[3]</a></span>.</p>
+<p>In 2025, eight European countries participate in Eurotransplant: Austria, Belgium,
+Croatia, Germany, Hungary, Luxembourg, the Netherlands and Slovenia. In
+the 58-year history of Eurotransplant, more than 190,000 donors have been reported
+to the organization <span class="citation"><a href="#ref-etStatsLibrary3002P">[4]</a></span>. With the deceased-donor organs that
+become available, some 6,000 transplantations are performed per year <span class="citation"><a href="#ref-etStatsLibrary2082P">[5]</a></span>. However,
+persistent donor shortages also mean that not all patients can be helped in time.
+In fact, more than a thousand patients die each year while waiting for a
+transplant <span class="citation"><a href="#ref-etStatsLibrary4512P">[6]</a></span>.</p>
+<p>When a donor is reported, Eurotransplant is responsible for
+the allocation of the available organs. This means that Eurotransplant has to find
+suitable recipients from the 13,500 candidates who wait for a transplant
+in the 76 transplantation programs that are active in the region <span class="citation"><a href="#ref-etStatsLibrary3002P">[4]</a></span>. Ideally, Eurotransplant
+completes the allocation procedure prior to the explantation of the available organs, which can mean that Eurotransplant has to
+find suitable recipients within six hours of the reporting of the donor. Completing the allocation
+within this time window can be challenging, as most donors have multiple
+organs available for transplantation, donors can be reported at any time of the day,
+and the transplant centers frequently decline the organs that are offered to
+their patients.</p>
+<p>The central problem in organ allocation is to determine to which candidates the
+available organs ought to be offered. In this thesis, we study this allocation
+question for the allocation of the liver and the kidneys in Eurotransplant.
+Eurotransplant’s daily operations currently depend on allocation systems that
+are the product of almost sixty years of scientific, legal, and ethical discussions
+on allocation. In this first chapter, we describe the background of these systems,
+and discuss how they have been shaped by objective medical criteria and fairness
+considerations.</p>
+</div>
+<div id="objective-medical-criteria-for-organ-allocation" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> Objective medical criteria for organ allocation<a href="CHintroduction.html#objective-medical-criteria-for-organ-allocation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the 1990s, the Netherlands, Belgium and Germany introduced legal frameworks
+that govern the prioritization of candidates for transplantation. To meet the
+new legal requirements, Eurotransplant updated its allocation systems in
+the 1990s <span class="citation"><a href="#ref-HaaseKromwijk1999">[7]</a></span>. The legal frameworks required that the ranking of
+candidates for transplantation is (i) transparent and (ii) based on objective medical criteria
+<span class="citation"><a href="#ref-HaaseKromwijk1999">[7]</a>, <a href="#ref-Persijn2006">[8]</a></span>. In the transplantation literature, a distinction is often
+made between three objective medical criteria: medical urgency, medical utility,
+and transplant benefit <span class="citation"><a href="#ref-Schaubel2009">[9]</a></span>. Which medical criterion is used to prioritize candidates affects which
+candidates have access to transplantation, as we illustrate in Figure
+<a href="CHintroduction.html#fig:ch1fig1">1.1</a> for three hypothetical candidates: candidate A, B, and C.
+For medical and historical reasons, the specific criterion that is used for
+allocation differs by organ.</p>
+<p>The first principle, medical urgency (or medical need), gives priority
+to the candidate who would be expected to die first without an organ transplantation. In our hypothetical example, an allocation based on medical urgency would prioritize candidate A, because they
+are expected to die first without a transplant. Eurotransplant uses such
+“sickest-first” allocation for the liver, with candidates ranked using
+Model for End-Stage Liver Disease (MELD) scores. These MELD scores quantify
+a candidate’s expected 90-day mortality risk based on biomarkers measurable from
+the candidate’s blood. A potential concern about sickest-first allocation is that
+organs could be allocated to candidates whose life expectancy
+would remain short, even with a transplant. For example, allocation of the organ to
+candidate B may seem preferable to allocation to candidate A, because candidate B would survive much longer with the transplant.
+The second principle, which is referred to as “medical utility” in the transplant
+literature, quantifies which candidates would be expected
+to live the longest with the transplant. Under this utilitarian principle, candidate
+C would be prioritized over candidates A and B (see Figure <a href="CHintroduction.html#fig:ch1fig1">1.1</a>).
+An example of utility-based allocation in Eurotransplant is leukocyte-antigen
+matching in kidney transplantation, a practice that has positive effects on the
+survival of the kidney graft and transplant recipient. A general concern about
+the ranking of candidates based
+on medical utility is that it can lead to the transplantation of relatively healthy
+patients who have little need for a transplant. In our hypothetical example,
+it could be argued that candidate B should be prioritized over candidate C,
+since candidate B has a much greater need for transplantation.</p>
+<p>The third principle, transplant benefit, quantifies which candidate is expected
+to benefit most from receiving the organ. Such benefit is typically defined
+as the contrast between medical utility and medical urgency. For Figure <a href="CHintroduction.html#fig:ch1fig1">1.1</a>,
+we defined transplant benefit as the number of life years gained by transplantation.
+With this definition of benefit, a benefit-based allocation would prioritize
+candidate B who gains the most life years through transplantation. A theoretical
+advantage to this allocation is that it may prevent the transplantation of candidates
+who have a short life expectancy after transplantation (candidate A), while
+also preventing the transplantation of candidates
+who have little need for a transplant (candidate C). Within Eurotransplant, prioritization of candidates for lung transplantation is based on the principle of transplant benefit.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch1fig1"></span>
+<img src="figures/ch1/fig1-allocation_principles.png" alt="Hypothetical scenario in which a choice has to be made between three
+  transplant candidates: candidates A, B, or C. The numbers in circles
+  are the ranks for the hypothetical candidates under urgency-based,
+  utility-based, and benefits-based allocation." width="100%" />
+<p class="caption">
+Figure 1.1: Hypothetical scenario in which a choice has to be made between three
+transplant candidates: candidates A, B, or C. The numbers in circles
+are the ranks for the hypothetical candidates under urgency-based,
+utility-based, and benefits-based allocation.
+</p>
+</div>
+<p>Although an allocation that is based on medical utility, medical urgency, or
+transplant benefit is conceptually straightforward, applying these principles
+for organ allocation is complex. One issue is that neither Eurotransplant nor
+the transplant centers know the lifetime a candidate would have, either with or
+without the transplant. Allocation in Eurotransplant therefore relies on statistical
+models that quantify the expected survival of candidates.</p>
+</div>
+<div id="fairness-in-organ-allocation" class="section level2 hasAnchor" number="1.3">
+<h2><span class="header-section-number">1.3</span> Fairness in organ allocation<a href="CHintroduction.html#fairness-in-organ-allocation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p></p>
+<p>With candidates ranked based on their expected survival, the basis of organ allocation
+in Eurotransplant is formed by objective medical criteria. However, prioritizing
+candidates solely based on these criteria leads to unfair or unjust
+waiting list outcomes. To address this, Eurotransplant’s
+allocation systems also include mechanisms aimed at making allocation fair.</p>
+<p>One type of fairness mechanisms are the balancing mechanisms that regulate the
+international exchange of organs among Eurotransplant’s member countries. These
+balancing mechanisms were introduced after it was observed that the kidney procurement
+and kidney transplant rates were <em>“totally out of balance”</em> between Eurotransplant’s
+member countries, which was deemed unfair to countries with high organ donation rates
+<span class="citation"><a href="#ref-persijnEurotransplantKidneyAllocation2000">[10]</a></span>. Their continued importance
+is underscored by the fact that donor procurement rates still
+vary widely between the member countries. For example, Belgium reported
+approximately 30 deceased-organ donors per million people per year over the last decade,
+while Germany reported only 10 <span class="citation"><a href="#ref-et_donor_pmp">[11]</a></span>.
+It is deemed just that Belgian patients benefit from the high Belgian donation rate,
+and Eurotransplant is even legally required under the Belgian transplantation law
+to guarantee a “reasonable balance” in the number of organs imported to and exported
+from Belgium <span class="citation"><a href="#ref-BelgischeWet1986">[12]</a></span>. The balancing mechanisms ensure such a balance.</p>
+<p>Other fairness mechanisms are aimed at giving patients an equal chance of
+finding a transplant <span class="citation"><a href="#ref-DeMeester1999">[13]</a></span>. For example, Eurotransplant’s liver
+allocation system includes ABO blood group rules which give patients access to
+roughly the same number of potential donors, regardless of their ABO blood group. This ensures
+that no patients are disadvantaged by their own blood group <span class="citation"><a href="#ref-demeesterWhichABOmatchingRule2002">[14]</a></span>.
+Mechanisms are also in place to facilitate access to transplantation for candidates
+for whom a suitable donor is difficult to find. For example, in kidney allocation,
+candidates with difficult-to-match leukocyte-antigen typings receive additional
+points <span class="citation"><a href="#ref-demeesterNewEurotransplantKidney1998">[15]</a></span>.</p>
+<p>A separate issue is that some patient groups may be underserved by how medical
+urgency, medical utility, or transplant benefit have been defined in
+Eurotransplant’s allocation systems. For example, several groups of liver
+transplant candidates are not at risk of an imminent waiting list death,
+which is what is scored by MELD. These candidates may nonetheless require access to
+transplantation, for example because of quality of life concerns,
+or risk of disease irreversibility.
+To help such candidates access transplantation, the liver allocation system awards exception
+points to these patient groups. In kidney allocation, prioritization is based on
+medical utility because patients with end-stage renal disease can survive for
+prolonged periods of time on dialysis. However, some candidates may
+lose access to dialysis, and Eurotransplant has implemented rules that facilitate
+access to transplantation for such candidates.</p>
+<p>There are also patients who may deserve access to transplantation based on
+ethical grounds. In Eurotransplant, children have been given special attention.
+Another group consists of patients who lose their graft shortly after
+an initial transplantation procedure. Special rules
+facilitate access to a repeat transplant for these patients.</p>
+<p>Considerations of fairness are thus integral to Eurotransplant’s current
+allocation systems. The importance of fairness was also underscored by the
+2007 Joint Declaration that was signed by the Ministers of Health of
+Eurotransplant’s member countries, which states that maximizing equality of
+opportunity for patients is the <em>“most important factor for allocation”</em> <span class="citation"><a href="#ref-ETMan2025">[16]</a></span>.
+Nevertheless, achieving fairness in organ allocation is not a simple task; in describing
+Eurotransplant’s kidney allocation system, former medical director Guido Persijn
+wrote that an allocation system in which transplantation is equally accessible
+for all patients is <em>“very difficult to implement in practice”</em>, with the
+implemented allocation systems merely an <em>“attempt”</em> towards this goal <span class="citation"><a href="#ref-Persijn2006">[8]</a></span>.</p>
+<p>It is thus not surprising that Eurotransplant regularly identifies flaws
+in its allocation systems, and revises the systems based on the available
+evidence. A recent example of such a flaw was the “blood group O problem” in kidney
+allocation <span class="citation"><a href="#ref-glander2010">[17]</a></span>, which arose because Eurotransplant allowed the
+transplantation of blood group O kidneys into non-O candidates in case of a perfect
+leukocyte-antigen match. Because of this rule, blood group O candidates – who cannot accept non-O
+kidneys because of blood group incompatibility – accumulated on the waiting list.
+As a result, blood group O candidates faced higher mortality rates than non-O
+candidates (13% vs 8%) and waited two years longer for a transplant <span class="citation"><a href="#ref-glander2010">[17]</a></span>.
+This problem was addressed in 2010 by also requiring blood
+group identity for perfectly matched donors.
+Since then, the gap in waiting times between the blood groups has
+shrunk, although blood group O candidates continue to experience longer waiting times
+than blood groups A and AB <span class="citation"><a href="#ref-etStatsLibrary2194P">[18]</a></span>.
+The central role of fairness in allocation motivated the first goal of this thesis, which is to
+study questions related to equality of opportunity in Eurotransplant’s kidney
+and liver allocation systems. Specifically,
+in Chapter <a href="CHsexdisparity.html#CHsexdisparity">4</a> we study why females are more likely than males
+to have an adverse waiting list outcome in liver transplantation, and in Chapter
+<a href="CHvpra.html#CHvpra">7</a> we study how immunization affects access to kidney
+transplantation. These chapters confirm
+that these patient groups are disadvantaged in the current allocation systems.</p>
+</div>
+<div id="challenges-in-improving-organ-allocation-systems" class="section level2 hasAnchor" number="1.4">
+<h2><span class="header-section-number">1.4</span> Challenges in improving organ allocation systems<a href="CHintroduction.html#challenges-in-improving-organ-allocation-systems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The previous sections discussed that Eurotransplant’s allocation systems have
+room for improvement. The primary
+forums to discuss potential improvements to the allocation systems are
+Eurotransplant’s organ-specific advisory committees, whose members are
+medical specialists who are affiliated with active transplantation programs in Eurotransplant.
+These committees can submit recommendations to the
+Board of Eurotransplant and national competent authorities on how allocation
+may be improved. Before such recommendations are implemented, approval from
+these bodies is required.</p>
+<p>Changing the allocation systems is a slow process, despite regular meetings
+of the advisory committees. One challenge is the complexity of the allocation procedure in
+Eurotransplant. When a donor becomes available, Eurotransplant runs computer
+algorithms against a central database to generate organ-specific <em>match lists</em>.
+The transplant centers register their candidates in this database, while
+donor procurement organizations register donors in this database. The candidates who are
+eligible for the organ offer appear on the match lists, and the order
+in which they appear determines the sequence in which Eurotransplant
+offers the organs to candidates. Improving the
+allocation system may therefore seem as simple as refining the match list order.</p>
+<p>However, discussions on the match list order are not straightforward as
+match lists behave very differently from regular queuing systems. For example,
+being highly ranked on the current match list does not guarantee that a
+candidate will attain a similar rank on the next match list.
+The top-ranked candidate is also often not transplanted, as the transplant
+centers regularly decline organ offers because of concerns about the quality
+of the donor, logistical reasons, or temporary non-transplantability of their
+patient.</p>
+<p>Additional challenges arise from the fact that Eurotransplant’s member countries
+have different priorities and needs in allocation, in large part because of
+the international variation in organ donation rates. For example, Belgium has
+more than twice as many organ donors per million people as Germany.
+With these varying donation rates, it is often difficult to reach consensus on which
+patient groups deserve additional attention. Even when the interests of the
+member countries are aligned, it is often not clear how much additional
+support a patient group would need to realize equality of opportunity.</p>
+<p>Due to these challenges, Eurotransplant’s allocation systems evolve only slowly in
+response to developments in the field. In fact, the core components of Eurotransplant’s
+liver and kidney allocation systems have changed little over the past two
+decades. For example, kidney allocation in Eurotransplant is still based on
+a point system that was introduced in 1996 despite substantial changes in
+the waiting list and donor pool. Liver allocation in Eurotransplant has been
+based on MELD since 2006, while other regions have switched to different
+allocation mechanisms for the liver (e.g., <span class="citation"><a href="#ref-Allen2024">[19]</a>, <a href="#ref-kimMELD3point0">[20]</a></span>).</p>
+<p>To advance, Eurotransplant requires tools which can give
+insight into the adequacy and unintended consequences of proposed policy changes.
+This motivated the second goal of this thesis, which is to develop
+discrete-event simulation software for this purpose. These simulators replicate the kidney and liver
+allocation procedures in Eurotransplant, and were developed in close
+collaboration with relevant stakeholders. In Chapters <a href="CHelassimulator.html#CHelassimulator">5</a>
+and <a href="CHetkidneysimulator.html#CHetkidneysimulator">8</a>, we describe and validate simulators for the
+liver and kidney, respectively, and we demonstrate their usefulness through
+clinically motivated case studies.</p>
+</div>
+<div id="outline-of-this-thesis" class="section level2 hasAnchor" number="1.5">
+<h2><span class="header-section-number">1.5</span> Outline of this thesis<a href="CHintroduction.html#outline-of-this-thesis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The thesis is divided into two parts. In Part I, we focus on the allocation of the
+liver. In Chapter <a href="CHprefaceliver.html#CHprefaceliver">2</a>, we describe the history of
+Eurotransplant’s liver allocation system and identify potential areas for improvement.
+In Chapter <a href="CHdynremeld.html#CHdynremeld">3</a>, we propose a method that can be used
+to revise MELD more efficiently. In Chapter <a href="CHsexdisparity.html#CHsexdisparity">4</a>, we describe
+sex disparity in liver waiting list outcomes in Eurotransplant and study the mechanisms
+through which this disparity arises. In Chapter <a href="CHelassimulator.html#CHelassimulator">5</a>,
+we describe and validate the ELAS simulator, a discrete-event simulator
+tailored to Eurotransplant.</p>
+<p>In Part II, we turn to allocation of the kidneys. Chapter <a href="CHprefacekidney.html#CHprefacekidney">6</a>
+outlines the kidney allocation programs used by Eurotransplant, describes their historical
+development, and discusses contemporary challenges in kidney allocation. In Chapter
+<a href="CHvpra.html#CHvpra">7</a>, we examine how having a pre-existing sensitization against HLA
+antigens affects a candidate’s relative transplant rate. In Chapter <a href="CHetkidneysimulator.html#CHetkidneysimulator">8</a>,
+we present the ETKidney simulator, a discrete-event simulator for kidney
+allocation in Eurotransplant.</p>
+<p>We reflect on the findings and contributions of this thesis in Chapter
+<a href="CHdiscussion.html#CHdiscussion">9</a>.</p>
+
+<p></p>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body" entry-spacing="0">
+<div id="ref-vanRoodET1967" class="csl-entry">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">J. J. van Rood, <span>“A proposal for international cooperation in organ transplantation: <span>Eurotransplant</span>,”</span> in <em>Histocompatibility testing 1967: Report of a conference and workshop, torino and saint-vincent, italy, 14–24 june 1967</em>, R. Curtoni, P. Mattiuz, and R. Tosi, Eds., Copenhagen, Denmark, 1967, pp. 451–452.</div>
+</div>
+<div id="ref-jubileumboek" class="csl-entry">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">Eurotransplant International Foundation, <span>“Introduction,”</span> in <em>Together on a <span>Life-Saving</span> <span>Mission</span>: <span>The</span> <span>World</span> of <span>Eurotransplant</span></em>, Leiden, the Netherlands: Eurotransplant International Foundation, 2017, ch. 1, p. 7.</div>
+</div>
+<div id="ref-Langer2012" class="csl-entry">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">R. M. Langer, B. Cohen, and A. Rahmel, <span>“History of <span>Eurotransplant</span>,”</span> <em>Transplantation Proceedings</em>, vol. 44, no. 7, pp. 2130–2131, 2012, doi: <a href="https://doi.org/10.1016/j.transproceed.2012.07.125">10.1016/j.transproceed.2012.07.125</a>.</div>
+</div>
+<div id="ref-etStatsLibrary3002P" class="csl-entry">
+<div class="csl-left-margin">[4] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> <span>Statistics Library</span>. <span>Report</span> 3002p: Active waiting list (at year-end) in all <span>ET,</span> by year, by organ combination.”</span> Online, 2024. Available: <a href="https://statistics.eurotransplant.org/reportloader.php?report=11162-33135-33157&amp;format=html&amp;download=0">https://statistics.eurotransplant.org/reportloader.php?report=11162-33135-33157&amp;format=html&amp;download=0</a></div>
+</div>
+<div id="ref-etStatsLibrary2082P" class="csl-entry">
+<div class="csl-left-margin">[5] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> <span>Statistics Library</span>. <span>Report</span> 2082p: Organs transplanted in all <span>ET,</span> by year, by donor type, by organ.”</span> Online, 2024. Available: <a href="https://statistics.eurotransplant.org/reportloader.php?report=10941-33135&amp;format=html&amp;download=0">https://statistics.eurotransplant.org/reportloader.php?report=10941-33135&amp;format=html&amp;download=0</a></div>
+</div>
+<div id="ref-etStatsLibrary4512P" class="csl-entry">
+<div class="csl-left-margin">[6] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> <span>Statistics Library</span>. <span>Report</span> 4512p: Waiting list mortality in all <span>ET,</span> by year, by organ.”</span> Online, 2025. Available: <a href="https://statistics.eurotransplant.org/reportloader.php?report=11151-33135-33195&amp;format=html&amp;download=1">https://statistics.eurotransplant.org/reportloader.php?report=11151-33135-33195&amp;format=html&amp;download=1</a></div>
+</div>
+<div id="ref-HaaseKromwijk1999" class="csl-entry">
+<div class="csl-left-margin">[7] </div><div class="csl-right-inline">B. J. J. M. Haase-Kromwijk, J. de Meester, and G. G. Persijn, <span>“<span>Eurotransplant Foundation</span>: The original framework of organ exchange,”</span> <em>Best Practice &amp; Research Clinical Anaesthesiology</em>, vol. 13, no. 2, pp. 169–178, 1999, doi: <a href="https://doi.org/10.1053/bean.1999.0018">10.1053/bean.1999.0018</a>.</div>
+</div>
+<div id="ref-Persijn2006" class="csl-entry">
+<div class="csl-left-margin">[8] </div><div class="csl-right-inline">G. G. Persijn, <span>“Allocation of organs, particularly kidneys, within <span>Eurotransplant</span>,”</span> <em>Human Immunology</em>, vol. 67, no. 6, pp. 419–423, 2006, doi: <a href="https://doi.org/10.1016/j.humimm.2006.03.008">10.1016/j.humimm.2006.03.008</a>.</div>
+</div>
+<div id="ref-Schaubel2009" class="csl-entry">
+<div class="csl-left-margin">[9] </div><div class="csl-right-inline">D. E. Schaubel <em>et al.</em>, <span>“Survival benefit-based deceased-donor liver allocation,”</span> <em>American Journal of Transplantation</em>, vol. 9, no. 4, pp. 970–981, 2009, doi: <a href="https://doi.org/10.1111/j.1600-6143.2009.02571.x">10.1111/j.1600-6143.2009.02571.x</a>.</div>
+</div>
+<div id="ref-persijnEurotransplantKidneyAllocation2000" class="csl-entry">
+<div class="csl-left-margin">[10] </div><div class="csl-right-inline">G. G. Persijn, J. M. Smits, and U. Frei, <span>“<span>Eurotransplant</span> kidney allocation,”</span> <em>The Lancet</em>, vol. 355, no. 9197, p. 71, 2000, doi: <a href="https://doi.org/10.1016/S0140-6736(05)72018-3">10.1016/S0140-6736(05)72018-3</a>.</div>
+</div>
+<div id="ref-et_donor_pmp" class="csl-entry">
+<div class="csl-left-margin">[11] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> <span>Statistics Library</span>. <span>Report</span> 1031p: Deceased donors used, per million population, by year, by donor country.”</span> Online, 2024. Available: <a href="https://statistics.eurotransplant.org/reportloader.php?report=10867-33157&amp;format=html&amp;download=0">https://statistics.eurotransplant.org/reportloader.php?report=10867-33157&amp;format=html&amp;download=0</a></div>
+</div>
+<div id="ref-BelgischeWet1986" class="csl-entry">
+<div class="csl-left-margin">[12] </div><div class="csl-right-inline">Federale Overheidsdienst Binnenlandse Zaken, <span>“Wet van 13/06/1986 betreffende het wegnemen en transplanteren van organen.”</span> <a href="https://etaamb.openjustice.be/nl/wet-van-13-juni-1986_n2009000473.html" class="uri">https://etaamb.openjustice.be/nl/wet-van-13-juni-1986_n2009000473.html</a>, 1986. Available: <a href="https://etaamb.openjustice.be/nl/wet-van-13-juni-1986_n2009000473.html">https://etaamb.openjustice.be/nl/wet-van-13-juni-1986_n2009000473.html</a></div>
+</div>
+<div id="ref-DeMeester1999" class="csl-entry">
+<div class="csl-left-margin">[13] </div><div class="csl-right-inline">J. de Meester, G. G. Persijn, J. M. Smits, and Y. Vanrenterghem, <span>“The new <span>Eurotransplant</span> kidney allocation system: A justified balance between equity and utility?”</span> <em>Transplant International</em>, vol. 12, no. 4, pp. 299–300, 1999, doi: <a href="https://doi.org/10.1007/s001470050229">10.1007/s001470050229</a>.</div>
+</div>
+<div id="ref-demeesterWhichABOmatchingRule2002" class="csl-entry">
+<div class="csl-left-margin">[14] </div><div class="csl-right-inline">J. de Meester <em>et al.</em>, <span>“Which <span class="nocase">ABO-matching</span> rule should be the decisive factor in the choice between a highly urgent and an elective patient?”</span> <em>Transplant International</em>, vol. 15, no. 8, pp. 431–435, 2002, doi: <a href="https://doi.org/10.1007/s00147-002-0424-y">10.1007/s00147-002-0424-y</a>.</div>
+</div>
+<div id="ref-demeesterNewEurotransplantKidney1998" class="csl-entry">
+<div class="csl-left-margin">[15] </div><div class="csl-right-inline">J. de Meester, G. G. Persijn, T. Wujciak, G. Opelz, and Y. Vanrenterghem, <span>“The new <span>Eurotransplant</span> kidney allocation system: Report one year after implementation.”</span> <em>Transplantation</em>, vol. 66, no. 9, pp. 1154–1159, 1998, doi: <a href="https://doi.org/10.1097/00007890-199811150-00007">10.1097/00007890-199811150-00007</a>.</div>
+</div>
+<div id="ref-ETMan2025" class="csl-entry">
+<div class="csl-left-margin">[16] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant Manual</span>. <span>Chapter 1: Introduction</span>.”</span> Available: <a href="https://www.eurotransplant.org/allocation/eurotransplant-manual/">https://www.eurotransplant.org/allocation/eurotransplant-manual/</a></div>
+</div>
+<div id="ref-glander2010" class="csl-entry">
+<div class="csl-left-margin">[17] </div><div class="csl-right-inline">P. Glander <em>et al.</em>, <span>“The ‘blood group <span>O</span> problem’ in kidney transplantation — time to change?”</span> <em>Nephrology Dialysis Transplantation</em>, vol. 25, no. 6, pp. 1998–2004, 2010, doi: <a href="https://doi.org/10.1093/ndt/gfp779">10.1093/ndt/gfp779</a>.</div>
+</div>
+<div id="ref-etStatsLibrary2194P" class="csl-entry">
+<div class="csl-left-margin">[18] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> <span>Statistics Library</span>. <span>Report</span> 2194p. Kidney transplant (deceased donor) recipients in all et, median time to transplant, by year, by blood group.”</span> Online, 2025. Available: <a href="https://statistics.eurotransplant.org/reportloader.php?report=10649-33135-33195&amp;format=html&amp;download=0&amp;action=login">https://statistics.eurotransplant.org/reportloader.php?report=10649-33135-33195&amp;format=html&amp;download=0&amp;action=login</a></div>
+</div>
+<div id="ref-Allen2024" class="csl-entry">
+<div class="csl-left-margin">[19] </div><div class="csl-right-inline">E. Allen, R. Taylor, A. Gimson, and D. Thorburn, <span>“Transplant benefit-based offering of deceased donor livers in the <span>United Kingdom</span>,”</span> <em>Journal of Hepatology</em>, vol. 81, no. 3, pp. 471–478, 2024, doi: <a href="https://doi.org/10.1016/j.jhep.2024.03.020">10.1016/j.jhep.2024.03.020</a>.</div>
+</div>
+<div id="ref-kimMELD3point0" class="csl-entry">
+<div class="csl-left-margin">[20] </div><div class="csl-right-inline">W. R. Kim <em>et al.</em>, <span>“<span>MELD</span> 3.0: The <span class="nocase">Model for End-Stage Liver Disease</span> updated for the modern era,”</span> <em>Gastroenterology</em>, vol. 161, no. 6, pp. 1887–1895.e4, 2021, doi: <a href="https://doi.org/10.1053/j.gastro.2021.08.050">10.1053/j.gastro.2021.08.050</a>.</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="dankwoord.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="CHprefaceliver.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["thesis.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

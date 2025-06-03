@@ -1,0 +1,4925 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 The ETKidney simulator | Organ allocation models in Eurotransplant</title>
+  <meta name="description" content="This is the PhD thesis of H.C. de Ferrante" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 The ETKidney simulator | Organ allocation models in Eurotransplant" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="/cover/thesis_cover.png" />
+  <meta property="og:description" content="This is the PhD thesis of H.C. de Ferrante" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 The ETKidney simulator | Organ allocation models in Eurotransplant" />
+  
+  <meta name="twitter:description" content="This is the PhD thesis of H.C. de Ferrante" />
+  <meta name="twitter:image" content="/cover/thesis_cover.png" />
+
+<meta name="author" content="Hans Christiaan de Ferrante" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="CHvpra.html"/>
+<link rel="next" href="CHdiscussion.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="dankwoord.html"><a href="dankwoord.html"><i class="fa fa-check"></i>Dankwoord</a></li>
+<li class="chapter" data-level="1" data-path="CHintroduction.html"><a href="CHintroduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="CHintroduction.html"><a href="CHintroduction.html#eurotransplant"><i class="fa fa-check"></i><b>1.1</b> Eurotransplant</a></li>
+<li class="chapter" data-level="1.2" data-path="CHintroduction.html"><a href="CHintroduction.html#objective-medical-criteria-for-organ-allocation"><i class="fa fa-check"></i><b>1.2</b> Objective medical criteria for organ allocation</a></li>
+<li class="chapter" data-level="1.3" data-path="CHintroduction.html"><a href="CHintroduction.html#fairness-in-organ-allocation"><i class="fa fa-check"></i><b>1.3</b> Fairness in organ allocation</a></li>
+<li class="chapter" data-level="1.4" data-path="CHintroduction.html"><a href="CHintroduction.html#challenges-in-improving-organ-allocation-systems"><i class="fa fa-check"></i><b>1.4</b> Challenges in improving organ allocation systems</a></li>
+<li class="chapter" data-level="1.5" data-path="CHintroduction.html"><a href="CHintroduction.html#outline-of-this-thesis"><i class="fa fa-check"></i><b>1.5</b> Outline of this thesis</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html"><i class="fa fa-check"></i><b>2</b> Liver allocation in Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#liver-allocation-prior-to-meld"><i class="fa fa-check"></i><b>2.1</b> Liver allocation prior to MELD</a></li>
+<li class="chapter" data-level="2.2" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#meld-based-liver-allocation-in-the-united-states"><i class="fa fa-check"></i><b>2.2</b> MELD-based liver allocation in the United States</a></li>
+<li class="chapter" data-level="2.3" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#meld-based-liver-allocation-in-eurotransplant"><i class="fa fa-check"></i><b>2.3</b> MELD-based liver allocation in Eurotransplant</a></li>
+<li class="chapter" data-level="2.4" data-path="CHprefaceliver.html"><a href="CHprefaceliver.html#areas-for-improvement-in-meld-based-allocation-systems"><i class="fa fa-check"></i><b>2.4</b> Areas for improvement in MELD-based allocation systems</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="CHdynremeld.html"><a href="CHdynremeld.html"><i class="fa fa-check"></i><b>3</b> Revising MELD from calendar-time cross-sections with correction for selection bias</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="CHdynremeld.html"><a href="CHdynremeld.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2" data-path="CHdynremeld.html"><a href="CHdynremeld.html#materials-and-methods"><i class="fa fa-check"></i><b>3.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="3.3" data-path="CHdynremeld.html"><a href="CHdynremeld.html#results"><i class="fa fa-check"></i><b>3.3</b> Results</a></li>
+<li class="chapter" data-level="3.4" data-path="CHdynremeld.html"><a href="CHdynremeld.html#discussion"><i class="fa fa-check"></i><b>3.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html"><i class="fa fa-check"></i><b>4</b> Sex disparity in liver allocation within Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#materials-and-methods-1"><i class="fa fa-check"></i><b>4.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="4.3" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#results-1"><i class="fa fa-check"></i><b>4.3</b> Results</a></li>
+<li class="chapter" data-level="4.4" data-path="CHsexdisparity.html"><a href="CHsexdisparity.html#discussion-1"><i class="fa fa-check"></i><b>4.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="CHelassimulator.html"><a href="CHelassimulator.html"><i class="fa fa-check"></i><b>5</b> The ELAS simulator</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="CHelassimulator.html"><a href="CHelassimulator.html#introduction-2"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elassystem"><i class="fa fa-check"></i><b>5.2</b> The Eurotransplant Liver Allocation System (ELAS)</a></li>
+<li class="chapter" data-level="5.3" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasdesign"><i class="fa fa-check"></i><b>5.3</b> The design of the ELAS simulator</a></li>
+<li class="chapter" data-level="5.4" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasmodules"><i class="fa fa-check"></i><b>5.4</b> Modules of the ELAS simulator</a></li>
+<li class="chapter" data-level="5.5" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasvv"><i class="fa fa-check"></i><b>5.5</b> Verification and validation</a></li>
+<li class="chapter" data-level="5.6" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elascasestudies"><i class="fa fa-check"></i><b>5.6</b> Case studies: the impact of modifying ELAS rules</a></li>
+<li class="chapter" data-level="5.7" data-path="CHelassimulator.html"><a href="CHelassimulator.html#sec:elasconclusion"><i class="fa fa-check"></i><b>5.7</b> Conclusions and discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html"><i class="fa fa-check"></i><b>6</b> Kidney allocation in Eurotransplant</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#hla-matching-versus-fairness"><i class="fa fa-check"></i><b>6.1</b> HLA matching versus fairness</a></li>
+<li class="chapter" data-level="6.2" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#kidney-allocation-programs-in-eurotransplant"><i class="fa fa-check"></i><b>6.2</b> Kidney allocation programs in Eurotransplant</a></li>
+<li class="chapter" data-level="6.3" data-path="CHprefacekidney.html"><a href="CHprefacekidney.html#contemporary-challenges-in-kidney-allocation"><i class="fa fa-check"></i><b>6.3</b> Contemporary challenges in kidney allocation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="CHvpra.html"><a href="CHvpra.html"><i class="fa fa-check"></i><b>7</b> Access to transplantation for immunized candidates</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="CHvpra.html"><a href="CHvpra.html#introduction-3"><i class="fa fa-check"></i><b>7.1</b> Introduction</a></li>
+<li class="chapter" data-level="7.2" data-path="CHvpra.html"><a href="CHvpra.html#materials-and-methods-2"><i class="fa fa-check"></i><b>7.2</b> Materials and methods</a></li>
+<li class="chapter" data-level="7.3" data-path="CHvpra.html"><a href="CHvpra.html#results-2"><i class="fa fa-check"></i><b>7.3</b> Results</a></li>
+<li class="chapter" data-level="7.4" data-path="CHvpra.html"><a href="CHvpra.html#discussion-2"><i class="fa fa-check"></i><b>7.4</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html"><i class="fa fa-check"></i><b>8</b> The ETKidney simulator</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#introduction-4"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneyalloc"><i class="fa fa-check"></i><b>8.2</b> The kidney allocation programs of Eurotransplant</a></li>
+<li class="chapter" data-level="8.3" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneydesign"><i class="fa fa-check"></i><b>8.3</b> Purpose and design of the ETKidney Simulator</a></li>
+<li class="chapter" data-level="8.4" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneymodules"><i class="fa fa-check"></i><b>8.4</b> Modules of the ETKidney simulator</a></li>
+<li class="chapter" data-level="8.5" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneyvv"><i class="fa fa-check"></i><b>8.5</b> Verification and validation</a></li>
+<li class="chapter" data-level="8.6" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneycasestudies"><i class="fa fa-check"></i><b>8.6</b> Case studies</a></li>
+<li class="chapter" data-level="8.7" data-path="CHetkidneysimulator.html"><a href="CHetkidneysimulator.html#sec:etkidneydiscussion"><i class="fa fa-check"></i><b>8.7</b> Discussion and conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="CHdiscussion.html"><a href="CHdiscussion.html"><i class="fa fa-check"></i><b>9</b> The way forward</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="CHdiscussion.html"><a href="CHdiscussion.html#this-thesis-is-a-sharp-look-at-familiar-problems"><i class="fa fa-check"></i><b>9.1</b> This thesis is a sharp look at familiar problems</a></li>
+<li class="chapter" data-level="9.2" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-need-to-look-beyond-survival-models-for-allocation"><i class="fa fa-check"></i><b>9.2</b> We need to look beyond survival models for allocation</a></li>
+<li class="chapter" data-level="9.3" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-should-look-beyond-aggregate-outcomes"><i class="fa fa-check"></i><b>9.3</b> We should look beyond aggregate outcomes</a></li>
+<li class="chapter" data-level="9.4" data-path="CHdiscussion.html"><a href="CHdiscussion.html#scientific-evidence-is-rarely-the-bottleneck"><i class="fa fa-check"></i><b>9.4</b> Scientific evidence is rarely the bottleneck</a></li>
+<li class="chapter" data-level="9.5" data-path="CHdiscussion.html"><a href="CHdiscussion.html#the-chicken-and-egg-problem-in-allocation-development"><i class="fa fa-check"></i><b>9.5</b> The “chicken-and-egg” problem in allocation development</a></li>
+<li class="chapter" data-level="9.6" data-path="CHdiscussion.html"><a href="CHdiscussion.html#we-need-more-constructive-dialogue"><i class="fa fa-check"></i><b>9.6</b> We need more constructive dialogue</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="APPipcw.html"><a href="APPipcw.html"><i class="fa fa-check"></i><b>A</b> Inverse Probability Censoring Weights</a>
+<ul>
+<li class="chapter" data-level="" data-path="APPipcw.html"><a href="APPipcw.html#definition-of-ipcw-weights"><i class="fa fa-check"></i>Definition of IPCW weights</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="APPimputation.html"><a href="APPimputation.html"><i class="fa fa-check"></i><b>B</b> Completing the status updates streams for transplant recipients</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="APPimputation.html"><a href="APPimputation.html#step-1-and-2-construction-of-the-pseudo-observations"><i class="fa fa-check"></i><b>B.1</b> Step 1 and 2: Construction of the pseudo-observations</a></li>
+<li class="chapter" data-level="B.2" data-path="APPimputation.html"><a href="APPimputation.html#step-3-fitting-a-model-for-the-mean-restricted-survival-time"><i class="fa fa-check"></i><b>B.2</b> Step 3: Fitting a model for the mean restricted survival time</a></li>
+<li class="chapter" data-level="B.3" data-path="APPimputation.html"><a href="APPimputation.html#step-4-constructing-future-statuses"><i class="fa fa-check"></i><b>B.3</b> Step 4: Constructing future statuses</a></li>
+<li class="chapter" data-level="B.4" data-path="APPimputation.html"><a href="APPimputation.html#step-4.2-matching-the-patient-to-a-particular-patient-in-the-risk-set"><i class="fa fa-check"></i><b>B.4</b> Step 4.2: matching the patient to a particular patient in the risk set</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="course-of-life.html"><a href="course-of-life.html"><i class="fa fa-check"></i>Course of Life</a></li>
+<li class="chapter" data-level="" data-path="list-of-publications.html"><a href="list-of-publications.html"><i class="fa fa-check"></i>List of publications</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Organ allocation models in Eurotransplant</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="CHetkidneysimulator" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> The ETKidney simulator<a href="CHetkidneysimulator.html#CHetkidneysimulator" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p></p>
+<hr />
+<p>
+An article based on this chapter has been submitted for publication:
+de Ferrante, H.C., Laguna-Goya, R., Smeulders, B.M.L., Spieksma, F.C.R., Tieken, I.</p>
+<p>
+</p>
+<p><p><strong>Abstract</strong></p>
+</p>
+<p>A barrier to modernizing ETKAS and ESP kidney allocation
+rules is that Eurotransplant lacks tools to quantitatively assess the
+impact of kidney allocation policy changes. We present the ETKidney simulator,
+which was developed for this purpose. This tool simulates kidney allocation
+according to the actual ETKAS and ESP allocation rules. The ETKidney simulator was
+developed in close collaboration with medical doctors from
+Eurotransplant, and was presented to the Eurotransplant Kidney
+Advisory Committee as well as other major
+stakeholders. To enhance trust in the tool, the ETKidney simulator
+has been made publicly available together with synthetic data.</p>
+<p>In this chapter, we describe the ETKidney simulator in detail and validate
+the simulator by comparing simulated outcomes to actual ETKAS and ESP
+outcomes between April 1, 2021, and December 31, 2024. We illustrate
+how the simulator can contribute to the evaluation of alternative kidney allocation
+policies with three clinically motivated case studies. We anticipate
+that the ETKidney simulator will be pivotal in modernizing ETKAS and
+ESP allocation rules by enabling informed decision-making on kidney
+allocation rules in collaboration with national competent authorities.</p>
+<p>
+</p>
+<div id="introduction-4" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Introduction<a href="CHetkidneysimulator.html#introduction-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Potential improvements to ETKAS and ESP are regularly proposed, and are
+often based on medical insights or ethical considerations. For instance,
+proposals have been made to emphasize DR matching in ETKAS
+<span class="citation"><a href="#ref-doxiadisSimplerEquitableAllocation2007">[130]</a>, <a href="#ref-vereerstraetenAllocationCadaverKidneys1999">[156]</a></span>,
+motivated by findings that mismatches at the HLA-DR locus are most deleterious to graft
+survival <span class="citation"><a href="#ref-Roberts2004">[157]</a>, <a href="#ref-johnsonFactorsInfluencingOutcome2010">[158]</a></span>.
+Other proposals include making candidates under the age of 65 eligible for ESP
+<span class="citation"><a href="#ref-Ssal2020">[159]</a></span>, introducing HLA-DR matching in ESP <span class="citation"><a href="#ref-deFijter2023">[145]</a></span>, introducing candidate-donor age matching
+<span class="citation"><a href="#ref-vonsamson-himmelstjernaContinuousDonorrecipientAge2024">[150]</a></span>, basing HLA matching on epitope
+matching <span class="citation"><a href="#ref-Niemann2021">[160]</a></span>, and giving extra priority to the candidates who
+are immunized but do not qualify for the Acceptable Mismatch (AM) program
+<span class="citation"><a href="#ref-ziemannUnacceptableHumanLeucocyte2017">[134]</a>, <a href="#ref-zecherImpactSensitizationWaiting2022a">[135]</a></span>.</p>
+<p>Within Eurotransplant, such areas for improvement are regularly discussed
+by the Eurotransplant Kidney Advisory Committee (ETKAC), whose members are
+nephrologists who represent the Eurotransplant member countries,
+an abdominal surgeon, and an immunologist. Despite regular ETKAC discussions
+on the aforementioned topics, ETKAS and ESP have not changed much since their
+initiations in 1996 and 1999, respectively. To support discussions within ETKAC
+and discussions with national competent authorities, Eurotransplant requires a tool that can
+quantify the impact of policy changes in ETKAS and ESP. Computer simulations
+can be used for this purpose.</p>
+<p>The use of computer simulations to design kidney allocation systems is not new.
+In fact, ETKAS itself was based on computer simulations that were published in
+in 1993 <span class="citation"><a href="#ref-wujciakProposalImprovedCadaver1993a">[126]</a>, <a href="#ref-wujciakComputerAnalysisCadaver1993">[161]</a></span>. Other organ allocation organizations also
+routinely note the usage of computer simulations. For example, in the United States,
+the Kidney-Pancreas Simulated Allocation Model (KPSAM) was used to revise allocation rules
+in 2014 <span class="citation"><a href="#ref-israniNewNationalAllocation2014">[149]</a></span>, and this tool continues to
+be used for the proposal of further changes to allocation
+<span class="citation"><a href="#ref-israniNewKidneyPancreas2021">[162]</a>, <a href="#ref-mankowskiAcceleratingKidneyAllocation2019">[163]</a></span>.
+The kidney allocation policies in France and the United Kingdom were also
+updated on the basis of bespoke computer simulations in 2015 and 2019,
+respectively <span class="citation"><a href="#ref-Audry2022">[147]</a>, <a href="#ref-jacquelinetChangingKidneyAllocation2006">[164]</a>, <a href="#ref-Mumford2018">[165]</a></span>.
+A bespoke model for Eurotransplant has not been available.</p>
+<p>This motivated us to develop a simulation toolbox that enables
+Eurotransplant and other stakeholders to quantify the impact of changes
+to ETKAS and ESP allocation rules. This tool, which we refer to as the
+ETKidney simulator, uses discrete-event simulation (DES) to mimic kidney
+allocation within Eurotransplant. The simulator was developed in close
+collaboration with medical doctors from Eurotransplant and was presented
+on several occasions to ETKAC, which has welcomed the ETKidney simulator as a tool to
+inform policy discussions on kidney allocation. The Python code of the
+simulator is made publicly available together with synthetic data to
+enable collaborations with policymakers and scientists in evaluating
+alternative ETKAS and ESP allocation rules.<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a></p>
+<p></p>
+<p>In this chapter, we
+describe how kidneys are allocated within Eurotransplant (Section <a href="CHetkidneysimulator.html#sec:etkidneyalloc">8.2</a>) and how this process is approximated by
+the simulator (Sections <a href="CHetkidneysimulator.html#sec:etkidneydesign">8.3</a> and <a href="CHetkidneysimulator.html#sec:etkidneymodules">8.4</a>). We also give insight into how closely
+the simulator approximates outcomes of ETKAS and ESP with input-output
+validation (Section <a href="CHetkidneysimulator.html#sec:etkidneyvv">8.5</a>), and demonstrate how the ETKidney
+simulator can contribute to policy evaluation with three clinically relevant
+case studies (Section <a href="CHetkidneysimulator.html#sec:etkidneycasestudies">8.6</a>).</p>
+</div>
+<div id="sec:etkidneyalloc" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> The kidney allocation programs of Eurotransplant<a href="CHetkidneysimulator.html#sec:etkidneyalloc" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Figure <a href="CHetkidneysimulator.html#fig:ch8fig1">8.1</a> shows how Eurotransplant
+allocates the deceased-donor kidneys that become available for
+kidney-only transplantation.<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a> Three standard allocation programs are
+used to place these kidneys: the AM program, ETKAS and ESP (see Figure <a href="CHetkidneysimulator.html#fig:ch8fig1">8.1</a>).
+The program through which Eurotransplant offers the kidney(s) is determined by
+the age of the donor. Kidneys from donors under the age of 65 are first offered for
+transplantation through the AM program, which accounted for 3% of
+kidney-only transplantations between 2014 and 2023, and then through
+ETKAS, which accounted for 69% of kidney-only transplantations. The ESP is
+used to allocate kidneys from donors aged 65 or older, and accounted for
+16% of kidney-only transplantations <span class="citation"><a href="#ref-etStatsLibrary2072P">[167]</a></span>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch8fig1"></span>
+<img src="figures/ch8/fig1-flowchart_kidney_allocation.svg" alt="Flow chart illustrating how Eurotransplant offers kidneys for kidney-only transplantation. The percentages shown represent the proportion of kidney-only transplantations performed through each mechanism between 2014 and 2023. Kidneys declined by all candidates in ESP were re-allocated via ETKAS until March 2021. Since March 2021, such kidneys are instead offered via extended ESP allocation, in which non-local candidates and those aged below 65 can participate since March 2021." width="96%" />
+<p class="caption">
+Figure 8.1: Flow chart illustrating how Eurotransplant offers kidneys for kidney-only transplantation. The percentages shown represent the proportion of kidney-only transplantations performed through each mechanism between 2014 and 2023. Kidneys declined by all candidates in ESP were re-allocated via ETKAS until March 2021. Since March 2021, such kidneys are instead offered via extended ESP allocation, in which non-local candidates and those aged below 65 can participate since March 2021.
+</p>
+</div>
+<p>The remaining 11% of kidney-only transplantations between 2014 and 2023
+resulted from <em>non-standard allocation</em>, which Eurotransplant can initiate
+if the loss of a transplantable graft is anticipated. In non-standard allocation,
+Eurotransplant offers the grafts to centers in the vicinity of the kidney(s),
+either through extended or rescue allocation. In extended kidney allocation, centers
+have 60 minutes to propose candidates. In rescue allocation, offers are competitive,
+which means that the first center to respond receives the kidney. Not all kidneys offered by
+Eurotransplant are eventually transplanted.
+In fact, approximately 24% of the kidneys that were offered by Eurotransplant
+for transplantation between 2014 and 2023 were discarded <span class="citation"><a href="#ref-etreport_1132P">[168]</a></span>.</p>
+<p>Match lists determine which candidate receives an offer at
+what moment. The composition and ordering of
+candidates on match lists are determined by program-specific
+<em>eligibility</em>, <em>filtering</em>, and <em>ranking criteria</em>. The eligibility
+criteria determine whether a candidate is allowed to appear on the match list
+under Eurotransplant kidney allocation rules. Examples of eligibility criteria are that the
+candidate must have the same blood group as the donor, and that the donor’s HLA
+must not include an HLA antigen that the center has reported as unacceptable for
+the candidate.
+The filtering criteria also determine whether Eurotransplant contacts
+the center to make an offer for a specific candidate. While eligibility criteria
+are rules imposed by Eurotransplant, filtering criteria represent the preferences
+that transplant centers have on kidney offers.
+The filtering criteria can be distinguished into:</p>
+<ol style="list-style-type: decimal">
+<li><em>allocation profiles</em>, with which centers can indicate that their
+patient does not want to receive offers from donors with certain
+characteristics (e.g. donors above a certain age, donors with a specific
+virology, or other donor-related characteristics), and</li>
+<li><em>HLA mismatch criteria</em>, with which centers can specify their minimum
+requirements for the HLA match quality between the donor and
+candidate on the HLA-A, -B, and -DR loci.</li>
+</ol>
+<p>Finally, the ranking criteria determine the position of a candidate on the
+match list. An overview of the ETKAS- and ESP-specific ranking criteria is included
+in Section <a href="CHetkidneysimulator.html#sec:etkidneympmod">8.4.3</a>.</p>
+<p>In standard allocation, Eurotransplant only offers kidneys to candidates
+who appear on the <em>filtered match list</em>, which means that candidates must
+meet the program’s eligibility and filtering criteria. In extended allocation,
+centers are allowed to select candidates from the <em>unfiltered match list</em>,
+which means that candidates only have to meet the program’s eligibility criteria.
+In rescue allocation, centers can also propose other candidates
+for transplantation, including those with
+non-identical ABO blood groups.</p>
+</div>
+<div id="sec:etkidneydesign" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Purpose and design of the ETKidney Simulator<a href="CHetkidneysimulator.html#sec:etkidneydesign" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We use discrete-event simulation (DES) to simulate kidney allocation according to the
+actual ETKAS and ESP allocation rules implemented in March 2021. Simulation of
+the AM program is beyond the scope of the ETKidney simulator, because
+the definition of acceptable antigens is based on an individualized
+risk-benefit analysis which requires specialized immunological
+knowledge. We note that the simulator has not been designed for the analysis of
+kidney discard rates.</p>
+<p>Relevant states for the simulation are (i) the statuses of candidates on the ETKAS or ESP
+waiting lists, (ii) the export
+balances of Eurotransplant member countries, which affect a candidate’s
+rank on ETKAS match lists because of Eurotransplant’s balance point
+system (see Section <a href="CHetkidneysimulator.html#sec:etkidneybalance">8.4.2</a>). In DES, we study how these system states
+evolve in response to a series of discrete events. For the ETKidney
+simulator, we distinguish between three types of events, which are:</p>
+<ol style="list-style-type: decimal">
+<li><p><em>candidate status updates</em>; these include changes to a candidate’s waiting
+list status (transplantable, non-transplantable, HU, removed, transplanted,
+or deceased), their allocation profiles, their unacceptable antigens,
+their HLA mismatch criteria, the reporting of an antibody screening,
+or a choice between ETKAS or ESP in Germany (where these programs are mutually exclusive),</p></li>
+<li><p><em>donor arrivals</em>; these are donors reported to Eurotransplant for whom one or two kidneys become available for kidney-only transplantation through ETKAS or ESP, which generally
+results in a transplantation, and</p></li>
+<li><p><em>balance update events</em>; these are transplantations across country borders
+through allocation programs other than ETKAS and ESP. These transplantations
+also count towards the export balances of Eurotransplant’s member countries, based
+on which balance points are awarded.</p></li>
+</ol>
+<div id="sec:etkidneyinputstreams" class="section level3 hasAnchor" number="8.3.1">
+<h3><span class="header-section-number">8.3.1</span> Input data for the ETKidney simulator<a href="CHetkidneysimulator.html#sec:etkidneyinputstreams" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Users of the ETKidney simulator have to specify the input streams that
+define the candidate status updates and donor arrival events. Furthermore, an input stream of
+international transplantations can be specified, which is used to
+initialize ETKAS balances and to define balance update events. For candidates
+and donors, the data in the input streams must include
+all administrative and medical information required by the eligibility,
+filtering, and ranking criteria. Additional information may be required
+by the graft offer acceptance module to simulate the decision-making of kidney
+transplant centers in accepting kidney offers, and by the post-transplant module to simulate post-transplant
+survival.</p>
+<p>For candidates, the input streams must include complete information on
+what would happen to each candidate until they exit the waiting list,
+either because of a waiting list removal or a waiting list death. This requirement
+implies that candidate input streams cannot
+be solely based on historical registry data: after all, waiting list
+removals or waiting list deaths have not been observed for candidates who were
+transplanted via ETKAS or ESP.</p>
+<p>For simulations done in this chapter, we use input streams based on
+historical data. The actual status update trajectories of candidates are complemented
+with statuses copied over from comparable candidates who remained registered
+on the waiting list. For this, we use a procedure to complete a candidate’s
+status updates that was originally developed for the ELAS simulator (see Chapter <a href="CHelassimulator.html#CHelassimulator">5</a> and Appendix <a href="APPimputation.html#APPimputation">B</a>).</p>
+</div>
+<div id="sec:etkidneyinit" class="section level3 hasAnchor" number="8.3.2">
+<h3><span class="header-section-number">8.3.2</span> Initialization of the ETKidney simulator’s system state<a href="CHetkidneysimulator.html#sec:etkidneyinit" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The balance system is initialized using data from the input stream for international transplantations:
+all international transplantations that were performed prior to the simulation
+start date are processed, which ensures that the balances are correctly initialized.
+Additionally, the
+simulator schedules a balance update event for every cross-border transplantation
+that occurs within the simulation window via combined transplantations or via the AM
+program. This is necessary to accurately simulate the evolution of balances,
+because such transplantations also count towards a member country’s export balance.</p>
+<p>From candidate input streams, the simulator loads all candidates who
+have an active status on the waiting list within the simulation window.
+The listings of candidates listed for repeat kidney transplantation whose initial
+transplantation takes place within the simulation window are excluded, which
+is necessary to ensure that a candidate cannot simultaneously wait for a
+primary and repeat transplantation in ETKidney simulation runs. For each candidate,
+a single patient event is scheduled in the Future Event Set (FES) timed at the
+candidate’s first available status update. The scheduling of subsequent status
+updates is postponed until the status update has been processed.</p>
+<p>From donor input streams, all donors reported during the simulation
+window are loaded. For each donor, a donor event is scheduled in the FES
+on the donor reporting date.</p>
+<p></p>
+</div>
+<div id="sec:etkidneyoverview" class="section level3 hasAnchor" number="8.3.3">
+<h3><span class="header-section-number">8.3.3</span> Overview of the simulation<a href="CHetkidneysimulator.html#sec:etkidneyoverview" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Figure <a href="CHetkidneysimulator.html#fig:ch8fig2">8.2</a> illustrates how events are processed in the simulation.
+The balance update events are handled by simply updating the export balances
+of the countries that were involved in the international transplantation. The
+patient events are handled by updating the status
+of the corresponding patient. Handling of donor events is more complex, because
+the allocation of the kidney(s) through ETKAS or ESP has to be approximated
+by the simulator.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch8fig2"></span>
+<img src="figures/ch8/fig2-event_handling_flowchart.svg" alt="Event handling flowchart for the ETKidney simulator. Inputs and parameters are represented using parallelograms. If a kidney is declined by all candidates, simulation settings determine whether a discard is recorded or a candidate is forced to accept the kidney for transplantation. FES, Future Event Set." width="90%" />
+<p class="caption">
+Figure 8.2: Event handling flowchart for the ETKidney simulator. Inputs and parameters are represented using parallelograms. If a kidney is declined by all candidates, simulation settings determine whether a discard is recorded or a candidate is forced to accept the kidney for transplantation. FES, Future Event Set.
+</p>
+</div>
+<p>
+To approximate such kidney-only allocation, the ETKidney simulator’s
+<em>match list module</em> was developed (see Section
+<a href="CHetkidneysimulator.html#sec:etkidneympmod">8.4.3</a>). This module first
+creates, depending on the age of the donor, an unfiltered ETKAS or ESP
+match list that contains for each candidate who meets the
+corresponding program’s eligibility criteria a <em>match record</em>. These match records
+are automatically ordered based on the respective
+program’s ranking criteria, with the number of points awarded to each
+match record determined by the <em>point score module</em> (see Section
+<a href="CHetkidneysimulator.html#sec:etkidneympmod">8.4.3</a>).</p>
+<p>Using the ordered match list as the input, the <em>graft offering</em> module simulates
+which candidates accept the kidneys (see Section
+<a href="CHetkidneysimulator.html#sec:etkidneyacceptance">8.4.4</a>). In rare cases, all candidates on the match list
+are simulated to decline the kidney offer. If this
+happens for an ESP match list, the graft offering module will
+try to place the kidneys through non-standard ESP allocation, which is
+how Eurotransplant allocates kidneys from donors aged 65 or older since
+March 2021. In the rare event that kidneys remain unplaced, the graft offering module
+can either (i) record a discard for the kidney(s), or (ii) force transplantation of the
+candidate who was predicted to be most likely to accept the graft.
+For the simulations in this chapter, option (ii) is used because
+the donor input stream used for simulation consists only of donors whose
+kidneys were actually transplanted through ETKAS and ESP.</p>
+<p>After a graft has been accepted, transplantations are recorded with the
+kidney balances updated in case of a cross-border transplantation.
+The <em>post-transplant module</em> simulates post-transplant outcomes for transplant
+recipients. In case a candidate is simulated to enlist for repeat transplantation,
+this module also schedules a <em>synthetic re-listing</em> (see Section
+<a href="CHetkidneysimulator.html#sec:etkidneysynthreg">8.4.5.2</a>).</p>
+</div>
+</div>
+<div id="sec:etkidneymodules" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Modules of the ETKidney simulator<a href="CHetkidneysimulator.html#sec:etkidneymodules" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section describes key modules of the ETKidney simulator: the HLA
+system module (Section <a href="CHetkidneysimulator.html#sec:etkidneyhla">8.4.1</a>), the balance system module
+(Section <a href="CHetkidneysimulator.html#sec:etkidneybalance">8.4.2</a>), the match list and point system
+module (Section <a href="CHetkidneysimulator.html#sec:etkidneympmod">8.4.3</a>), the graft offering
+module (Section <a href="CHetkidneysimulator.html#sec:etkidneyacceptance">8.4.4</a>), and the post-transplant module
+(Section <a href="CHetkidneysimulator.html#sec:etkidneyposttxp">8.4.5</a>).</p>
+<div id="sec:etkidneyhla" class="section level3 hasAnchor" number="8.4.1">
+<h3><span class="header-section-number">8.4.1</span> The HLA system module<a href="CHetkidneysimulator.html#sec:etkidneyhla" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The HLA system module implements all mechanisms through which
+Eurotransplant prioritizes HLA matching. These procedures are (i)
+determining how many mismatches there are at the HLA loci of interest, (ii)
+calculating the vPRA on the basis of unacceptable antigens, and (iii)
+calculating the mismatch probability.</p>
+<div id="sec:etkidneyhlammcalc" class="section level4 hasAnchor" number="8.4.1.1">
+<h4><span class="header-section-number">8.4.1.1</span> Calculation of HLA mismatches<a href="CHetkidneysimulator.html#sec:etkidneyhlammcalc" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The HLA system module can determine, for a given patient HLA and given
+donor HLA, how many antigen mismatches there are per locus (0, 1, or 2).
+The simulation settings file specifies at which HLA loci mismatches are to
+be determined. By default, the module only counts mismatches
+at the HLA-A, -B, and -DR loci, because the current ETKAS point
+system only awards points for these mismatches. HLA-A and HLA-B
+mismatches are determined at the level of broad antigens, while HLA-DR
+mismatches are determined at the level of split antigens (as is done
+for allocation in ETKAS, see <span class="citation"><a href="#ref-manualKidney">[169]</a></span>).</p>
+</div>
+<div id="sec:etkidneyvpracalc" class="section level4 hasAnchor" number="8.4.1.2">
+<h4><span class="header-section-number">8.4.1.2</span> Quantification of virtual Panel-Reactive Antibodies (vPRA)<a href="CHetkidneysimulator.html#sec:etkidneyvpracalc" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>A candidate’s vPRA affects a candidate’s position on the match list
+because the vPRA is used to calculate the mismatch probability.
+In simulations included in this chapter the vPRA is quantified by
+counting the fraction of donors that carry unacceptable antigens in
+the ETRL donor panel (V4.0). This database includes the HLA phenotypes
+of 10,000 donors that were recently reported to Eurotransplant.
+The HLA system module can also quantify the
+vPRA against a user-specified input database of 10,000 donor HLAs.</p>
+</div>
+<div id="sec:etkidneymmp" class="section level4 hasAnchor" number="8.4.1.3">
+<h4><span class="header-section-number">8.4.1.3</span> Calculation of the Eurotransplant mismatch probability (MMP)<a href="CHetkidneysimulator.html#sec:etkidneymmp" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>ETKAS awards points for the mismatch probability, which is the chance
+that there is <em>no</em> favorably matched donor for a candidate among the next
+1,000 donors reported to Eurotransplant. Eurotransplant calculates
+this mismatch probability analytically as:
+<span class="math display">\[\texttt{MMP} = \Bigl(1 - f_{BG}\cdot (1-\texttt{vPRA})\cdot p_{\leq1mm}\Bigr)^{1000},\]</span>
+where <span class="math inline">\(f_{BG}\)</span> is the candidate’s blood group frequency and
+<span class="math inline">\(p_{\leq1mm}\)</span> is a quantification of the probability that a donor has at
+most 1 HLA-ABDR mismatch with the candidate.</p>
+<p>By default, <span class="math inline">\(p_{\leq1mm}\)</span> is calculated with analytic formulas for the probability of
+receiving exactly 0 mismatches and exactly 1 mismatch, which are also used for ETKAS
+allocation. A disadvantage of this approach is that both these formulas assume
+that HLA antigens are independently distributed according to their population
+frequencies, which ignores HLA linkage disequilibrium. To resolve this, the
+HLA system module can also quantify the availability of favorably matched donors
+by counting the number of 0- or 1-ABDR mismatched donors among the pool of 10,000
+donors used to calculate the vPRA, which we denote by <span class="math inline">\(f_{\leq1mm}\)</span>. Using this
+quantity, we define the <em>“1-ABDR HLA mismatch frequency”</em> as
+<span class="math display">\[\Bigl(1- f_{\leq1mm}\Bigr)^{1000}.\]</span> We note that this quantity does not
+take into account the candidate’s blood group, nor the candidate’s vPRA.
+We use this quantity in the second case study (see Section
+<a href="CHetkidneysimulator.html#sec:etkidneycasestudyvpra">8.6.2</a>).</p>
+</div>
+</div>
+<div id="sec:etkidneybalance" class="section level3 hasAnchor" number="8.4.2">
+<h3><span class="header-section-number">8.4.2</span> The balance system module<a href="CHetkidneysimulator.html#sec:etkidneybalance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To balance the international exchange of kidneys, Eurotransplant keeps track of
+the <em>net kidney export balances</em> of its member countries, and awards points in
+ETKAS based on these balances.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a> Within Austria, an additional regional balance system
+exists to ensure that the Austrian regions benefit equally from
+cross-border transplantations <span class="citation"><a href="#ref-manualKidney">[169]</a></span>. The balance system module
+implements both these national and regional balance systems for the ETKidney
+simulator. Initialization of the net export balances is possible, and can be based on
+historical data. By default, separate balances are maintained for each donor
+age group (0-17 years, 18-49 years, 50-64 years, or 65 years or older), which
+is consistent with how balances have been maintained since April 1, 2019 <span class="citation"><a href="#ref-manualKidney">[169]</a></span>.</p>
+</div>
+<div id="sec:etkidneympmod" class="section level3 hasAnchor" number="8.4.3">
+<h3><span class="header-section-number">8.4.3</span> The match list module &amp; point system module<a href="CHetkidneysimulator.html#sec:etkidneympmod" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The match list module is used to create ETKAS or ESP match lists, which
+serve as input for the graft offering module. Only candidates who meet
+the corresponding program’s eligibility criteria appear on match lists,
+with each candidate ranked based on <em>tiers</em> and <em>points</em>. Candidates
+ranked in higher tiers receive priority over candidates in
+lower tiers. Within each tier, candidates are ranked by points. In ETKAS,
+tiers are in order of descending priority:</p>
+<ol style="list-style-type: decimal">
+<li><p>candidates with zero HLA-ABDR mismatches with the donor,</p></li>
+<li><p>pediatric candidates, in case the donor is also pediatric,</p></li>
+<li><p>all other candidates.</p></li>
+</ol>
+<p>The ETKAS point system awards:</p>
+<ol style="list-style-type: decimal">
+<li><p>33.33 points per year of accrued dialysis time,</p></li>
+<li><p>400 minus 66.66 points per HLA-ABDR mismatch. These points are
+doubled if the candidate is pediatric,</p></li>
+<li><p>100 points if the candidate is pediatric,</p></li>
+<li><p>500 points if the candidate has the High Urgency (HU) status,</p></li>
+<li><p>up to 100 mismatch probability points,</p></li>
+<li><p>balance points, the amount of which is determined based on the net export balances of
+Eurotransplant’s member countries,</p></li>
+<li><p>up to 300 distance points if the candidate is located in the same
+country as the donor. The specific amount awarded depends on the
+country, see the kidney manual for an overview <span class="citation"><a href="#ref-manualKidney">[169]</a></span>.</p></li>
+</ol>
+<p>Since March 2021, ESP allocation has been based on nine tiers, which are defined
+based on the location of the candidate relative to the donor and whether the
+candidate is 65 years or older. Within ESP tiers points are awarded
+based on the dialysis time that a candidate has accrued <span class="citation"><a href="#ref-manualKidney">[169]</a></span>.</p>
+</div>
+<div id="sec:etkidneyacceptance" class="section level3 hasAnchor" number="8.4.4">
+<h3><span class="header-section-number">8.4.4</span> The graft offering module<a href="CHetkidneysimulator.html#sec:etkidneyacceptance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The graft offering module mimics how Eurotransplant offers kidneys to
+centers for transplantation, and returns, based on a match list, the
+candidates who accept the kidney for transplantation (if any). How kidney
+offers are simulated in the ETKidney simulator is illustrated in Figure
+<a href="CHetkidneysimulator.html#fig:ch8fig3">8.3</a>. The module first simulates, based on the donor, the
+maximum number of offers made in standard allocation. We denote this number by <span class="math inline">\(k\)</span>. The module then makes kidney offers to
+candidates in order of their ranking on the <em>filtered</em> match list,
+either until <span class="math inline">\(k\)</span> offers have been made or until all available kidneys
+have been accepted for transplantation.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch8fig3"></span>
+<img src="figures/ch8/fig3-graft_offering_diagram.svg" alt="Flow chart summarizing how the ETKidney simulator approximates the graft offering process." width="90%" />
+<p class="caption">
+Figure 8.3: Flow chart summarizing how the ETKidney simulator approximates the graft offering process.
+</p>
+</div>
+<p>If not all kidneys have been accepted after <span class="math inline">\(k\)</span> offers in standard
+allocation, the match lists are re-ordered with priority for
+candidates located in the vicinity of the donor to
+approximate non-standard allocation. At this point, the module also makes
+offers to candidates who appear only on the <em>unfiltered</em> match list,
+as centers can select such candidates in extended and rescue allocation.
+Offers in non-standard allocation are made either until all kidneys have been accepted
+or until the match list is exhausted. The module then returns the candidates who have
+accepted the kidneys.</p>
+<div id="sec:etkidneynonstandard" class="section level4 hasAnchor" number="8.4.4.1">
+<h4><span class="header-section-number">8.4.4.1</span> Simulating the switch to non-standard allocation<a href="CHetkidneysimulator.html#sec:etkidneynonstandard" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The graft offering module switches to non-standard allocation following <span class="math inline">\(k\)</span>
+declines. We modeled <span class="math inline">\(K\)</span> with a Cox proportional hazards model with
+adjustment for donor characteristics (donor age, virology, death cause,
+last creatinine, diabetes, smoking, proteinuria, blood group, and
+extended donor criteria). Cox models were stratified by the program
+(ETKAS / ESP), and within ETKAS additionally by the donor country.
+The baseline hazards and parameters needed to simulate from this model
+are made available with the ETKidney simulator. These were estimated
+on match lists generated between January 1, 2014, and January 1, 2024. ESP match lists
+from before March 2021 were excluded for estimation of these parameters,
+because non-standard allocation was rarely used in ESP before March 2021.<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a></p>
+</div>
+<div id="sec:etkidneytwostage" class="section level4 hasAnchor" number="8.4.4.2">
+<h4><span class="header-section-number">8.4.4.2</span> Simulating kidney offer acceptance behavior with a two-staged approach<a href="CHetkidneysimulator.html#sec:etkidneytwostage" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To simulate the center offer acceptance behavior of transplant centers,
+a two-stage acceptance procedure was implemented that</p>
+<ol style="list-style-type: decimal">
+<li><p>simulates <em>center-level</em> decisions based on donor characteristics
+(donor death cause, age, last creatinine, blood group, DBD / DCD
+donation, and extended donor criteria) and
+center characteristics (country, distance to the donor). These
+models simulate whether a center is willing to accept the kidney(s)
+for any candidate in the center, and</p></li>
+<li><p>simulates <em>patient-level</em> decisions to determine whether the center
+accepts a kidney offer for a specific candidate. These decisions are
+simulated only if the center is willing to accept the donor, and are
+simulated based on donor characteristics (see above), candidate
+characteristics (age, pediatric status, HU status, vPRA, dialysis
+time, prior kidney transplantation), and match characteristics (HLA
+match, geographic distance, candidate-donor age difference).</p></li>
+</ol>
+<p>Logistic models are used to simulate both center- and patient-level decisions. We anticipated
+that kidney offer acceptance behavior would differ between ETKAS and ESP,
+because HLA match quality has historically been ignored in ESP and because
+the programs have different donor and patient populations. Therefore, the
+ETKidney simulator uses separate models to simulate the offer acceptance behavior
+of transplant centers in ETKAS and ESP.</p>
+<p>The odds ratios required for simulations are made publicly available with
+the ETKidney simulator, and were estimated on match lists with mixed
+effect logistic regressions. Random effects were included to account for
+within-donor, within-candidate and within-center correlations in organ
+offer acceptance decisions. For ETKAS, odds ratios
+were estimated on historical data between January 1, 2012, and January 1, 2021. For
+ESP, odds ratios were estimated between January 1, 2018, and January 1, 2024. We
+included data from after 2021 to estimate the ESP odds ratios, because ESP
+offers to candidates younger than 65 and international candidates have only
+been allowed since March 2021.</p>
+</div>
+<div id="sec:dkt" class="section level4 hasAnchor" number="8.4.4.3">
+<h4><span class="header-section-number">8.4.4.3</span> Simulation of dual kidney transplantations<a href="CHetkidneysimulator.html#sec:dkt" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Annually, approximately 20 to 30 candidates receive a dual kidney
+transplantation, a procedure that is permitted when loss of both grafts
+is anticipated or for specific anatomical reasons. The graft offering module
+simulates whether such a dual kidney transplantation is performed based on donor
+and patient characteristics (candidate age,
+donor age, country of listing, and rescue allocation). For this, a
+logistic model is used. The odds ratios provided with the ETKidney
+simulator were estimated on match lists from January 1, 2018, to January 1, 2024,
+using only offers where both grafts remained available for transplantation.</p>
+</div>
+</div>
+<div id="sec:etkidneyposttxp" class="section level3 hasAnchor" number="8.4.5">
+<h3><span class="header-section-number">8.4.5</span> The post-transplant module<a href="CHetkidneysimulator.html#sec:etkidneyposttxp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In total, 13% of the candidates on the kidney waiting list have received
+a prior kidney transplant, which makes it important to simulate post-transplant
+survival in the ETKidney simulator. This simulation is important even for short-term
+simulations, as nearly 3% of kidney transplant recipients
+enlist for a repeat kidney transplantation within one year of transplantation
+<span class="citation"><a href="#ref-eurotransplantinternationalfoundationWaitingListRegistrations2024">[170]</a></span>.
+The post-transplant module was implemented to simulate survival after kidney
+transplantation and to simulate listing for repeat transplantation.
+</p>
+<div id="sec:etkidneysimposttxp" class="section level4 hasAnchor" number="8.4.5.1">
+<h4><span class="header-section-number">8.4.5.1</span> Simulation of post-transplant failure time and a potential re-listing date<a href="CHetkidneysimulator.html#sec:etkidneysimposttxp" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>For each kidney transplantation, the post-transplant module simulates a
+patient failure time <span class="math inline">\(t\)</span> based on donor characteristics (age,
+DBD/DCD donor, last creatinine, death cause, hypertension, malignancy, diabetes),
+patient characteristics (age, dialysis time, repeat kidney
+transplantation, country of listing), and match characteristics (HLA
+match, standard or non-standard allocation, year of transplantation, international
+transplantation). This failure time is defined as a post-transplant
+death or a repeat kidney transplantation, whichever occurs first. We
+modeled <span class="math inline">\(T\)</span> with a Weibull model based on recipient, donor, and
+transplantation characteristics (as done for the ELAS simulator, see Section <a href="CHelassimulator.html#sec:elassimposttxp">5.4.5.1</a>).
+The scale and shape parameters supplied with
+the ETKidney simulator were estimated based on ETKAS and ESP
+transplantations that were performed between January 1, 2011, and January 1, 2021.</p>
+<p>Most transplant recipients enlist for a repeat kidney transplantation
+before a patient failure materializes. Because a
+potential re-registration must logically occur before a patient death
+or re-transplantation, we simulate the time-to-relisting <span class="math inline">\(r\)</span> based on
+the empirical distribution of <span class="math inline">\(R\)</span> relative to <span class="math inline">\(T\)</span> (explained in Section <a href="CHelassimulator.html#sec:elassrelisting">5.4.5.2</a> for the ELAS simulator).
+For the ETKidney simulator, we stratified these distributions based on
+candidate age groups and time-until-failure <span class="math inline">\(t\)</span>, which both strongly affect
+whether a candidate is listed for repeat kidney transplantation
+(see Figure <a href="CHetkidneysimulator.html#fig:ch8sfig1">8.4</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch8sfig1"></span>
+<img src="figures/ch8/sFig1.png" alt="Cumulative incidence curves showing the probability of listing for repeat transplantation, stratified by time-to-event categories. These curves were estimated with the Kaplan-Meier estimator based on candidates transplanted between January 1, 2011, and January 1, 2024." width="100%" />
+<p class="caption">
+Figure 8.4: Cumulative incidence curves showing the probability of listing for repeat transplantation, stratified by time-to-event categories. These curves were estimated with the Kaplan-Meier estimator based on candidates transplanted between January 1, 2011, and January 1, 2024.
+</p>
+</div>
+</div>
+<div id="sec:etkidneysynthreg" class="section level4 hasAnchor" number="8.4.5.2">
+<h4><span class="header-section-number">8.4.5.2</span> Constructing synthetic re-registrations<a href="CHetkidneysimulator.html#sec:etkidneysynthreg" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>In case transplant recipients are simulated to enlist for a repeat
+transplantation before the simulation end date, the post-transplant
+module creates a <em>synthetic re-listing</em> for this candidate. This
+synthetic re-listing is created by combining the static information from
+the transplant recipient with the dynamic candidate status updates from
+an actually re-listed candidate. The actually re-listed candidate is
+chosen such that they are similar to transplant recipient in terms of
+background characteristics as well as in time-to-failure <span class="math inline">\(t\)</span> and time-to-relisting
+<span class="math inline">\(r\)</span>.</p>
+<p>By default, the post-transplant module finds a matching re-registration
+<span class="math inline">\(k\)</span> by:</p>
+<ol style="list-style-type: decimal">
+<li><p>Considering re-listings where candidates match on country of listing and on
+whether they were re-listed within 1 year after transplantation<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a>, are of similar age (&lt;20 years difference), have similar time
+to re-listing and time-to-failure, and have a similar number
+of years on dialysis.</p></li>
+<li><p>Selecting the m=5 listings for repeat transplantation with the closest Mahalanobis
+distance between (<span class="math inline">\(r_i\)</span>, <span class="math inline">\(t_i\)</span>) and (<span class="math inline">\(r_k\)</span>, <span class="math inline">\(t_k\)</span>).</p></li>
+<li><p>Sampling a random re-registration from the <span class="math inline">\(m\)</span> re-registrations.</p></li>
+</ol>
+<p>A synthetic re-registration is then constructed by combining patient
+attributes from patient <span class="math inline">\(i\)</span> with the urgency code updates and PRA re-certifications
+from patient <span class="math inline">\(k\)</span>. These status updates affect whether a candidate is eligible for a match
+list offer, as candidates with a non-transplantable status or outdated PRA screenings
+are not eligible for offers in ETKAS and ESP. Other status updates (vPRA, allocation profiles,
+diagnosis groups, HLA, reported dialysis initiation dates) are not copied over
+because they are considered patient-specific. We note that the PRA screenings
+are only used to determine the eligibility of the candidate, and not to predict
+graft offer acceptance behavior or post-transplant survival.</p>
+<p>A specific challenge for simulating listing for repeat transplantation is that
+kidney transplantation is a strongly immunizing event <span class="citation"><a href="#ref-Lopes2015">[171]</a></span>. Many
+repeat transplant candidates will therefore have
+developed <em>de novo</em> Donor-Specific Antibodies (dnDSAs) that centers can report as
+unacceptable. Candidates who are listed for repeat transplantation
+therefore tend to have higher vPRAs and face reduced access to kidney transplantation.
+It is not clear how to simulate such <em>de novo</em> immunization, because:</p>
+<ul>
+<li><p>HLA antigens are cross-reactive, which means that patients typically also
+develop DSAs against HLA antigens that were not present in the donor <span class="citation"><a href="#ref-Lucas2015">[172]</a></span>,</p></li>
+<li><p>the immunogenicity of donor HLAs also depends on the patient’s own HLA
+<span class="citation"><a href="#ref-Lucas2015">[172]</a></span>, and</p></li>
+<li><p>HLA laboratories and transplant centers have different attitudes in
+labeling the HLA antigens of the initial donor as unacceptable <span class="citation"><a href="#ref-Susal2013">[173]</a>, <a href="#ref-Ziemann2022">[174]</a></span>.</p></li>
+</ul>
+<p>Accurate simulation of <em>de novo</em> immunization falls outside of the scope of
+the ETKidney simulator. Instead, a very simple procedure was
+implemented that assumes that candidates have a fixed probability
+of becoming immunized against any mismatched donor antigen. By default,
+this probability is set to 20%. This probability was chosen because
+having one additional mismatch per locus increases the probability of
+reporting unacceptable antigens against that specific locus with 10 to 25%
+on average (depending on the locus) <span class="citation"><a href="#ref-Isaacson2022">[175]</a></span>.</p>
+</div>
+</div>
+</div>
+<div id="sec:etkidneyvv" class="section level2 hasAnchor" number="8.5">
+<h2><span class="header-section-number">8.5</span> Verification and validation<a href="CHetkidneysimulator.html#sec:etkidneyvv" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section describes verification and validation efforts undertaken to
+ensure that the ETKidney simulator closely mimics ETKAS and ESP.</p>
+<div id="sec:etkidneyverification" class="section level3 hasAnchor" number="8.5.1">
+<h3><span class="header-section-number">8.5.1</span> Verification of the ETKidney simulator<a href="CHetkidneysimulator.html#sec:etkidneyverification" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We built unit tests to ensure that the behavior of the modules aligns
+with their intended functionality. For example, unit tests were
+constructed to verify whether HLA match qualities returned by the HLA
+system module were equal to HLA match qualities recorded on actual ETKAS match lists.
+Unit tests were also used to ascertain that the HLA system module
+returned the correct mismatch probabilities and vPRAs.</p>
+<p>The simulation of the graft offering process and of post-transplant survival
+is based on statistical models whose parameters were estimated in the statistical
+programming language <em>R</em>. Unit tests were constructed to ensure that the
+probabilities predicted in the ETKidney simulator based on these parameters matched
+the probabilities predicted in R, for both offer acceptance
+decisions as well as post-transplant survival.
+</p>
+</div>
+<div id="sec:etkidneyvalidation" class="section level3 hasAnchor" number="8.5.2">
+<h3><span class="header-section-number">8.5.2</span> Validation of the ETKidney simulator<a href="CHetkidneysimulator.html#sec:etkidneyvalidation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To ensure face validity of the model, medical doctors from
+Eurotransplant were actively involved in the development and conceptual
+design of the simulator. We also had meetings with ETKAC and the ETRL on
+various occasions in which the ETKidney simulator was discussed. Moreover,
+the model was presented at the 2024 Eurotransplant Annual Meeting to
+collect feedback from additional major stakeholders,
+such as medical doctors and transplantation coordinators affiliated with the
+transplant centers.</p>
+<p>We assess the operational validity of the model using input-output validation.
+For this, we simulate ETKAS and ESP kidney
+allocation between April 1, 2021, and January 1, 2024 under the actual allocation
+rules used within this simulation window. The simulation start date of April 1, 2021
+was chosen because the allocation of ESP donors changed in March 2021.
+For the donor input stream, we
+used all 4,326 donors reported in the simulation window
+whose kidneys were transplanted after allocation through ETKAS or ESP (see Table <a href="CHetkidneysimulator.html#tab:ch8tab1donors">8.1</a>
+for their characteristics). For the candidate input stream, we used all
+n=9,393 candidates activated on the ETKAS or ESP waiting list during the
+simulation period (Table <a href="CHetkidneysimulator.html#tab:ch8tab1patlisted">8.2</a>), and the n=14,647
+candidates already registered candidates on April 1, 2021
+(Table <a href="CHetkidneysimulator.html#tab:ch8tab1patsimstart">8.3</a>).</p>
+<div class="table-scroll">
+<table class="table" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:ch8tab1donors">Table 8.1: </span>Characteristics of the donors used for simulation.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+variable
+</th>
+<th style="text-align:center;">
+level
+</th>
+<th style="text-align:center;">
+Austria<br>(n=372)
+</th>
+<th style="text-align:center;">
+Belgium<br>(n=627)
+</th>
+<th style="text-align:center;">
+Croatia<br>(n=189)
+</th>
+<th style="text-align:center;">
+Germany<br>(n=2,072)
+</th>
+<th style="text-align:center;">
+Hungary<br>(n=265)
+</th>
+<th style="text-align:center;">
+Netherlands<br>(n=704)
+</th>
+<th style="text-align:center;">
+Slovenia<br>(n=97)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+kidneys available
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+260<br>(69.9%)
+</td>
+<td style="text-align:center;">
+471<br>(75.1%)
+</td>
+<td style="text-align:center;">
+127<br>(67.2%)
+</td>
+<td style="text-align:center;">
+1,625<br>(78.4%)
+</td>
+<td style="text-align:center;">
+208<br>(78.5%)
+</td>
+<td style="text-align:center;">
+532<br>(75.6%)
+</td>
+<td style="text-align:center;">
+71<br>(73.2%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+112<br>(30.1%)
+</td>
+<td style="text-align:center;">
+156<br>(24.9%)
+</td>
+<td style="text-align:center;">
+62<br>(32.8%)
+</td>
+<td style="text-align:center;">
+447<br>(21.6%)
+</td>
+<td style="text-align:center;">
+57<br>(21.5%)
+</td>
+<td style="text-align:center;">
+172<br>(24.4%)
+</td>
+<td style="text-align:center;">
+26<br>(26.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+type
+</td>
+<td style="text-align:center;">
+HB
+</td>
+<td style="text-align:center;">
+350<br>(94.1%)
+</td>
+<td style="text-align:center;">
+345<br>(55.0%)
+</td>
+<td style="text-align:center;">
+189<br>(100%)
+</td>
+<td style="text-align:center;">
+2,072<br>(100%)
+</td>
+<td style="text-align:center;">
+265<br>(100%)
+</td>
+<td style="text-align:center;">
+260<br>(36.9%)
+</td>
+<td style="text-align:center;">
+97<br>(100%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+NHB
+</td>
+<td style="text-align:center;">
+22<br>(5.9%)
+</td>
+<td style="text-align:center;">
+282<br>(45.0%)
+</td>
+<td style="text-align:center;">
+–
+</td>
+<td style="text-align:center;">
+–
+</td>
+<td style="text-align:center;">
+–
+</td>
+<td style="text-align:center;">
+444<br>(63.1%)
+</td>
+<td style="text-align:center;">
+–
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+sex
+</td>
+<td style="text-align:center;">
+female
+</td>
+<td style="text-align:center;">
+166<br>(44.6%)
+</td>
+<td style="text-align:center;">
+256<br>(40.8%)
+</td>
+<td style="text-align:center;">
+75<br>(39.7%)
+</td>
+<td style="text-align:center;">
+965<br>(46.6%)
+</td>
+<td style="text-align:center;">
+113<br>(42.6%)
+</td>
+<td style="text-align:center;">
+314<br>(44.6%)
+</td>
+<td style="text-align:center;">
+28<br>(28.9%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+male
+</td>
+<td style="text-align:center;">
+206<br>(55.4%)
+</td>
+<td style="text-align:center;">
+371<br>(59.2%)
+</td>
+<td style="text-align:center;">
+114<br>(60.3%)
+</td>
+<td style="text-align:center;">
+1,107<br>(53.4%)
+</td>
+<td style="text-align:center;">
+152<br>(57.4%)
+</td>
+<td style="text-align:center;">
+390<br>(55.4%)
+</td>
+<td style="text-align:center;">
+69<br>(71.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="4">
+age
+</td>
+<td style="text-align:center;">
+0-17 years
+</td>
+<td style="text-align:center;">
+22<br>(5.9%)
+</td>
+<td style="text-align:center;">
+16<br>(2.6%)
+</td>
+<td style="text-align:center;">
+15<br>(7.9%)
+</td>
+<td style="text-align:center;">
+85<br>(4.1%)
+</td>
+<td style="text-align:center;">
+12<br>(4.5%)
+</td>
+<td style="text-align:center;">
+12<br>(1.7%)
+</td>
+<td style="text-align:center;">
+9<br>(9.3%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+18-49 years
+</td>
+<td style="text-align:center;">
+118<br>(31.7%)
+</td>
+<td style="text-align:center;">
+235<br>(37.5%)
+</td>
+<td style="text-align:center;">
+69<br>(36.5%)
+</td>
+<td style="text-align:center;">
+650<br>(31.4%)
+</td>
+<td style="text-align:center;">
+136<br>(51.3%)
+</td>
+<td style="text-align:center;">
+191<br>(27.1%)
+</td>
+<td style="text-align:center;">
+34<br>(35.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+50-64 years
+</td>
+<td style="text-align:center;">
+166<br>(44.6%)
+</td>
+<td style="text-align:center;">
+264<br>(42.1%)
+</td>
+<td style="text-align:center;">
+70<br>(37.0%)
+</td>
+<td style="text-align:center;">
+786<br>(37.9%)
+</td>
+<td style="text-align:center;">
+100<br>(37.7%)
+</td>
+<td style="text-align:center;">
+291<br>(41.3%)
+</td>
+<td style="text-align:center;">
+37<br>(38.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+65+ years
+</td>
+<td style="text-align:center;">
+66<br>(17.7%)
+</td>
+<td style="text-align:center;">
+112<br>(17.9%)
+</td>
+<td style="text-align:center;">
+35<br>(18.5%)
+</td>
+<td style="text-align:center;">
+551<br>(26.6%)
+</td>
+<td style="text-align:center;">
+17<br>(6.4%)
+</td>
+<td style="text-align:center;">
+210<br>(29.8%)
+</td>
+<td style="text-align:center;">
+17<br>(17.5%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="4">
+ABO blood group
+</td>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+136<br>(36.6%)
+</td>
+<td style="text-align:center;">
+260<br>(41.5%)
+</td>
+<td style="text-align:center;">
+60<br>(31.7%)
+</td>
+<td style="text-align:center;">
+784<br>(37.8%)
+</td>
+<td style="text-align:center;">
+67<br>(25.3%)
+</td>
+<td style="text-align:center;">
+329<br>(46.7%)
+</td>
+<td style="text-align:center;">
+35<br>(36.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+A
+</td>
+<td style="text-align:center;">
+168<br>(45.2%)
+</td>
+<td style="text-align:center;">
+285<br>(45.5%)
+</td>
+<td style="text-align:center;">
+91<br>(48.1%)
+</td>
+<td style="text-align:center;">
+914<br>(44.1%)
+</td>
+<td style="text-align:center;">
+121<br>(45.7%)
+</td>
+<td style="text-align:center;">
+279<br>(39.6%)
+</td>
+<td style="text-align:center;">
+43<br>(44.3%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+B
+</td>
+<td style="text-align:center;">
+45<br>(12.1%)
+</td>
+<td style="text-align:center;">
+69<br>(11.0%)
+</td>
+<td style="text-align:center;">
+28<br>(14.8%)
+</td>
+<td style="text-align:center;">
+270<br>(13.0%)
+</td>
+<td style="text-align:center;">
+51<br>(19.2%)
+</td>
+<td style="text-align:center;">
+74<br>(10.5%)
+</td>
+<td style="text-align:center;">
+14<br>(14.4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+AB
+</td>
+<td style="text-align:center;">
+23<br>(6.2%)
+</td>
+<td style="text-align:center;">
+13<br>(2.1%)
+</td>
+<td style="text-align:center;">
+10<br>(5.3%)
+</td>
+<td style="text-align:center;">
+104<br>(5.0%)
+</td>
+<td style="text-align:center;">
+26<br>(9.8%)
+</td>
+<td style="text-align:center;">
+22<br>(3.1%)
+</td>
+<td style="text-align:center;">
+5<br>(5.2%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="4">
+death cause
+</td>
+<td style="text-align:center;">
+anoxia
+</td>
+<td style="text-align:center;">
+63<br>(16.9%)
+</td>
+<td style="text-align:center;">
+227<br>(36.2%)
+</td>
+<td style="text-align:center;">
+14<br>(7.4%)
+</td>
+<td style="text-align:center;">
+452<br>(21.8%)
+</td>
+<td style="text-align:center;">
+39<br>(14.7%)
+</td>
+<td style="text-align:center;">
+190<br>(27.0%)
+</td>
+<td style="text-align:center;">
+13<br>(13.4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+CVA
+</td>
+<td style="text-align:center;">
+232<br>(62.4%)
+</td>
+<td style="text-align:center;">
+262<br>(41.8%)
+</td>
+<td style="text-align:center;">
+129<br>(68.3%)
+</td>
+<td style="text-align:center;">
+1,180<br>(56.9%)
+</td>
+<td style="text-align:center;">
+175<br>(66.0%)
+</td>
+<td style="text-align:center;">
+362<br>(51.4%)
+</td>
+<td style="text-align:center;">
+47<br>(48.5%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+trauma
+</td>
+<td style="text-align:center;">
+75<br>(20.2%)
+</td>
+<td style="text-align:center;">
+121<br>(19.3%)
+</td>
+<td style="text-align:center;">
+39<br>(20.6%)
+</td>
+<td style="text-align:center;">
+375<br>(18.1%)
+</td>
+<td style="text-align:center;">
+48<br>(18.1%)
+</td>
+<td style="text-align:center;">
+136<br>(19.3%)
+</td>
+<td style="text-align:center;">
+34<br>(35.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+other
+</td>
+<td style="text-align:center;">
+2<br>(0.5%)
+</td>
+<td style="text-align:center;">
+17<br>(2.7%)
+</td>
+<td style="text-align:center;">
+7<br>(3.7%)
+</td>
+<td style="text-align:center;">
+65<br>(3.1%)
+</td>
+<td style="text-align:center;">
+3<br>(1.1%)
+</td>
+<td style="text-align:center;">
+16<br>(2.3%)
+</td>
+<td style="text-align:center;">
+3<br>(3.1%)
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Based on donors reported between April 1, 2021, and December 31, 2024, who had their kidneys allocated and transplanted via ETKAS or ESP. Abbreviations: HB, heartbeating; NHB, nonheartbeating
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div class="table-scroll">
+<table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:ch8tab1patlisted">Table 8.2: </span>Characteristics of newly registered patients who were used for simulations.
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+variable
+</th>
+<th style="text-align:center;">
+level
+</th>
+<th style="text-align:center;">
+Austria<br>(n=859)
+</th>
+<th style="text-align:center;">
+Belgium<br>(n=1,461)
+</th>
+<th style="text-align:center;">
+Croatia<br>(n=352)
+</th>
+<th style="text-align:center;">
+Germany<br>(n=4,547)
+</th>
+<th style="text-align:center;">
+Hungary<br>(n=665)
+</th>
+<th style="text-align:center;">
+Netherlands<br>(n=1,406)
+</th>
+<th style="text-align:center;">
+Slovenia<br>(n=103)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="2">
+type transplant
+</td>
+<td style="text-align:center;">
+primary
+</td>
+<td style="text-align:center;">
+721<br>(83.9%)
+</td>
+<td style="text-align:center;">
+1,278<br>(87.5%)
+</td>
+<td style="text-align:center;">
+328<br>(93.2%)
+</td>
+<td style="text-align:center;">
+3,978<br>(87.5%)
+</td>
+<td style="text-align:center;">
+609<br>(91.6%)
+</td>
+<td style="text-align:center;">
+1,173<br>(83.4%)
+</td>
+<td style="text-align:center;">
+88<br>(85.4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+repeat
+</td>
+<td style="text-align:center;">
+138<br>(16.1%)
+</td>
+<td style="text-align:center;">
+183<br>(12.5%)
+</td>
+<td style="text-align:center;">
+24<br>(6.8%)
+</td>
+<td style="text-align:center;">
+569<br>(12.5%)
+</td>
+<td style="text-align:center;">
+56<br>(8.4%)
+</td>
+<td style="text-align:center;">
+233<br>(16.6%)
+</td>
+<td style="text-align:center;">
+15<br>(14.6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="4">
+age
+</td>
+<td style="text-align:center;">
+0-17 years
+</td>
+<td style="text-align:center;">
+22<br>(2.6%)
+</td>
+<td style="text-align:center;">
+35<br>(2.4%)
+</td>
+<td style="text-align:center;">
+7<br>(2.0%)
+</td>
+<td style="text-align:center;">
+252<br>(5.5%)
+</td>
+<td style="text-align:center;">
+28<br>(4.2%)
+</td>
+<td style="text-align:center;">
+15<br>(1.1%)
+</td>
+<td style="text-align:center;">
+3<br>(2.9%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+18-49 years
+</td>
+<td style="text-align:center;">
+279<br>(32.5%)
+</td>
+<td style="text-align:center;">
+467<br>(32.0%)
+</td>
+<td style="text-align:center;">
+124<br>(35.2%)
+</td>
+<td style="text-align:center;">
+1,617<br>(35.6%)
+</td>
+<td style="text-align:center;">
+283<br>(42.6%)
+</td>
+<td style="text-align:center;">
+351<br>(25.0%)
+</td>
+<td style="text-align:center;">
+44<br>(42.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+50-64 years
+</td>
+<td style="text-align:center;">
+376<br>(43.8%)
+</td>
+<td style="text-align:center;">
+616<br>(42.2%)
+</td>
+<td style="text-align:center;">
+155<br>(44.0%)
+</td>
+<td style="text-align:center;">
+1,898<br>(41.7%)
+</td>
+<td style="text-align:center;">
+270<br>(40.6%)
+</td>
+<td style="text-align:center;">
+562<br>(40.0%)
+</td>
+<td style="text-align:center;">
+35<br>(34.0%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+65+ years
+</td>
+<td style="text-align:center;">
+182<br>(21.2%)
+</td>
+<td style="text-align:center;">
+343<br>(23.5%)
+</td>
+<td style="text-align:center;">
+66<br>(18.8%)
+</td>
+<td style="text-align:center;">
+780<br>(17.2%)
+</td>
+<td style="text-align:center;">
+84<br>(12.6%)
+</td>
+<td style="text-align:center;">
+478<br>(34.0%)
+</td>
+<td style="text-align:center;">
+21<br>(20.4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="4">
+ABO blood group
+</td>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+332<br>(38.6%)
+</td>
+<td style="text-align:center;">
+656<br>(44.9%)
+</td>
+<td style="text-align:center;">
+132<br>(37.5%)
+</td>
+<td style="text-align:center;">
+1,730<br>(38.0%)
+</td>
+<td style="text-align:center;">
+182<br>(27.4%)
+</td>
+<td style="text-align:center;">
+617<br>(43.9%)
+</td>
+<td style="text-align:center;">
+42<br>(40.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+A
+</td>
+<td style="text-align:center;">
+365<br>(42.5%)
+</td>
+<td style="text-align:center;">
+583<br>(39.9%)
+</td>
+<td style="text-align:center;">
+130<br>(36.9%)
+</td>
+<td style="text-align:center;">
+1,962<br>(43.1%)
+</td>
+<td style="text-align:center;">
+303<br>(45.6%)
+</td>
+<td style="text-align:center;">
+522<br>(37.1%)
+</td>
+<td style="text-align:center;">
+44<br>(42.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+B
+</td>
+<td style="text-align:center;">
+108<br>(12.6%)
+</td>
+<td style="text-align:center;">
+159<br>(10.9%)
+</td>
+<td style="text-align:center;">
+72<br>(20.5%)
+</td>
+<td style="text-align:center;">
+618<br>(13.6%)
+</td>
+<td style="text-align:center;">
+121<br>(18.2%)
+</td>
+<td style="text-align:center;">
+210<br>(14.9%)
+</td>
+<td style="text-align:center;">
+14<br>(13.6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+AB
+</td>
+<td style="text-align:center;">
+54<br>(6.3%)
+</td>
+<td style="text-align:center;">
+63<br>(4.3%)
+</td>
+<td style="text-align:center;">
+18<br>(5.1%)
+</td>
+<td style="text-align:center;">
+237<br>(5.2%)
+</td>
+<td style="text-align:center;">
+59<br>(8.9%)
+</td>
+<td style="text-align:center;">
+57<br>(4.1%)
+</td>
+<td style="text-align:center;">
+3<br>(2.9%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="3">
+vPRA at listing
+</td>
+<td style="text-align:center;">
+0%
+</td>
+<td style="text-align:center;">
+675<br>(78.6%)
+</td>
+<td style="text-align:center;">
+1,059<br>(72.5%)
+</td>
+<td style="text-align:center;">
+221<br>(62.8%)
+</td>
+<td style="text-align:center;">
+3,249<br>(71.5%)
+</td>
+<td style="text-align:center;">
+510<br>(76.7%)
+</td>
+<td style="text-align:center;">
+1,016<br>(72.3%)
+</td>
+<td style="text-align:center;">
+72<br>(69.9%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+&gt;0-84.9%
+</td>
+<td style="text-align:center;">
+134<br>(15.6%)
+</td>
+<td style="text-align:center;">
+298<br>(20.4%)
+</td>
+<td style="text-align:center;">
+101<br>(28.7%)
+</td>
+<td style="text-align:center;">
+970<br>(21.3%)
+</td>
+<td style="text-align:center;">
+94<br>(14.1%)
+</td>
+<td style="text-align:center;">
+282<br>(20.1%)
+</td>
+<td style="text-align:center;">
+20<br>(19.4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+85+%
+</td>
+<td style="text-align:center;">
+50<br>(5.8%)
+</td>
+<td style="text-align:center;">
+104<br>(7.1%)
+</td>
+<td style="text-align:center;">
+30<br>(8.5%)
+</td>
+<td style="text-align:center;">
+328<br>(7.2%)
+</td>
+<td style="text-align:center;">
+61<br>(9.2%)
+</td>
+<td style="text-align:center;">
+108<br>(7.7%)
+</td>
+<td style="text-align:center;">
+11<br>(10.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="2">
+dialysis status
+</td>
+<td style="text-align:center;">
+on dialysis
+</td>
+<td style="text-align:center;">
+803<br>(93.5%)
+</td>
+<td style="text-align:center;">
+1,247<br>(85.4%)
+</td>
+<td style="text-align:center;">
+327<br>(92.9%)
+</td>
+<td style="text-align:center;">
+4,479<br>(98.5%)
+</td>
+<td style="text-align:center;">
+586<br>(88.1%)
+</td>
+<td style="text-align:center;">
+1,057<br>(75.2%)
+</td>
+<td style="text-align:center;">
+96<br>(93.2%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+preemptive
+</td>
+<td style="text-align:center;">
+56<br>(6.5%)
+</td>
+<td style="text-align:center;">
+214<br>(14.6%)
+</td>
+<td style="text-align:center;">
+25<br>(7.1%)
+</td>
+<td style="text-align:center;">
+68<br>(1.5%)
+</td>
+<td style="text-align:center;">
+79<br>(11.9%)
+</td>
+<td style="text-align:center;">
+349<br>(24.8%)
+</td>
+<td style="text-align:center;">
+7<br>(6.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+dial. time at listing
+</td>
+<td style="text-align:center;">
+mean<br>[Q1-Q3]
+</td>
+<td style="text-align:center;">
+1.7<br>[0.5-2.3]
+</td>
+<td style="text-align:center;">
+1.3<br>[0.0-1.7]
+</td>
+<td style="text-align:center;">
+1.6<br>[0.4-2.4]
+</td>
+<td style="text-align:center;">
+2.4<br>[0.8-3.0]
+</td>
+<td style="text-align:center;">
+1.2<br>[0.1-1.5]
+</td>
+<td style="text-align:center;">
+1.0<br>[0.0-1.1]
+</td>
+<td style="text-align:center;">
+2.4<br>[0.7-2.9]
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Based on patients listed in ETKAS or ESP between Apr 1, 2021 and December 31, 2024, with at least one active status in this period.
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div class="table-scroll">
+<table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:ch8tab1patsimstart">Table 8.3: </span>Characteristics of patients already present on the waiting list on April 1, 2021.
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+variable
+</th>
+<th style="text-align:center;">
+level
+</th>
+<th style="text-align:center;">
+Austria<br>(n=807)
+</th>
+<th style="text-align:center;">
+Belgium<br>(n=1,223)
+</th>
+<th style="text-align:center;">
+Croatia<br>(n=374)
+</th>
+<th style="text-align:center;">
+Germany<br>(n=9,513)
+</th>
+<th style="text-align:center;">
+Hungary<br>(n=1,006)
+</th>
+<th style="text-align:center;">
+Netherlands<br>(n=1,631)
+</th>
+<th style="text-align:center;">
+Slovenia<br>(n=93)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="2">
+status (Apr 1, 2021)
+</td>
+<td style="text-align:center;">
+active
+</td>
+<td style="text-align:center;">
+563<br>(69.8%)
+</td>
+<td style="text-align:center;">
+907<br>(74.2%)
+</td>
+<td style="text-align:center;">
+135<br>(36.1%)
+</td>
+<td style="text-align:center;">
+6,480<br>(68.1%)
+</td>
+<td style="text-align:center;">
+770<br>(76.5%)
+</td>
+<td style="text-align:center;">
+712<br>(43.7%)
+</td>
+<td style="text-align:center;">
+46<br>(49.5%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+inactive
+</td>
+<td style="text-align:center;">
+244<br>(30.2%)
+</td>
+<td style="text-align:center;">
+316<br>(25.8%)
+</td>
+<td style="text-align:center;">
+239<br>(63.9%)
+</td>
+<td style="text-align:center;">
+3,033<br>(31.9%)
+</td>
+<td style="text-align:center;">
+236<br>(23.5%)
+</td>
+<td style="text-align:center;">
+919<br>(56.3%)
+</td>
+<td style="text-align:center;">
+47<br>(50.5%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="2">
+type transplant
+</td>
+<td style="text-align:center;">
+primary
+</td>
+<td style="text-align:center;">
+581<br>(72.0%)
+</td>
+<td style="text-align:center;">
+972<br>(79.5%)
+</td>
+<td style="text-align:center;">
+304<br>(81.3%)
+</td>
+<td style="text-align:center;">
+7,813<br>(82.1%)
+</td>
+<td style="text-align:center;">
+941<br>(93.5%)
+</td>
+<td style="text-align:center;">
+1,321<br>(81.0%)
+</td>
+<td style="text-align:center;">
+74<br>(79.6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+repeat
+</td>
+<td style="text-align:center;">
+226<br>(28.0%)
+</td>
+<td style="text-align:center;">
+251<br>(20.5%)
+</td>
+<td style="text-align:center;">
+70<br>(18.7%)
+</td>
+<td style="text-align:center;">
+1,700<br>(17.9%)
+</td>
+<td style="text-align:center;">
+65<br>(6.5%)
+</td>
+<td style="text-align:center;">
+310<br>(19.0%)
+</td>
+<td style="text-align:center;">
+19<br>(20.4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="4">
+age (Apr 1, 2021)
+</td>
+<td style="text-align:center;">
+0-17 years
+</td>
+<td style="text-align:center;">
+5<br>(0.6%)
+</td>
+<td style="text-align:center;">
+16<br>(1.3%)
+</td>
+<td style="text-align:center;">
+5<br>(1.3%)
+</td>
+<td style="text-align:center;">
+159<br>(1.7%)
+</td>
+<td style="text-align:center;">
+14<br>(1.4%)
+</td>
+<td style="text-align:center;">
+9<br>(0.6%)
+</td>
+<td style="text-align:center;">
+0<br>(0%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+18-49 years
+</td>
+<td style="text-align:center;">
+264<br>(32.7%)
+</td>
+<td style="text-align:center;">
+433<br>(35.4%)
+</td>
+<td style="text-align:center;">
+144<br>(38.5%)
+</td>
+<td style="text-align:center;">
+3,334<br>(35.0%)
+</td>
+<td style="text-align:center;">
+404<br>(40.2%)
+</td>
+<td style="text-align:center;">
+392<br>(24.0%)
+</td>
+<td style="text-align:center;">
+36<br>(38.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+50-64 years
+</td>
+<td style="text-align:center;">
+401<br>(49.7%)
+</td>
+<td style="text-align:center;">
+532<br>(43.5%)
+</td>
+<td style="text-align:center;">
+149<br>(39.8%)
+</td>
+<td style="text-align:center;">
+4,639<br>(48.8%)
+</td>
+<td style="text-align:center;">
+402<br>(40.0%)
+</td>
+<td style="text-align:center;">
+691<br>(42.4%)
+</td>
+<td style="text-align:center;">
+40<br>(43.0%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+65+ years
+</td>
+<td style="text-align:center;">
+137<br>(17.0%)
+</td>
+<td style="text-align:center;">
+242<br>(19.8%)
+</td>
+<td style="text-align:center;">
+76<br>(20.3%)
+</td>
+<td style="text-align:center;">
+1,381<br>(14.5%)
+</td>
+<td style="text-align:center;">
+186<br>(18.5%)
+</td>
+<td style="text-align:center;">
+539<br>(33.0%)
+</td>
+<td style="text-align:center;">
+17<br>(18.3%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="4">
+ABO blood group
+</td>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+408<br>(50.6%)
+</td>
+<td style="text-align:center;">
+654<br>(53.5%)
+</td>
+<td style="text-align:center;">
+145<br>(38.8%)
+</td>
+<td style="text-align:center;">
+4,216<br>(44.3%)
+</td>
+<td style="text-align:center;">
+368<br>(36.6%)
+</td>
+<td style="text-align:center;">
+826<br>(50.6%)
+</td>
+<td style="text-align:center;">
+38<br>(40.9%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+A
+</td>
+<td style="text-align:center;">
+239<br>(29.6%)
+</td>
+<td style="text-align:center;">
+332<br>(27.1%)
+</td>
+<td style="text-align:center;">
+133<br>(35.6%)
+</td>
+<td style="text-align:center;">
+3,468<br>(36.5%)
+</td>
+<td style="text-align:center;">
+372<br>(37.0%)
+</td>
+<td style="text-align:center;">
+478<br>(29.3%)
+</td>
+<td style="text-align:center;">
+24<br>(25.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+B
+</td>
+<td style="text-align:center;">
+131<br>(16.2%)
+</td>
+<td style="text-align:center;">
+200<br>(16.4%)
+</td>
+<td style="text-align:center;">
+75<br>(20.1%)
+</td>
+<td style="text-align:center;">
+1,383<br>(14.5%)
+</td>
+<td style="text-align:center;">
+206<br>(20.5%)
+</td>
+<td style="text-align:center;">
+278<br>(17.0%)
+</td>
+<td style="text-align:center;">
+22<br>(23.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+AB
+</td>
+<td style="text-align:center;">
+29<br>(3.6%)
+</td>
+<td style="text-align:center;">
+37<br>(3.0%)
+</td>
+<td style="text-align:center;">
+21<br>(5.6%)
+</td>
+<td style="text-align:center;">
+446<br>(4.7%)
+</td>
+<td style="text-align:center;">
+60<br>(6.0%)
+</td>
+<td style="text-align:center;">
+49<br>(3.0%)
+</td>
+<td style="text-align:center;">
+9<br>(9.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="3">
+vPRA group
+</td>
+<td style="text-align:center;">
+0%
+</td>
+<td style="text-align:center;">
+479<br>(59.4%)
+</td>
+<td style="text-align:center;">
+694<br>(56.7%)
+</td>
+<td style="text-align:center;">
+189<br>(50.5%)
+</td>
+<td style="text-align:center;">
+5,573<br>(58.6%)
+</td>
+<td style="text-align:center;">
+717<br>(71.3%)
+</td>
+<td style="text-align:center;">
+1,085<br>(66.5%)
+</td>
+<td style="text-align:center;">
+50<br>(53.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+&gt;0-84.9%
+</td>
+<td style="text-align:center;">
+209<br>(25.9%)
+</td>
+<td style="text-align:center;">
+299<br>(24.4%)
+</td>
+<td style="text-align:center;">
+100<br>(26.7%)
+</td>
+<td style="text-align:center;">
+2,650<br>(27.9%)
+</td>
+<td style="text-align:center;">
+173<br>(17.2%)
+</td>
+<td style="text-align:center;">
+337<br>(20.7%)
+</td>
+<td style="text-align:center;">
+19<br>(20.4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+85+%
+</td>
+<td style="text-align:center;">
+119<br>(14.7%)
+</td>
+<td style="text-align:center;">
+230<br>(18.8%)
+</td>
+<td style="text-align:center;">
+85<br>(22.7%)
+</td>
+<td style="text-align:center;">
+1,290<br>(13.6%)
+</td>
+<td style="text-align:center;">
+116<br>(11.5%)
+</td>
+<td style="text-align:center;">
+209<br>(12.8%)
+</td>
+<td style="text-align:center;">
+24<br>(25.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="2">
+dialysis status
+</td>
+<td style="text-align:center;">
+on dialysis
+</td>
+<td style="text-align:center;">
+789<br>(97.8%)
+</td>
+<td style="text-align:center;">
+1,164<br>(95.2%)
+</td>
+<td style="text-align:center;">
+358<br>(95.7%)
+</td>
+<td style="text-align:center;">
+9,497<br>(99.8%)
+</td>
+<td style="text-align:center;">
+924<br>(91.8%)
+</td>
+<td style="text-align:center;">
+1,455<br>(89.2%)
+</td>
+<td style="text-align:center;">
+90<br>(96.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+preemptive
+</td>
+<td style="text-align:center;">
+18<br>(2.2%)
+</td>
+<td style="text-align:center;">
+59<br>(4.8%)
+</td>
+<td style="text-align:center;">
+16<br>(4.3%)
+</td>
+<td style="text-align:center;">
+16<br>(0.2%)
+</td>
+<td style="text-align:center;">
+82<br>(8.2%)
+</td>
+<td style="text-align:center;">
+176<br>(10.8%)
+</td>
+<td style="text-align:center;">
+3<br>(3.2%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+dial. years (Apr 1, 2021)
+</td>
+<td style="text-align:center;">
+mean<br>[Q1-Q3]
+</td>
+<td style="text-align:center;">
+3.2<br>[1.5-4.2]
+</td>
+<td style="text-align:center;">
+3.1<br>[1.1-4.1]
+</td>
+<td style="text-align:center;">
+3.4<br>[1.6-4.2]
+</td>
+<td style="text-align:center;">
+5.7<br>[3.1-7.7]
+</td>
+<td style="text-align:center;">
+3.0<br>[1.2-4.3]
+</td>
+<td style="text-align:center;">
+1.9<br>[0.0-2.8]
+</td>
+<td style="text-align:center;">
+4.0<br>[1.8-5.5]
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Based on patients listed in ETKAS or ESP before Apr 1, 2024, with at least one active status in this period.
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<p></p>
+<p>To enable accurate simulation of the ETKAS balance system, we also
+exported from the Eurotransplant database all cross-border transplantations that
+followed allocation via the AM program or were a combined transplantation. These
+transplantations were used to define the input stream of international transplantations. In
+simulations, we schedule donor arrivals, candidate status updates, and balance
+update events on the dates this information was actually reported to
+Eurotransplant. Our input-output validation exercise thus keeps the
+inputs as close as possible to reality, and assesses whether the outputs of
+the ETKidney simulator are comparable to the actual outputs of ETKAS and
+ESP.</p>
+<p>Importantly, the outputs of the simulator depend on several stochastic
+processes: the offer acceptance behavior of the transplant centers,
+listing for a repeat transplantation after an initial kidney transplantation,
+and the switching to non-standard allocation by Eurotransplant. To give insight into variability of simulator
+outputs, we simulate ETKAS and ESP allocation 200 times over the
+simulation window and report 95% interquantile ranges for relevant
+summary statistics. These 95% IQRs are obtained by simulating allocation
+200 times and reporting the 2.5th and 97.5th percentiles of simulation
+outputs. For each of these 200 simulation runs, we use a different set
+of completed status trajectories (see Section <a href="CHetkidneysimulator.html#sec:etkidneyinputstreams">8.3.1</a>). We say that the ETKidney
+simulator is <em>“well-calibrated”</em> for a quantity of interest if the
+observed summary statistic falls within the 95% IQR of the 200
+simulations.</p>
+<div id="sec:etkidneyioval" class="section level4 unnumbered hasAnchor">
+<h4>Results of input-output validation<a href="CHetkidneysimulator.html#sec:etkidneyioval" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Table <a href="CHetkidneysimulator.html#tab:ch8tab1">8.4</a> reports results of this input-output validation for kidney waiting list outcomes.
+The ETKidney simulator
+is well-calibrated for almost all summary statistics: the total number
+of transplantations, the number of dual kidney transplantations, the
+number of ETKAS or ESP transplantations, the number of re-listings, and
+the number of waiting list deaths per country in all countries. We only
+observe miscalibration for the number of waiting list deaths in Hungary
+(-11%) and the active waiting list size at simulation termination (2%
+too many candidates have an active waiting list status).
+Table <a href="CHetkidneysimulator.html#tab:ch8tab2">8.5</a> reports input-output validation
+results for ETKAS and ESP transplantations. For ETKAS, the simulator is
+well-calibrated for the number of transplantations placed by allocation mechanism
+(standard or non-standard), transplantations by candidate age group, and
+transplantations in repeat transplant candidates. The simulator is
+also well-calibrated for the number of transplantations by HLA match
+quality, with only the number of zero-mismatched transplantations
+overestimated (%). The number of
+transplantations in candidates with vPRAs exceeding 95% is
+underestimated (-17%). This miscalibration appears to have been the result
+of the introduction of the virtual crossmatch in January 2023, potentially
+because the number of positive crossmatches in the recipient center decreased
+after the introduction of the
+virtual crossmatch in Eurotransplant <span class="citation"><a href="#ref-Heidt2024">[176]</a></span> (see Table <a href="CHetkidneysimulator.html#tab:ch8stab1">8.6</a> for miscalibration after January 2023). The simulator is well-calibrated
+for the number of transplantations per country, with only a slight
+overestimation observed in Croatia (%) and a slight
+underestimation observed in Hungary (-2%). The degree of geographical sharing
+is underestimated in ETKAS: there are too many local or regional transplantations
+in simulations (%), and too few inter-regional (-11%) or international
+(-9%) transplantations.</p>
+<p>Table <a href="CHetkidneysimulator.html#tab:ch8tab2">8.5</a> also shows that the ETKidney simulator is
+well-calibrated for most relevant outcomes in ESP: the number of transplantations in
+primary and repeat kidney transplant candidates, and the number of
+transplantations by HLA match quality and immunization status. The simulator
+overestimates the number of kidneys transplanted after non-standard allocation
+in ESP (+23%). An apparent consequence of this is that the number of
+kidneys allocated to candidates under the age of 65 is overestimated
+(%), particularly in Belgium, the
+Netherlands, and Slovenia where
+centers appear to be reluctant to transplant a candidate under the age of 65
+with an ESP donor (see Table <a href="CHetkidneysimulator.html#tab:ch8stab2">8.7</a>). Finally, the simulator is well-calibrated for the
+number of transplantations by recipient country and match geography,
+with the only exception Germany where 2% too many ESP kidneys are
+transplanted.</p>
+<p>
+Overall, the ETKidney simulator appears to be well-calibrated for most
+outcomes of ETKAS and ESP allocation. The results of this input-output
+validation exercise were discussed with medical doctors from
+Eurotransplant and ETKAC, who deemed differences small enough to make
+the simulator useful for determining the impact of alternative kidney
+allocation policies. We illustrate this with case studies in the next
+section.</p>
+<p></p>
+<table>
+<caption>
+<span id="tab:ch8tab1">Table 8.4: </span>Input-output validation of waiting list outcomes between April 1, 2021 and January 1, 2024. For simulations, the numbers shown are the averages and 95% interquantile ranges (IQR) of outcomes over 200 simulations. Ranges are displayed in bold if the simulator is not well-calibrated, i.e. the actual statistic does not fall within the 95% IQR.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+category
+</th>
+<th style="text-align:center;">
+simulated results<br>(average and 95% IQR)
+</th>
+<th style="text-align:center;">
+actual data<br>(2021-2024)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="2">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>transplantations through ETKAS or ESP</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+number of unique donors
+</td>
+<td style="text-align:center;">
+4326
+</td>
+<td style="text-align:center;">
+4326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+number of transplantations
+</td>
+<td style="text-align:center;">
+7545.7 [7530-7560]
+</td>
+<td style="text-align:center;">
+7549
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>number of transplantations by type</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+single kidney
+</td>
+<td style="text-align:center;">
+7471.4 [7440-7500]
+</td>
+<td style="text-align:center;">
+7484
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+dual kidney
+</td>
+<td style="text-align:center;">
+74.3 [60-90]
+</td>
+<td style="text-align:center;">
+65
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>number of transplantations by allocation mechanism</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+ESP
+</td>
+<td style="text-align:center;">
+1740.4 [1727-1752]
+</td>
+<td style="text-align:center;">
+1745
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+ETKAS
+</td>
+<td style="text-align:center;">
+5805.3 [5797-5814]
+</td>
+<td style="text-align:center;">
+5804
+</td>
+</tr>
+<tr grouplength="6">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>waiting list</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+initial active waiting list
+</td>
+<td style="text-align:center;">
+9589
+</td>
+<td style="text-align:center;">
+9589
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+number of listings
+</td>
+<td style="text-align:center;">
+24028.2 [24010-24046]
+</td>
+<td style="text-align:center;">
+24038
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+re-listings in simulated period
+</td>
+<td style="text-align:center;">
+106.2 [88-124]
+</td>
+<td style="text-align:center;">
+116
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+final active waiting list size
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">10142.4 [10095-10194]</span>
+</td>
+<td style="text-align:center;">
+9958
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+waiting list removals (count)
+</td>
+<td style="text-align:center;">
+1449.1 [1427-1473]
+</td>
+<td style="text-align:center;">
+1469
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+waiting list deaths (count)
+</td>
+<td style="text-align:center;">
+1145.5 [1122-1165]
+</td>
+<td style="text-align:center;">
+1140
+</td>
+</tr>
+<tr grouplength="7">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>number of waiting list deaths by country</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Austria
+</td>
+<td style="text-align:center;">
+73.3 [67-80]
+</td>
+<td style="text-align:center;">
+73
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Belgium
+</td>
+<td style="text-align:center;">
+81.6 [73-90]
+</td>
+<td style="text-align:center;">
+73
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Croatia
+</td>
+<td style="text-align:center;">
+40.4 [36-46]
+</td>
+<td style="text-align:center;">
+40
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Germany
+</td>
+<td style="text-align:center;">
+722.9 [705-740]
+</td>
+<td style="text-align:center;">
+713
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hungary
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">128.4 [121-135]</span>
+</td>
+<td style="text-align:center;">
+144
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Netherlands
+</td>
+<td style="text-align:center;">
+91.7 [84-99]
+</td>
+<td style="text-align:center;">
+90
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Slovenia
+</td>
+<td style="text-align:center;">
+7.1 [5-10]
+</td>
+<td style="text-align:center;">
+7
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="font-size: 15px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:ch8tab2">Table 8.5: </span>Validation of the number of transplantations between April 1, 2021, and January 1, 2024. For simulations, the numbers shown are averages and 95% IQRs over 200 simulations. Statistics are displayed in bold if the actual value does not fall within the 95% IQR.
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+ETKAS
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+ESP
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:center;">
+category
+</th>
+<th style="text-align:center;">
+simulated results<br>(average and 95% IQR)
+</th>
+<th style="text-align:center;">
+actual
+</th>
+<th style="text-align:center;">
+simulated results<br>(average and 95% IQR)
+</th>
+<th style="text-align:center;">
+actual
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>allocation mechanism</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+standard
+</td>
+<td style="text-align:center;">
+5044 [4881-5169]
+</td>
+<td style="text-align:center;">
+5000
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">1117 [1049-1188]</span>
+</td>
+<td style="text-align:center;">
+1237
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+non-standard
+</td>
+<td style="text-align:center;">
+761 [632-915]
+</td>
+<td style="text-align:center;">
+804
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">623 [551-690]</span>
+</td>
+<td style="text-align:center;">
+508
+</td>
+</tr>
+<tr grouplength="5">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>recipient characteristics</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+pediatric recipient
+</td>
+<td style="text-align:center;">
+339 [321-358]
+</td>
+<td style="text-align:center;">
+325
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+aged 65 or over
+</td>
+<td style="text-align:center;">
+734 [700-769]
+</td>
+<td style="text-align:center;">
+725
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">1512 [1475-1548]</span>
+</td>
+<td style="text-align:center;">
+1567
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+aged below 65
+</td>
+<td style="text-align:center;">
+5071 [5034-5105]
+</td>
+<td style="text-align:center;">
+5079
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">228 [192-261]</span>
+</td>
+<td style="text-align:center;">
+178
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+primary transplant
+</td>
+<td style="text-align:center;">
+5038 [5001-5068]
+</td>
+<td style="text-align:center;">
+5039
+</td>
+<td style="text-align:center;">
+1661 [1644-1677]
+</td>
+<td style="text-align:center;">
+1665
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+repeat transplant
+</td>
+<td style="text-align:center;">
+768 [734-795]
+</td>
+<td style="text-align:center;">
+765
+</td>
+<td style="text-align:center;">
+80 [67-92]
+</td>
+<td style="text-align:center;">
+80
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>HLA match quality</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+0 ABDR
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">650 [624-675]</span>
+</td>
+<td style="text-align:center;">
+617
+</td>
+<td style="text-align:center;">
+3 [1-6]
+</td>
+<td style="text-align:center;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+0 or 1 BDR
+</td>
+<td style="text-align:center;">
+1136 [1083-1179]
+</td>
+<td style="text-align:center;">
+1153
+</td>
+<td style="text-align:center;">
+62 [50-77]
+</td>
+<td style="text-align:center;">
+55
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+1B+1DR or 2B+0DR
+</td>
+<td style="text-align:center;">
+2468 [2406-2534]
+</td>
+<td style="text-align:center;">
+2492
+</td>
+<td style="text-align:center;">
+316 [285-348]
+</td>
+<td style="text-align:center;">
+336
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+2DR or 3+ BDR
+</td>
+<td style="text-align:center;">
+1551 [1490-1609]
+</td>
+<td style="text-align:center;">
+1542
+</td>
+<td style="text-align:center;">
+1360 [1328-1388]
+</td>
+<td style="text-align:center;">
+1350
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sensitization status</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+0%
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">4211 [4173-4255]</span>
+</td>
+<td style="text-align:center;">
+4142
+</td>
+<td style="text-align:center;">
+1477 [1455-1502]
+</td>
+<td style="text-align:center;">
+1468
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+&gt;0-84.9%
+</td>
+<td style="text-align:center;">
+1320 [1279-1356]
+</td>
+<td style="text-align:center;">
+1355
+</td>
+<td style="text-align:center;">
+256 [233-278]
+</td>
+<td style="text-align:center;">
+264
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+85-94.9%
+</td>
+<td style="text-align:center;">
+173 [155-191]
+</td>
+<td style="text-align:center;">
+186
+</td>
+<td style="text-align:center;">
+6 [2-10]
+</td>
+<td style="text-align:center;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+95+%
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">101 [87-114]</span>
+</td>
+<td style="text-align:center;">
+121
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">2 [1-3]</span>
+</td>
+<td style="text-align:center;">
+4
+</td>
+</tr>
+<tr grouplength="10">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>match geography</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+Austria
+</td>
+<td style="text-align:center;">
+532 [525-538]
+</td>
+<td style="text-align:center;">
+530
+</td>
+<td style="text-align:center;">
+106 [87-128]
+</td>
+<td style="text-align:center;">
+118
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+Belgium
+</td>
+<td style="text-align:center;">
+912 [905-918]
+</td>
+<td style="text-align:center;">
+914
+</td>
+<td style="text-align:center;">
+107 [83-132]
+</td>
+<td style="text-align:center;">
+120
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+Croatia
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">277 [272-283]</span>
+</td>
+<td style="text-align:center;">
+270
+</td>
+<td style="text-align:center;">
+38 [26-51]
+</td>
+<td style="text-align:center;">
+26
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+Germany
+</td>
+<td style="text-align:center;">
+2648 [2635-2659]
+</td>
+<td style="text-align:center;">
+2651
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">1081 [1049-1118]</span>
+</td>
+<td style="text-align:center;">
+1048
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+Hungary
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">464 [457-470]</span>
+</td>
+<td style="text-align:center;">
+472
+</td>
+<td style="text-align:center;">
+19 [11-28]
+</td>
+<td style="text-align:center;">
+24
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+Netherlands
+</td>
+<td style="text-align:center;">
+854 [847-860]
+</td>
+<td style="text-align:center;">
+849
+</td>
+<td style="text-align:center;">
+380 [349-406]
+</td>
+<td style="text-align:center;">
+398
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+Slovenia
+</td>
+<td style="text-align:center;">
+119 [113-124]
+</td>
+<td style="text-align:center;">
+118
+</td>
+<td style="text-align:center;">
+9 [4-15]
+</td>
+<td style="text-align:center;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+local/regional
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">4087 [3993-4164]</span>
+</td>
+<td style="text-align:center;">
+3902
+</td>
+<td style="text-align:center;">
+1374 [1324-1424]
+</td>
+<td style="text-align:center;">
+1408
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+interregional
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">637 [590-680]</span>
+</td>
+<td style="text-align:center;">
+715
+</td>
+<td style="text-align:center;">
+174 [138-206]
+</td>
+<td style="text-align:center;">
+178
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+international
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">1081 [1012-1164]</span>
+</td>
+<td style="text-align:center;">
+1187
+</td>
+<td style="text-align:center;">
+192 [153-225]
+</td>
+<td style="text-align:center;">
+159
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>
+<span id="tab:ch8stab1">Table 8.6: </span>Input-output validation of the number of transplantations by vPRA, before
+and after the introduction of the virtual crossmatch on January 24, 2023.
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+before virtual crossmatch
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+after virtual crossmatch
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:center;">
+vPRA
+</th>
+<th style="text-align:center;">
+simulated<br>(mean, 95% IQR)
+</th>
+<th style="text-align:center;">
+actual
+</th>
+<th style="text-align:center;">
+simulated<br>(mean, 95% IQR)
+</th>
+<th style="text-align:center;">
+actual
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+0%
+</td>
+<td style="text-align:center;">
+2751 [2711-2792]
+</td>
+<td style="text-align:center;">
+2755
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">1460 [1428-1489]</span>
+</td>
+<td style="text-align:center;">
+1387
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+0.01-84.9%
+</td>
+<td style="text-align:center;">
+875 [842-909]
+</td>
+<td style="text-align:center;">
+861
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">446 [417-474]</span>
+</td>
+<td style="text-align:center;">
+494
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+85-94.9%
+</td>
+<td style="text-align:center;">
+114 [99-128]
+</td>
+<td style="text-align:center;">
+117
+</td>
+<td style="text-align:center;">
+59 [48-69]
+</td>
+<td style="text-align:center;">
+69
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+95+%
+</td>
+<td style="text-align:center;">
+67 [56-78]
+</td>
+<td style="text-align:center;">
+75
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">34 [25-44]</span>
+</td>
+<td style="text-align:center;">
+46
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>
+<span id="tab:ch8stab2">Table 8.7: </span>Input-output validation of the number of transplantations with ESP donors in
+candidates under the age of 65, by recipient country of listing.
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+recipient country
+</th>
+<th style="text-align:center;">
+simulated<br> (mean, 95% IQR)
+</th>
+<th style="text-align:center;">
+actual
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+Austria
+</td>
+<td style="text-align:center;">
+19 [12-28]
+</td>
+<td style="text-align:center;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Belgium
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">14 [6-23]</span>
+</td>
+<td style="text-align:center;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Croatia
+</td>
+<td style="text-align:center;">
+13 [7-21]
+</td>
+<td style="text-align:center;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Germany
+</td>
+<td style="text-align:center;">
+156 [131-184]
+</td>
+<td style="text-align:center;">
+139
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Hungary
+</td>
+<td style="text-align:center;">
+3 [1-6]
+</td>
+<td style="text-align:center;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Netherlands
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">18 [8-30]</span>
+</td>
+<td style="text-align:center;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Slovenia
+</td>
+<td style="text-align:center;">
+<span style="font-weight: bold;">5 [2-10]</span>
+</td>
+<td style="text-align:center;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</div>
+</div>
+</div>
+<div id="sec:etkidneycasestudies" class="section level2 hasAnchor" number="8.6">
+<h2><span class="header-section-number">8.6</span> Case studies<a href="CHetkidneysimulator.html#sec:etkidneycasestudies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Together with ETKAC, three topics for case studies were selected in
+which the ETKidney simulator could help quantify the impact of
+alternative kidney allocation rules. The selected
+topics all concern the ETKAS program, and are (i) emphasizing matching at the HLA-B and HLA-DR locus,
+(ii) the introduction of a sliding scale based on
+the vPRA, and (iii) candidate-donor age matching. To limit the effects of
+transient effects, we extend the simulation period for these case
+studies from January 1, 2016 to January 1, 2024. We simulate all policy
+alternatives 20 times, and use traditional hypothesis testing to assess
+whether alternative policies significantly change the outcomes compared
+to the current policy. To increase the power of these tests, we use common
+random numbers <span class="citation"><a href="#ref-lawSimulationModelingAnalysis2015">[100]</a></span> as a variance
+reduction technique. Consequently, the outcomes that are simulated under the
+alternative allocation rules can be compared to the outcomes simulated under
+the current rules with pairwise t-tests.</p>
+<div id="sec:etkidneycasestudyhla" class="section level3 hasAnchor" number="8.6.1">
+<h3><span class="header-section-number">8.6.1</span> Case study 1: emphasizing matching at HLA-B and HLA-DR loci<a href="CHetkidneysimulator.html#sec:etkidneycasestudyhla" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Since its initiation in 1996, the ETKAS point system has placed equal emphasis
+on matching at the HLA-A, HLA-B, and HLA-DR loci, despite broad
+consensus that HLA-DR mismatches are more deleterious to graft survival
+than HLA-A and HLA-B mismatches
+<span class="citation"><a href="#ref-vereerstraetenExperienceWujciakOpelzAllocation1998">[129]</a>, <a href="#ref-Roberts2004">[157]</a></span>.
+Internal analyses on registry data from Eurotransplant suggest that
+mismatches on the HLA-B and HLA-DR locus are indeed more strongly associated with graft
+loss than mismatches on the HLA-A locus. This motivated us to simulate
+policies that emphasize matching at the HLA-B and HLA-DR loci relative to the
+HLA-A locus.</p>
+<p>The current ETKAS point system awards 400 points for HLA matching and
+penalizes HLA mismatches on the A, B, and DR loci with 66.7 points per
+mismatch. We assess the impact of three alternative HLA matching
+policies. These policies all continue to award up to 400 points for
+candidate-donor HLA match quality, but shift weight from the HLA-A
+locus to the HLA-B and HLA-DR loci (see Table <a href="CHetkidneysimulator.html#tab:ch8tab3">8.8</a>).
+The first policy is referred
+to as the <span class="math inline">\(\text{B} + 2\text{DR}\)</span> policy, because it gives no weight to
+the HLA-A locus, maintains the same weight for the HLA-B locus (-66.7 points),
+and doubles the weight on the HLA-DR locus (-133.3 points). The second
+policy, referred to as the <span class="math inline">\(0.5\text{A} + \text{B} + 1.5\text{DR}\)</span>
+policy, shifts only half of the weight placed on the HLA-A locus to the HLA-DR
+locus. The final policy, referred to as
+<span class="math inline">\(1.5\texttt{B} + 1.5\texttt{DR}\)</span>, penalizes mismatches at the HLA-B and HLA-DR
+loci both with 100 points per mismatch.</p>
+<p>
+</p>
+<table>
+<caption>
+<span id="tab:ch8tab3">Table 8.8: </span>Overview of the points awarded per locus for the alternative HLA-matching policies.
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+HLA locus
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:center;">
+policy
+</th>
+<th style="text-align:center;">
+A
+</th>
+<th style="text-align:center;">
+B
+</th>
+<th style="text-align:center;">
+DR
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+current
+</td>
+<td style="text-align:center;">
+-66.7
+</td>
+<td style="text-align:center;">
+-66.7
+</td>
+<td style="text-align:center;">
+-66.7
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+B + 2DR
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+-66.7
+</td>
+<td style="text-align:center;">
+-133.3
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(0.5\)</span>A + B + <span class="math inline">\(1.5\)</span>DR
+</td>
+<td style="text-align:center;">
+-33.3
+</td>
+<td style="text-align:center;">
+-66.7
+</td>
+<td style="text-align:center;">
+-100
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(1.5\)</span>B + <span class="math inline">\(1.5\)</span>DR
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+-100
+</td>
+<td style="text-align:center;">
+-100
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Simulation results for these three alternative policies are summarized
+in Table <a href="CHetkidneysimulator.html#tab:ch8tab4">8.9</a>. These results show that the policy
+alternatives reduce the number of transplantations with 2 DR or 3 or more BDR mismatches by 25 to 39%, and
+increase the number of transplantations with 1 B or 1 DR mismatch by 26
+to 49%. Thus, the policies indeed succeed in improving match quality on
+the HLA-B and HLA-DR locus.</p>
+<table class="table" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:ch8tab4">Table 8.9: </span>The simulated change in the number of transplantations under alternative HLA-ABDR matching policies. The numbers displayed are the averages of the differences observed over 20 simulations. mm: mismatches.
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="2">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Change in number of transplantations compared to current policy
+</div>
+</th>
+</tr>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+avg. number of transplantations observed under the current policy
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+B + 2DR
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+0.5A + B + 1.5DR
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+1.5B + 1.5DR
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:center;">
+variable
+</th>
+<th style="text-align:center;">
+</th>
+<th style="text-align:right;">
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="7">
+<td colspan="8" style="border-bottom: 1px solid;">
+<strong>ABDR mismatch count</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+0
+</td>
+<td style="text-align:center;">
+1925
+</td>
+<td style="text-align:right;">
+-9
+</td>
+<td style="text-align:left;">
+(-0%)
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:left;">
+(-0%)
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:left;">
+(-0%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+1
+</td>
+<td style="text-align:center;">
+952
+</td>
+<td style="text-align:right;">
+-181<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-19%)
+</td>
+<td style="text-align:right;">
+-55<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-6%)
+</td>
+<td style="text-align:right;">
+-99<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-10%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+2
+</td>
+<td style="text-align:center;">
+3855
+</td>
+<td style="text-align:right;">
+-634<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-16%)
+</td>
+<td style="text-align:right;">
+-252<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-7%)
+</td>
+<td style="text-align:right;">
+-509<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-13%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+3
+</td>
+<td style="text-align:center;">
+6037
+</td>
+<td style="text-align:right;">
+-358<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-6%)
+</td>
+<td style="text-align:right;">
+-76<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-1%)
+</td>
+<td style="text-align:right;">
+-224<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+4
+</td>
+<td style="text-align:center;">
+3235
+</td>
+<td style="text-align:right;">
++837<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+26%)
+</td>
+<td style="text-align:right;">
++282<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+9%)
+</td>
+<td style="text-align:right;">
++642<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+20%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+5
+</td>
+<td style="text-align:center;">
+730
+</td>
+<td style="text-align:right;">
++340<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+47%)
+</td>
+<td style="text-align:right;">
++104<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+14%)
+</td>
+<td style="text-align:right;">
++191<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+26%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+6
+</td>
+<td style="text-align:center;">
+78
+</td>
+<td style="text-align:right;">
++2
+</td>
+<td style="text-align:left;">
+(+3%)
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+(0%)
+</td>
+<td style="text-align:right;">
++7<sup>†</sup>
+</td>
+<td style="text-align:left;">
+(+9%)
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="8" style="border-bottom: 1px solid;">
+<strong>ABDR match quality</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+000
+</td>
+<td style="text-align:center;">
+1925
+</td>
+<td style="text-align:right;">
+-9
+</td>
+<td style="text-align:left;">
+(-0%)
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:left;">
+(-0%)
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:left;">
+(-0%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+_00, _10, _01
+</td>
+<td style="text-align:center;">
+3264
+</td>
+<td style="text-align:right;">
++1364<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+42%)
+</td>
+<td style="text-align:right;">
++850<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+26%)
+</td>
+<td style="text-align:right;">
++1585<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+49%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+_20, _11
+</td>
+<td style="text-align:center;">
+7234
+</td>
+<td style="text-align:right;">
++209<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+3%)
+</td>
+<td style="text-align:right;">
++240<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+3%)
+</td>
+<td style="text-align:right;">
++131<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+2%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+__2, _21
+</td>
+<td style="text-align:center;">
+4388
+</td>
+<td style="text-align:right;">
+-1567<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-36%)
+</td>
+<td style="text-align:right;">
+-1087<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-25%)
+</td>
+<td style="text-align:right;">
+-1708<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-39%)
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="8" style="border-bottom: 1px solid;">
+<strong>candidate homozygosity on HLA-B and DR</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+B and DR
+</td>
+<td style="text-align:center;">
+473
+</td>
+<td style="text-align:right;">
+-39<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-8%)
+</td>
+<td style="text-align:right;">
+-17<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-4%)
+</td>
+<td style="text-align:right;">
+-30<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+DR
+</td>
+<td style="text-align:center;">
+1662
+</td>
+<td style="text-align:right;">
+-207<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-12%)
+</td>
+<td style="text-align:right;">
+-104<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-6%)
+</td>
+<td style="text-align:right;">
+-94<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+B
+</td>
+<td style="text-align:center;">
+1052
+</td>
+<td style="text-align:right;">
++31<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+3%)
+</td>
+<td style="text-align:right;">
++14<sup>††</sup>
+</td>
+<td style="text-align:left;">
+(+1%)
+</td>
+<td style="text-align:right;">
+-19<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(-2%)
+</td>
+</tr>
+<tr>
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
+none
+</td>
+<td style="text-align:center;">
+13625
+</td>
+<td style="text-align:right;">
++212<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+2%)
+</td>
+<td style="text-align:right;">
++110<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+1%)
+</td>
+<td style="text-align:right;">
++144<sup>†††</sup>
+</td>
+<td style="text-align:left;">
+(+1%)
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> <sup>†</sup> p &lt; 0.05, <sup>††</sup> p &lt; 0.01, <sup>†††</sup> p &lt; 0.001
+</td>
+</tr>
+</tfoot>
+</table>
+<p>
+</p>
+<p>However, results also show that there are unintended consequences of
+this policy: the total number of ABDR mismatches at transplantation
+increases with all alternative policies and there are 5 to 12% fewer
+transplantations in candidates who have homozygosity at the HLA-B or HLA-DR
+loci, who are already disadvantaged in the current ETKAS system. Results
+such as those presented in Table <a href="CHetkidneysimulator.html#tab:ch8tab4">8.9</a> can facilitate discussions by ETKAC
+on whether the improved match quality at HLA-B and HLA-DR loci is worth the increase
+in total mismatches and the reduced access to kidney transplants for homozygotes.</p>
+</div>
+<div id="sec:etkidneycasestudyvpra" class="section level3 hasAnchor" number="8.6.2">
+<h3><span class="header-section-number">8.6.2</span> Case study 2: a sliding scale for the vPRA<a href="CHetkidneysimulator.html#sec:etkidneycasestudyvpra" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Prior studies have suggested that immunized candidates have reduced
+access to transplantation in ETKAS (see <span class="citation"><a href="#ref-ziemannUnacceptableHumanLeucocyte2017">[134]</a>, <a href="#ref-zecherImpactSensitizationWaiting2022a">[135]</a></span> and Chapter <a href="CHvpra.html#CHvpra">7</a>).
+In this case study, we assess whether this disparity can be alleviated
+by awarding points directly for the vPRA. For this, we modify the ETKAS point
+system in two ways. The first modification is that we directly award points for
+the vPRA using a <em>sliding scale</em>. Such a sliding scale for the vPRA has been a part of
+kidney allocation in the United States since 2014 <span class="citation"><a href="#ref-stewartSmoothingItOut2012">[177]</a></span>.
+The number of points awarded based on this sliding scale is calculated as <span class="math display">\[\texttt{weight}\cdot\frac{\texttt{base}^{\texttt{vPRA}}}{\texttt{base}-1}.\]</span>
+The maximum number of points awarded by the sliding scale depends on its <em>weight</em>,
+and its steepness depends on the <em>base</em>. The second modification is that we no longer directly award points for the vPRA via the mismatch probability.
+Instead, we replace mismatch probability points by the 1-ABDR HLA mismatch frequency (see Section <a href="CHetkidneysimulator.html#sec:etkidneymmp">8.4.1.3</a>). This quantity awards points to candidates based on
+how difficult-to-match their HLA phenotype is, and not their blood group or
+their vPRA.</p>
+<p>Representatives of ETKAC reached consensus that the aim of the
+sliding scale should be that a candidate’s chance of being transplanted
+through ETKAS should not decline up to a vPRA of 85%. Above this vPRA,
+candidates could have access to the AM program, or should consider removing unacceptable antigens in case they do not
+meet AM criteria. We used the ETKidney simulator to simulate ETKAS for
+different combinations of weights and bases,
+and quantify the association between vPRA and the relative
+transplant rate using Cox proportional hazards model on the outcomes simulated
+by the ETKidney simulator. For this, the same model specification is used as in Chapter
+<a href="CHvpra.html#CHvpra">7</a>. In Figure
+<a href="CHetkidneysimulator.html#fig:ch8fig4">8.5</a> the estimated relation between vPRA and the transplant rate is
+shown for several sliding scales. From this figure, the sliding scale
+with a base of 5 and weight of 133 appears to be the most acceptable
+option: with this sliding scale, the relative transplant rate
+of sensitized candidates no longer decays until a vPRA of 85%, as was desired
+by ETKAC.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch8fig4"></span>
+<img src="figures/ch8/fig4-vpra_effect.png" alt="Relations between the relative transplant rate and the vPRA in ETKAS, estimated on ETKidney simulator outcomes. These relations were estimated with a Cox proportional hazards model, using a spline transformation for the vPRA." width="85%" />
+<p class="caption">
+Figure 8.5: Relations between the relative transplant rate and the vPRA in ETKAS, estimated on ETKidney simulator outcomes. These relations were estimated with a Cox proportional hazards model, using a spline transformation for the vPRA.
+</p>
+</div>
+<p></p>
+</div>
+<div id="sec:etkidneycasestudyagematching" class="section level3 hasAnchor" number="8.6.3">
+<h3><span class="header-section-number">8.6.3</span> Case study 3: candidate-donor age matching<a href="CHetkidneysimulator.html#sec:etkidneycasestudyagematching" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consensus in the transplantation literature is that kidneys procured
+from young donors should preferentially be transplanted in young
+candidates
+<span class="citation"><a href="#ref-waiserAgeMatchingRenal2000">[178]</a>, <a href="#ref-pippiasYoungDeceasedDonor2020">[179]</a>, <a href="#ref-vanittersumIncreasedRiskGraft2017">[180]</a>, <a href="#ref-coemansCompetingRisksModel2024">[181]</a>, <a href="#ref-keithEffectDonorRecipient2004b">[182]</a></span>.
+While allocation systems in France and the United Kingdom have implemented mechanisms that explicitly award points for
+continuous candidate-donor age matching
+<span class="citation"><a href="#ref-Audry2022">[147]</a>, <a href="#ref-watson2020overview">[148]</a></span>, the
+ETKAS point system does not award points based on candidate or donor age
+(except for bonus points that are given to pediatric patients). In this case study, we (i) use retrospective data
+from Eurotransplant to quantify the associations of candidate and donor age with patient and graft survival
+with cause-specific
+hazard models, and (ii) simulate and evaluate two age matching policies
+for ETKAS.</p>
+<p>To quantify the relation between donor or candidate age and
+post-transplant survival, we consider all patients transplanted with a
+kidney through ETKAS or ESP between 2004 and 2019. We exclude candidates
+with the HU status and candidates without any follow-up information
+(n = 7,458), leaving n = 36,576 transplantations. We fit
+cause-specific Cox proportional hazards models on these transplantations
+for (i) graft loss and (ii) death with a functioning graft. We censored
+both time-to-event variables ten years after transplantation, because
+completeness of follow-up data beyond this time
+horizon is poor (available for less than 30% of patients). Besides donor and candidate age, we adjust for
+donor characteristics (DCD/DCD donation, hypertension,
+last creatinine, death cause, diabetes, malignancy), candidate
+characteristics (dialysis time), and match characteristics (a zero-mismatch
+indicator, the number of mismatches per locus for the HLA-A, -B, and -DR loci, and
+match geography). To allow for non-linear relations between continuous
+variables and the hazard rate, we adjust for spline transformations of
+the continuous variables. The estimated relations between donor or
+candidate age and patient and graft survival are shown in Figure <a href="CHetkidneysimulator.html#fig:ch8fig5">8.6</a>. These results are qualitatively
+similar to results obtained by Coemans et al. <span class="citation"><a href="#ref-coemansCompetingRisksModel2024">[181]</a></span>,
+who report that the hazard rate of graft loss decays linearly with
+recipient age while it increases quadratically with donor age, and that
+the mortality hazard rate increases quadratically with candidate age (note that the y-axis for the second panel is shown on the logarithmic scale).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch8fig5"></span>
+<img src="figures/ch8/fig5-competing_risk_model.png" alt="Estimated relations between graft loss and death with a functioning graft. Note that the hazard ratio for death with a functioning graft is shown on the logarithmic scale." width="100%" />
+<p class="caption">
+Figure 8.6: Estimated relations between graft loss and death with a functioning graft. Note that the hazard ratio for death with a functioning graft is shown on the logarithmic scale.
+</p>
+</div>
+<p>We simulate two candidate-donor age matching policies, both
+inspired by the French kidney allocation policy that was introduced in 2015
+<span class="citation"><a href="#ref-Audry2022">[147]</a></span>. Like ETKAS, the French policy awards
+points for candidate waiting time, HLA matching between the donor and candidate,
+the candidate’s likelihood of being favorably matched with a kidney, and the geographic distance
+between the donor and candidate. However, in France an “age filter” is
+applied to the total number of points awarded, with candidates ranked based on
+the filtered number of points. For example, the French age filter is 0%
+for a candidate who is over 20 years older than the donor, which
+means that such candidates receive 0% of their total points for ranking.
+The French age filter is asymmetrical with allocation of kidneys from
+a young donor to an older patient discouraged more strongly than
+the allocation of a kidney from an older donor to a young candidate.</p>
+<p>Inspired by this French age filter, we evaluate two asymmetrical age filters for ETKAS
+(see Figure <a href="CHetkidneysimulator.html#fig:ch8fig6">8.7</a>). Both filters give a candidate 100%
+of their ETKAS points in case the age difference between the candidate and donor is 5 years or less. The “strict” filter (blue) is similar to the
+French age filter in that it gives almost no points in case the
+candidate is much older than the donor. The “muted” filter (orange)
+gives a larger fraction of the total number of ETKAS points, which we
+anticipated to be more acceptable for Eurotransplant because it
+maintains a better balance in the international exchange of kidneys.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch8fig6"></span>
+<img src="figures/ch8/fig6-age_matching_policies.png" alt="Evaluated age filters for ETKAS." width="100%" />
+<p class="caption">
+Figure 8.7: Evaluated age filters for ETKAS.
+</p>
+</div>
+<p>Simulated outcomes for the muted and strict age matching policies are
+compared to the current policy in Table
+<a href="CHetkidneysimulator.html#tab:ch8tab5">8.10</a>. The table shows that the muted
+and strict policies increase the number of age-matched transplantations (defined as
+transplantations with a candidate-donor age difference of at most five years) by 60% and 138%, respectively.
+An unintended consequence is that the muted and strict age filters lead to reduced
+HLA match quality at transplantation, with a 12% and 33% increase
+in the number of level 4 mismatched kidney transplantations (2 DR, or 3 or 4 B+DR
+mismatches), respectively. Table also
+<a href="CHetkidneysimulator.html#tab:ch8tab5">8.10</a> shows that the muted policy
+only modestly increases international sharing (+5%) and inter-regional
+sharing (+7%), while the strict policy leads to a 37% increase in
+international transplantations. The
+strict age filter increases the number of extended or rescue
+transplantations (+7%), potentially because international offers are
+relatively more likely to be declined.</p>
+<p>To evaluate whether the benefits of candidate-donor age matching outweigh
+its unintended consequences, we use the earlier mentioned cause-specific
+hazard models to predict the probability of death with a functioning
+graft ten years after transplantation for all simulated
+transplantations. For this, we predict the cumulative incidence of death
+with functioning graft using a cause-specific hazards approach <span class="citation"><a href="#ref-wreedeMstatePackageAnalysis2011">[183]</a></span>. By summing up these 10-year event probabilities
+for all candidates, we obtain the expected number of events ten years after
+transplantation, which is visualized in Figure <a href="CHetkidneysimulator.html#fig:ch8fig7">8.8</a> for the current policy
+(green), the muted age filter (orange), and the strict age filter
+(blue). These results suggest that the muted and strict age filter could
+reduce the numbers of deaths with a functioning graft 10 years after
+transplantation by 11% and 18%, respectively.</p>
+<table class="table" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:ch8tab5">Table 8.10: </span>The simulated change in the number of transplantations in ETKAS under continuous candidate-donor age matching policies. The numbers displayed are the average differences over 20 simulations. mm: mismatches.
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="2">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Change in number of transplantations compared to current policy
+</div>
+</th>
+</tr>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+avg. number of transplantations observed under the current policy
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+muted filter
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+strict filter
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+variable
+</th>
+<th style="text-align:center;">
+</th>
+<th style="text-align:right;">
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="7">
+<td colspan="6" style="border-bottom: 1px solid;">
+<strong>age difference</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+candidate 35+ years older
+</td>
+<td style="text-align:center;">
+708
+</td>
+<td style="text-align:right;">
+-497<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-70%)
+</td>
+<td style="text-align:right;">
+-557<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-79%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+candidate 15-34 years older
+</td>
+<td style="text-align:center;">
+3166
+</td>
+<td style="text-align:right;">
+-1742<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-55%)
+</td>
+<td style="text-align:right;">
+-2549<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-81%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+candidate 6-14 years older
+</td>
+<td style="text-align:center;">
+3256
+</td>
+<td style="text-align:right;">
++434<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(+13%)
+</td>
+<td style="text-align:right;">
+-1756<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-54%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+max 5 year difference
+</td>
+<td style="text-align:center;">
+4810
+</td>
+<td style="text-align:right;">
++2919<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(+61%)
+</td>
+<td style="text-align:right;">
++6640<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(+138%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+candidate 6-14 years younger
+</td>
+<td style="text-align:center;">
+2624
+</td>
+<td style="text-align:right;">
+-151<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-6%)
+</td>
+<td style="text-align:right;">
+-230<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-9%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+candidate 15-34 years younger
+</td>
+<td style="text-align:center;">
+2064
+</td>
+<td style="text-align:right;">
+-873<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-42%)
+</td>
+<td style="text-align:right;">
+-1386<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-67%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+candidate 35+ years younger
+</td>
+<td style="text-align:center;">
+184
+</td>
+<td style="text-align:right;">
+-86<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-47%)
+</td>
+<td style="text-align:right;">
+-155<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-84%)
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="6" style="border-bottom: 1px solid;">
+<strong>ABDR match quality</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+level 1 (0 ABDR mm)
+</td>
+<td style="text-align:center;">
+1922
+</td>
+<td style="text-align:right;">
+-8
+</td>
+<td style="text-align:left;">
+(-0%)
+</td>
+<td style="text-align:right;">
+-40<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-2%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+level 2 (at most 1 BDR mm)
+</td>
+<td style="text-align:center;">
+3250
+</td>
+<td style="text-align:right;">
+-380<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-12%)
+</td>
+<td style="text-align:right;">
+-902<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-28%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+level 3 (2B or 1DR+1B mm)
+</td>
+<td style="text-align:center;">
+7224
+</td>
+<td style="text-align:right;">
+-156<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-2%)
+</td>
+<td style="text-align:right;">
+-496<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+level 4 (2DR or 3+BDR mm)
+</td>
+<td style="text-align:center;">
+4417
+</td>
+<td style="text-align:right;">
++547<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(+12%)
+</td>
+<td style="text-align:right;">
++1446<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(+33%)
+</td>
+</tr>
+<tr grouplength="3">
+<td colspan="6" style="border-bottom: 1px solid;">
+<strong>match geography</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+local or regional
+</td>
+<td style="text-align:center;">
+11744
+</td>
+<td style="text-align:right;">
+-297<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-3%)
+</td>
+<td style="text-align:right;">
+-1514<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(-13%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+national
+</td>
+<td style="text-align:center;">
+1796
+</td>
+<td style="text-align:right;">
++121<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(+7%)
+</td>
+<td style="text-align:right;">
++306<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(+17%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+international
+</td>
+<td style="text-align:center;">
+3272
+</td>
+<td style="text-align:right;">
++179<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(+5%)
+</td>
+<td style="text-align:right;">
++1215<sup>***</sup>
+</td>
+<td style="text-align:left;">
+(+37%)
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="6" style="border-bottom: 1px solid;">
+<strong>type of allocation</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+standard allocation
+</td>
+<td style="text-align:center;">
+14487
+</td>
+<td style="text-align:right;">
++50
+</td>
+<td style="text-align:left;">
+(+0%)
+</td>
+<td style="text-align:right;">
+-160*
+</td>
+<td style="text-align:left;">
+(-1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+non-standard
+</td>
+<td style="text-align:center;">
+2325
+</td>
+<td style="text-align:right;">
+-47
+</td>
+<td style="text-align:left;">
+(-2%)
+</td>
+<td style="text-align:right;">
++167<sup>*</sup>
+</td>
+<td style="text-align:left;">
+(+7%)
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> <sup>∗</sup> p &lt; 0.05, <sup>∗∗</sup> p &lt; 0.01, <sup>∗∗∗</sup> p &lt; 0.001
+</td>
+</tr>
+</tfoot>
+</table>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch8fig7"></span>
+<img src="figures/ch8/fig7-posttransplantevents.png" alt="Expected number of post-transplant events ten years after transplantation, predicted based on candidate, donor, and transplantation characteristics with competing risk models." width="65%" />
+<p class="caption">
+Figure 8.8: Expected number of post-transplant events ten years after transplantation, predicted based on candidate, donor, and transplantation characteristics with competing risk models.
+</p>
+</div>
+<p></p>
+</div>
+</div>
+<div id="sec:etkidneydiscussion" class="section level2 hasAnchor" number="8.7">
+<h2><span class="header-section-number">8.7</span> Discussion and conclusion<a href="CHetkidneysimulator.html#sec:etkidneydiscussion" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Eurotransplant has long recognized the important role computer simulations could have for
+allocation development. For example, in the one-year evaluation of ETKAS that was
+published in 1998, the organization stressed that <em>“introduction of a change must be
+preceded by a computer simulation study”</em>
+<span class="citation"><a href="#ref-demeesterNewEurotransplantKidney1998">[15]</a></span>. However, Eurotransplant has
+only recently started the development of tools required for such
+simulation studies, with initiatives including the development of the ELAS simulator
+(see Chapter <a href="CHelassimulator.html#CHelassimulator">5</a>) and the passing a recommendation by the Thoracic
+Committee to develop a simulation tool for heart and lung allocation in 2024.
+Within this line of research, we present the ETKidney
+simulator.</p>
+<p>Discrete-event simulators are already routinely used to update allocation rules in other
+geographic regions
+<span class="citation"><a href="#ref-Pritsker1995">[85]</a>, <a href="#ref-jacquelinetChangingKidneyAllocation2006">[164]</a>, <a href="#ref-Mumford2018">[165]</a></span>.
+The most prominent simulator for kidney allocation is the Kidney-Pancreas Simulated Allocation
+Model (KPSAM), which was developed to simulate kidney allocation in the United States and which is made publicly available for research by the SRTR. KPSAM differs
+from the ETKidney simulator in several aspects. Firstly, KPSAM users have to
+manually specify in simulation inputs when a candidate would list for a
+repeat transplantation, as well as how their statuses would
+evolve after their return to the waiting list; in the ETKidney simulator, simulation of re-listings is instead
+based on historical data. Secondly, in KPSAM the graft offer acceptance behavior is
+simulated according to a single, patient-level logistic regression, while the ETKidney simulator additionally includes logistic
+regressions at the center level to capture that centers regularly
+decline kidneys for all their candidates. Thirdly, in KPSAM the kidneys that
+become available for allocation are discarded after a fixed number of offers, while
+the ETKidney simulator has functionality to simulate based on donor characteristics
+after how many offers Eurotransplant would stop offering the kidney in standard allocation.
+Thereafter, the ETKidney simulator switches to non-standard
+allocation. Such out-of-sequence offering is not simulated in
+KPSAM.</p>
+<p>More important than these technical differences is that the ETKidney
+simulator is a bespoke model for Eurotransplant, which implements
+Eurotransplant-specific allocation mechanisms such as the points for the mismatch
+probability and the balance system that Eurotransplant uses to balance the
+international transfer of kidneys. Eurotransplant needs such a
+bespoke model in its communication with national competent authorities, who
+are interested not only in the overall effects of policies but also in
+the specific impacts that the policy changes have on their national waiting list populations.
+To build trust in the simulator, we have used input-output validation to
+show that the simulator can closely approximate contemporary
+transplantation patterns of ETKAS and ESP. Results of this validation
+exercise were discussed with medical doctors from Eurotransplant, and
+presented at the Eurotransplant Annual Meeting to additional major
+stakeholders, including representatives from national competent authorities
+as well as medical professionals from the kidney transplant centers. In
+the view of many of these stakeholders, the simulator has become a useful
+tool for kidney allocation policy development as we have also demonstrated in this
+chapter through three clinically motivated case studies.</p>
+<p>From discussions with ETKAC, ETRL and other stakeholders, it became
+clear that the policies proposed in these case studies have to be refined further. The
+first case study focused on HLA matching at the A, B, and DR
+loci. This focus was motivated by the fact that HLA-B
+and HLA-DR are most strongly associated with graft loss in Eurotransplant. However,
+HLA matching in kidney transplantation also aims to prevent <em>de novo</em>
+sensitization. Recent literature has shown that HLA-DQ mismatches are most
+strongly associated with antibody formation <span class="citation"><a href="#ref-Isaacson2022">[175]</a>, <a href="#ref-Tambur2021">[184]</a></span>.
+Further simulations should explore how HLA-DQ matching can be included in ETKAS.</p>
+<p>The aim of the second case study was to develop a sliding scale
+that provides
+candidates with vPRAs below 85% with equality of opportunity in ETKAS. This aim was based on the fact that candidates with a
+vPRA &gt;85% may have access to the AM program. However, it has
+been observed that certain patient groups in the AM program are
+transplanted within months of entering the program <span class="citation"><a href="#ref-Heidt2015">[138]</a></span>, which
+suggests that these candidates may not require priority that is given by the
+AM program.
+Based on these findings, ETRL and Eurotransplant’s advisory committees have
+recommended changing the AM entry criterion to a donor frequency of 2%, which
+corresponds to a vPRA of approximately 95%. The sliding scale proposed in this case study should be revised to ensure that candidates with vPRAs between 85% and
+95% are not disadvantaged in ETKAS.</p>
+<p>The final case study suggested that continuous candidate-donor age matching is
+a promising avenue to improve kidney allocation in Eurotransplant, because it
+substantially reduces the number of post-transplant deaths with a functioning
+graft. However, these reductions are partly due to a decrease in transplantations
+among candidates aged 55 and older. A question that
+should be explored further is whether these candidates should be given access
+to donors aged 65 and over, as was already unanimously recommended in a 2018 European
+Consensus Meeting <span class="citation"><a href="#ref-Ssal2020">[159]</a></span>. Such access could be achieved by allowing
+candidates between 55 and 65 to participate in ESP, or by allocating
+donors aged over 65 via ETKAS. The preferred route should be discussed together
+with the advisory committees and national competent authorities.
+We acknowledge that the ETKidney simulator also has limitations.
+Firstly, the graft offer acceptance models and post-transplant survival models
+are calibrated to historical data. These models may lack external
+validity for future post-transplant survival and future offer acceptance
+behavior. An example of this, encountered during input-output
+validation, is that the simulator appears to underestimate the number of
+transplantations in immunized candidates after the introduction of the virtual
+crossmatch in Eurotransplant in January 2023. This limitation could be addressed
+by refitting the organ acceptance models in the future on more
+contemporary data. A second limitation is that validation was only based on
+historical input-output validation. Ideally, we would have been able to
+observe ETKAS and ESP outcomes under alternative allocation
+rules, and study whether the simulator would be able to capture
+simulated outcomes under these alternative rules <span class="citation"><a href="#ref-sargent2020">[185]</a></span>.
+Unfortunately, this was not feasible, since ETKAS and ESP allocation rules
+have undergone only minimal changes since their introductions in 1996 and 1999,
+respectively. A final limitation is that Eurotransplant is not allowed
+to publicly release information that could potentially identify its
+donors and candidates, which prevents exact reproduction of our simulations by external parties. We have tried to address this
+limitation by making synthetic data available on which kidney
+allocation can be simulated.</p>
+<p>In conclusion, we are confident that the ETKidney simulator is a valuable tool
+for quantifying the impact of kidney allocation policy changes in
+Eurotransplant, as we demonstrated with three clinical case studies. We
+anticipate that the simulator can play a pivotal role in modernizing
+ETKAS and ESP allocation rules, in collaboration with subject-matter
+experts from ETKAC, the ETRL, and national competent authorities.</p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body" entry-spacing="0">
+<div id="ref-demeesterNewEurotransplantKidney1998" class="csl-entry">
+<div class="csl-left-margin">[15] </div><div class="csl-right-inline">J. de Meester, G. G. Persijn, T. Wujciak, G. Opelz, and Y. Vanrenterghem, <span>“The new <span>Eurotransplant</span> kidney allocation system: Report one year after implementation.”</span> <em>Transplantation</em>, vol. 66, no. 9, pp. 1154–1159, 1998, doi: <a href="https://doi.org/10.1097/00007890-199811150-00007">10.1097/00007890-199811150-00007</a>.</div>
+</div>
+<div id="ref-Pritsker1995" class="csl-entry">
+<div class="csl-left-margin">[85] </div><div class="csl-right-inline">A. A. B. Pritsker <em>et al.</em>, <span>“Organ transplantation policy evaluation,”</span> in <em>Proceedings of the 27th conference on winter simulation - WSC ’95</em>, C. Alexopoulos, K. Kang, W. R. Lilegdon, and D. Goldsman, Eds., in WSC ’95. INFORMS, 1995, pp. 1314–1323. doi: <a href="https://doi.org/10.1145/224401.224813">10.1145/224401.224813</a>.</div>
+</div>
+<div id="ref-lawSimulationModelingAnalysis2015" class="csl-entry">
+<div class="csl-left-margin">[100] </div><div class="csl-right-inline">A. M. Law, <span>“Variance-reduction techniques,”</span> in <em>Simulation <span>Modeling</span> and <span>Analysis</span></em>, Fifth edition., in <span>McGraw</span>-<span>Hill</span> series in industrial engineering and management science., Dubuque: McGraw-Hill Education, 2015, ch. 11, pp. 588–596.</div>
+</div>
+<div id="ref-wujciakProposalImprovedCadaver1993a" class="csl-entry">
+<div class="csl-left-margin">[126] </div><div class="csl-right-inline">T. Wujciak and G. Opelz, <span>“A proposal for improved cadaver kidney allocation,”</span> <em>Transplantation</em>, vol. 56, no. 6, pp. 1513–1517, 1993, doi: <a href="https://doi.org/10.1097/00007890-199312000-00044">10.1097/00007890-199312000-00044</a>.</div>
+</div>
+<div id="ref-vereerstraetenExperienceWujciakOpelzAllocation1998" class="csl-entry">
+<div class="csl-left-margin">[129] </div><div class="csl-right-inline">P. Vereerstraeten, D. Abramowicz, L. De Pauw, and P. Kinnaert, <span>“Experience with the <span>Wujciak-Opelz</span> allocation system in a single center: An increase in <span>HLA-DR</span> mismatching and in early occurring acute rejection episodes,”</span> <em>Transplant International</em>, vol. 11, no. 5, pp. 378–381, 1998, doi: <a href="https://doi.org/10.1007/s001470050161">10.1007/s001470050161</a>.</div>
+</div>
+<div id="ref-doxiadisSimplerEquitableAllocation2007" class="csl-entry">
+<div class="csl-left-margin">[130] </div><div class="csl-right-inline">I. I. N. Doxiadis <em>et al.</em>, <span>“Simpler and equitable allocation of kidneys from postmortem donors primarily based on full <span>HLA-DR</span> compatibility,”</span> <em>Transplantation</em>, vol. 83, no. 9, p. 1207, 2007, doi: <a href="https://doi.org/10.1097/01.tp.0000261108.27421.bc">10.1097/01.tp.0000261108.27421.bc</a>.</div>
+</div>
+<div id="ref-ziemannUnacceptableHumanLeucocyte2017" class="csl-entry">
+<div class="csl-left-margin">[134] </div><div class="csl-right-inline">M. Ziemann <em>et al.</em>, <span>“Unacceptable human leukocyte antigens for organ offers in the era of organ shortage: Influence on waiting time before kidney transplantation,”</span> <em>Nephrology Dialysis Transplantation</em>, vol. 32, no. 5, pp. 880–889, 2017, doi: <a href="https://doi.org/10.1093/ndt/gfw462">10.1093/ndt/gfw462</a>.</div>
+</div>
+<div id="ref-zecherImpactSensitizationWaiting2022a" class="csl-entry">
+<div class="csl-left-margin">[135] </div><div class="csl-right-inline">D. Zecher <em>et al.</em>, <span>“Impact of sensitization on waiting time prior to kidney transplantation in <span>Germany</span>,”</span> <em>Transplantation</em>, vol. 106, no. 12, p. 2448, 2022, doi: <a href="https://doi.org/10.1097/TP.0000000000004238">10.1097/TP.0000000000004238</a>.</div>
+</div>
+<div id="ref-Heidt2015" class="csl-entry">
+<div class="csl-left-margin">[138] </div><div class="csl-right-inline">S. Heidt, M. D. Witvliet, G. W. Haasnoot, and F. H. J. Claas, <span>“The 25th anniversary of the <span>Eurotransplant</span> <span class="nocase">Acceptable Mismatch program</span> for highly sensitized patients,”</span> <em>Transplant Immunology</em>, vol. 33, no. 2, pp. 51–57, 2015, doi: <a href="https://doi.org/10.1016/j.trim.2015.08.006">10.1016/j.trim.2015.08.006</a>.</div>
+</div>
+<div id="ref-deFijter2023" class="csl-entry">
+<div class="csl-left-margin">[145] </div><div class="csl-right-inline">J. de Fijter <em>et al.</em>, <span>“A paired-kidney allocation study found superior survival with <span>HLA-DR</span> compatible kidney transplants in the <span>Eurotransplant</span> <span>Senior Program</span>,”</span> <em>Kidney International</em>, vol. 104, no. 3, pp. 552–561, 2023, doi: <a href="https://doi.org/10.1016/j.kint.2023.05.025">10.1016/j.kint.2023.05.025</a>.</div>
+</div>
+<div id="ref-Audry2022" class="csl-entry">
+<div class="csl-left-margin">[147] </div><div class="csl-right-inline">B. Audry <em>et al.</em>, <span>“The new <span>French</span> kidney allocation system for donations after brain death: Rationale, implementation, and evaluation,”</span> <em>American Journal of Transplantation</em>, vol. 22, no. 12, pp. 2855–2868, 2022, doi: <a href="https://doi.org/10.1111/ajt.17180">10.1111/ajt.17180</a>.</div>
+</div>
+<div id="ref-watson2020overview" class="csl-entry">
+<div class="csl-left-margin">[148] </div><div class="csl-right-inline">C. J. E. Watson, R. J. Johnson, and L. Mumford, <span>“Overview of the evolution of the <span>UK</span> kidney allocation schemes,”</span> <em>Current Transplantation Reports</em>, vol. 7, no. 2, pp. 140–144, 2020, doi: <a href="https://doi.org/10.1007/s40472-020-00270-6">10.1007/s40472-020-00270-6</a>.</div>
+</div>
+<div id="ref-israniNewNationalAllocation2014" class="csl-entry">
+<div class="csl-left-margin">[149] </div><div class="csl-right-inline">A. K. Israni <em>et al.</em>, <span>“New national allocation policy for deceased donor kidneys in the <span>United States</span> and possible effect on patient outcomes,”</span> <em>Journal of the American Society of Nephrology</em>, vol. 25, no. 8, pp. 1842–1848, 2014, doi: <a href="https://doi.org/10.1681/ASN.2013070784">10.1681/ASN.2013070784</a>.</div>
+</div>
+<div id="ref-vonsamson-himmelstjernaContinuousDonorrecipientAge2024" class="csl-entry">
+<div class="csl-left-margin">[150] </div><div class="csl-right-inline">F. A. von Samson-Himmelstjerna, B. Kolbrink, K. Budde, R. Schmitt, and K. Schulte, <span>“Continuous donor-recipient age matching: A chance for kidney allocation in the <span>Eurotransplant</span> region,”</span> <em>American Journal of Transplantation</em>, 2024, doi: <a href="https://doi.org/10.1016/j.ajt.2024.11.022">10.1016/j.ajt.2024.11.022</a>.</div>
+</div>
+<div id="ref-vereerstraetenAllocationCadaverKidneys1999" class="csl-entry">
+<div class="csl-left-margin">[156] </div><div class="csl-right-inline">P. Vereerstraeten, D. Abramowicz, M. Andrien, E. Dupont, L. De Pauw, and P. Kinnaert, <span>“Allocation of cadaver kidneys according to <span>HLA-DR</span> matching alone would result in optimal graft outcome in most recipients,”</span> <em>Transplantation Proceedings</em>, vol. 31, no. 1–2, pp. 739–741, 1999, doi: <a href="https://doi.org/10.1016/s0041-1345(98)01748-5">10.1016/s0041-1345(98)01748-5</a>.</div>
+</div>
+<div id="ref-Roberts2004" class="csl-entry">
+<div class="csl-left-margin">[157] </div><div class="csl-right-inline">J. P. Roberts <em>et al.</em>, <span>“Effect of changing the priority for <span>HLA</span> matching on the rates and outcomes of kidney transplantation in minority groups,”</span> <em>New England Journal of Medicine</em>, vol. 350, no. 6, pp. 545–551, 2004, doi: <a href="https://doi.org/10.1056/nejmoa025056">10.1056/nejmoa025056</a>.</div>
+</div>
+<div id="ref-johnsonFactorsInfluencingOutcome2010" class="csl-entry">
+<div class="csl-left-margin">[158] </div><div class="csl-right-inline">R. J. Johnson <em>et al.</em>, <span>“Factors influencing outcome after deceased heart beating donor kidney transplantation in the <span>United Kingdom</span>: An evidence base for a new national kidney allocation policy,”</span> <em>Transplantation</em>, vol. 89, no. 4, pp. 379–386, 2010, doi: <a href="https://doi.org/10.1097/TP.0b013e3181c90287">10.1097/TP.0b013e3181c90287</a>.</div>
+</div>
+<div id="ref-Ssal2020" class="csl-entry">
+<div class="csl-left-margin">[159] </div><div class="csl-right-inline">C. Süsal <em>et al.</em>, <span>“Should kidney allografts from old donors be allocated only to old recipients?”</span> <em>Transplant International</em>, vol. 33, no. 8, pp. 849–857, 2020, doi: <a href="https://doi.org/10.1111/tri.13628">10.1111/tri.13628</a>.</div>
+</div>
+<div id="ref-Niemann2021" class="csl-entry">
+<div class="csl-left-margin">[160] </div><div class="csl-right-inline">M. Niemann, N. Lachmann, K. Geneugelijk, and E. Spierings, <span>“Computational <span>Eurotransplant</span> kidney allocation simulations demonstrate the feasibility and benefit of <span class="nocase">T-cell</span> epitope matching,”</span> <em>PLOS Computational Biology</em>, vol. 17, no. 7, p. e1009248, 2021, doi: <a href="https://doi.org/10.1371/journal.pcbi.1009248">10.1371/journal.pcbi.1009248</a>.</div>
+</div>
+<div id="ref-wujciakComputerAnalysisCadaver1993" class="csl-entry">
+<div class="csl-left-margin">[161] </div><div class="csl-right-inline">T. Wujciak and G. Opelz, <span>“Computer analysis of cadaver kidney allocation procedures,”</span> <em>Transplantation</em>, vol. 55, no. 3, p. 516, 1993.</div>
+</div>
+<div id="ref-israniNewKidneyPancreas2021" class="csl-entry">
+<div class="csl-left-margin">[162] </div><div class="csl-right-inline">A. Israni <em>et al.</em>, <span>“New kidney and pancreas allocation policy: Moving to a circle as the first unit of allocation,”</span> <em>Journal of the American Society of Nephrology</em>, vol. 32, no. 7, pp. 1546–1550, 2021, doi: <a href="https://doi.org/10.1681/ASN.2020121679">10.1681/ASN.2020121679</a>.</div>
+</div>
+<div id="ref-mankowskiAcceleratingKidneyAllocation2019" class="csl-entry">
+<div class="csl-left-margin">[163] </div><div class="csl-right-inline">M. A. Mankowski <em>et al.</em>, <span>“Accelerating kidney allocation: Simultaneously expiring offers,”</span> <em>American Journal of Transplantation</em>, vol. 19, no. 11, pp. 3071–3078, 2019, doi: <a href="https://doi.org/10.1111/ajt.15396">10.1111/ajt.15396</a>.</div>
+</div>
+<div id="ref-jacquelinetChangingKidneyAllocation2006" class="csl-entry">
+<div class="csl-left-margin">[164] </div><div class="csl-right-inline">C. Jacquelinet <em>et al.</em>, <span>“<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1839596">Changing kidney allocation policy in <span>France:</span> The value of simulation</a>,”</span> <em>AMIA Annual Symposium Proceedings</em>, vol. 2006, pp. 374–378, 2006.</div>
+</div>
+<div id="ref-Mumford2018" class="csl-entry">
+<div class="csl-left-margin">[165] </div><div class="csl-right-inline">L. Mumford and C. J. Watson, <span>“Working towards a new deceased donor kidney offering scheme in the <span>UK</span>,”</span> <em>Transplantation</em>, p. S153, 2018, doi: <a href="https://doi.org/10.1097/01.tp.0000542784.78359.71">10.1097/01.tp.0000542784.78359.71</a>.</div>
+</div>
+<div id="ref-statlibrary2152P_AllET_Kidney" class="csl-entry">
+<div class="csl-left-margin">[166] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> <span>Statistics Library</span>. <span>Report</span> 2152p: Kidney transplants, deceased donors in all <span>ET,</span> by year, by organ combination.”</span> Online, 2024. Available: <a href="https://statistics.eurotransplant.org/reportloader.php?report=11246-33135-33153&amp;format=html&amp;download=0">https://statistics.eurotransplant.org/reportloader.php?report=11246-33135-33153&amp;format=html&amp;download=0</a></div>
+</div>
+<div id="ref-etStatsLibrary2072P" class="csl-entry">
+<div class="csl-left-margin">[167] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> <span>Statistics Library</span>. <span>Report</span> 2072p: Kidney-only transplants (deceased donor) in all <span>ET</span>.”</span> Online, 2024. Available: <a href="https://statistics.eurotransplant.org/reportloader.php?report=11151-33135-33195&amp;format=html&amp;download=1">https://statistics.eurotransplant.org/reportloader.php?report=11151-33135-33195&amp;format=html&amp;download=1</a></div>
+</div>
+<div id="ref-etreport_1132P" class="csl-entry">
+<div class="csl-left-margin">[168] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> <span>Statistics Library</span>. <span>Report</span> 1132p: Kidney donation, deceased donors in all <span>ET,</span> by year, by allocation phase.”</span> Online, Leiden, 2024. Available: <a href="https://statistics.eurotransplant.org/reportloader.php?report=11196-33135-33195&amp;format=html&amp;download=0">https://statistics.eurotransplant.org/reportloader.php?report=11196-33135-33195&amp;format=html&amp;download=0</a></div>
+</div>
+<div id="ref-manualKidney" class="csl-entry">
+<div class="csl-left-margin">[169] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> manual. Chapter 4: Kidney (etkas and esp).”</span> Online, 2024. Available: <a href="https://www.eurotransplant.org/allocation/eurotransplant-manual/">https://www.eurotransplant.org/allocation/eurotransplant-manual/</a></div>
+</div>
+<div id="ref-eurotransplantinternationalfoundationWaitingListRegistrations2024" class="csl-entry">
+<div class="csl-left-margin">[170] </div><div class="csl-right-inline">Eurotransplant, <span>“<span>Eurotransplant</span> <span>Statistics Library</span>. <span>Report</span> 4002p: Waiting list registrations in all <span>ET,</span> by year, by organ.”</span> Online, 2024. Available: <a href="https://statistics.eurotransplant.org/reportloader.php?report=10597-33135&amp;format=html&amp;download=0">https://statistics.eurotransplant.org/reportloader.php?report=10597-33135&amp;format=html&amp;download=0</a></div>
+</div>
+<div id="ref-Lopes2015" class="csl-entry">
+<div class="csl-left-margin">[171] </div><div class="csl-right-inline">D. Lopes <em>et al.</em>, <span>“Effect of different sensitization events on <span>HLA</span> alloimmunization in kidney transplant candidates,”</span> <em>Transplantation Proceedings</em>, vol. 47, no. 4, pp. 894–897, 2015, doi: <a href="https://doi.org/10.1016/j.transproceed.2015.03.014">10.1016/j.transproceed.2015.03.014</a>.</div>
+</div>
+<div id="ref-Lucas2015" class="csl-entry">
+<div class="csl-left-margin">[172] </div><div class="csl-right-inline">D. P. Lucas, M. S. Leffell, and A. A. Zachary, <span>“Differences in immunogenicity of <span>HLA</span> antigens and the impact of cross-reactivity on the humoral response,”</span> <em>Transplantation</em>, vol. 99, no. 1, pp. 77–85, 2015, doi: <a href="https://doi.org/10.1097/tp.0000000000000355">10.1097/tp.0000000000000355</a>.</div>
+</div>
+<div id="ref-Susal2013" class="csl-entry">
+<div class="csl-left-margin">[173] </div><div class="csl-right-inline">C. Süsal <em>et al.</em>, <span>“Algorithms for the determination of unacceptable <span>HLA</span> antigen mismatches in kidney transplant recipients,”</span> <em>Tissue Antigens</em>, vol. 82, no. 2, pp. 83–92, 2013, doi: <a href="https://doi.org/10.1111/tan.12137">10.1111/tan.12137</a>.</div>
+</div>
+<div id="ref-Ziemann2022" class="csl-entry">
+<div class="csl-left-margin">[174] </div><div class="csl-right-inline">M. Ziemann <em>et al.</em>, <span>“Determination of unacceptable <span>HLA</span> antigen mismatches in kidney transplant recipients,”</span> <em>HLA</em>, vol. 100, no. 1, pp. 3–17, 2022, doi: <a href="https://doi.org/10.1111/tan.14521">10.1111/tan.14521</a>.</div>
+</div>
+<div id="ref-Isaacson2022" class="csl-entry">
+<div class="csl-left-margin">[175] </div><div class="csl-right-inline">D. Isaacson, J. D. Schold, M. W. Gmeiner, H. C. Copley, V. Kosmoliaptsis, and A. R. Tambur, <span>“<span>HLA-DQ</span> mismatches lead to more unacceptable antigens, greater sensitization, and increased disparities in repeat transplant candidates,”</span> <em>Journal of the American Society of Nephrology</em>, vol. 33, no. 12, pp. 2293–2305, 2022, doi: <a href="https://doi.org/10.1681/asn.2022030296">10.1681/asn.2022030296</a>.</div>
+</div>
+<div id="ref-Heidt2024" class="csl-entry">
+<div class="csl-left-margin">[176] </div><div class="csl-right-inline">S. Heidt <em>et al.</em>, <span>“Introduction of the donor center virtual crossmatch in <span>Eurotransplant</span>,”</span> <em>HLA</em>, vol. 104, no. 2, 2024, doi: <a href="https://doi.org/10.1111/tan.15653">10.1111/tan.15653</a>.</div>
+</div>
+<div id="ref-stewartSmoothingItOut2012" class="csl-entry">
+<div class="csl-left-margin">[177] </div><div class="csl-right-inline">D. E. Stewart, A. Y. Kucheryavaya, N. L. Reinsmoen, and J. J. Friedewald, <span>“Smoothing it out: Creating a sliding scale for assigning <span>CPRA</span>-based allocation points,”</span> <em>American Journal of Transplantation</em>, vol. 12, no. s3, p. 128, 2012, doi: <a href="https://doi.org/10.1111/j.1600-6143.2012.04112.x">10.1111/j.1600-6143.2012.04112.x</a>.</div>
+</div>
+<div id="ref-waiserAgeMatchingRenal2000" class="csl-entry">
+<div class="csl-left-margin">[178] </div><div class="csl-right-inline">J. Waiser <em>et al.</em>, <span>“Age-matching in renal transplantation,”</span> <em>Nephrology Dialysis Transplantation</em>, vol. 15, no. 5, pp. 696–700, 2000, doi: <a href="https://doi.org/10.1093/ndt/15.5.696">10.1093/ndt/15.5.696</a>.</div>
+</div>
+<div id="ref-pippiasYoungDeceasedDonor2020" class="csl-entry">
+<div class="csl-left-margin">[179] </div><div class="csl-right-inline">M. Pippias <em>et al.</em>, <span>“Young deceased donor kidneys show a survival benefit over older donor kidneys in transplant recipients aged 20–50 years: A study by the <span>ERA–EDTA</span> registry,”</span> <em>Nephrology Dialysis Transplantation</em>, vol. 35, no. 3, pp. 534–543, 2020, doi: <a href="https://doi.org/10.1093/ndt/gfy268">10.1093/ndt/gfy268</a>.</div>
+</div>
+<div id="ref-vanittersumIncreasedRiskGraft2017" class="csl-entry">
+<div class="csl-left-margin">[180] </div><div class="csl-right-inline">F. J. van Ittersum <em>et al.</em>, <span>“Increased risk of graft failure and mortality in <span>Dutch</span> recipients receiving an expanded criteria donor kidney transplant,”</span> <em>Transplant International</em>, vol. 30, no. 1, pp. 14–28, 2017, doi: <a href="https://doi.org/10.1111/tri.12863">10.1111/tri.12863</a>.</div>
+</div>
+<div id="ref-coemansCompetingRisksModel2024" class="csl-entry">
+<div class="csl-left-margin">[181] </div><div class="csl-right-inline">M. Coemans <em>et al.</em>, <span>“A competing risks model to estimate the risk of graft failure and patient death after kidney transplantation using continuous donor-recipient age combinations,”</span> <em>American Journal of Transplantation</em>, vol. 0, no. 0, 2024, doi: <a href="https://doi.org/10.1016/j.ajt.2024.07.029">10.1016/j.ajt.2024.07.029</a>.</div>
+</div>
+<div id="ref-keithEffectDonorRecipient2004b" class="csl-entry">
+<div class="csl-left-margin">[182] </div><div class="csl-right-inline">D. S. Keith, A. Demattos, M. Golconda, J. Prather, and D. Norman, <span>“Effect of donor recipient age match on survival after first deceased donor renal transplantation,”</span> <em>Journal of the American Society of Nephrology</em>, vol. 15, no. 4, p. 1086, 2004, doi: <a href="https://doi.org/10.1097/01.ASN.0000119572.02053.F2">10.1097/01.ASN.0000119572.02053.F2</a>.</div>
+</div>
+<div id="ref-wreedeMstatePackageAnalysis2011" class="csl-entry">
+<div class="csl-left-margin">[183] </div><div class="csl-right-inline">L. C. de Wreede, M. Fiocco, and H. Putter, <span>“Mstate: An <span>R</span> package for the analysis of competing risks and multi-state models,”</span> <em>Journal of Statistical Software</em>, vol. 38, pp. 1–30, 2011, doi: <a href="https://doi.org/10.18637/jss.v038.i07">10.18637/jss.v038.i07</a>.</div>
+</div>
+<div id="ref-Tambur2021" class="csl-entry">
+<div class="csl-left-margin">[184] </div><div class="csl-right-inline">A. R. Tambur, V. Kosmoliaptsis, F. H. J. Claas, R. B. Mannon, P. Nickerson, and M. Naesens, <span>“Significance of <span>HLA-DQ</span> in kidney transplantation: Time to reevaluate human leukocyte antigen–matching priorities to improve transplant outcomes? An expert review and recommendations,”</span> <em>Kidney International</em>, vol. 100, no. 5, pp. 1012–1022, 2021, doi: <a href="https://doi.org/10.1016/j.kint.2021.06.026">10.1016/j.kint.2021.06.026</a>.</div>
+</div>
+<div id="ref-sargent2020" class="csl-entry">
+<div class="csl-left-margin">[185] </div><div class="csl-right-inline">R. G. Sargent, <span>“Verification and validation of simulation models: An advanced tutorial,”</span> in <em>2020 <span>Winter</span> <span>Simulation</span> <span>Conference</span> (<span>WSC</span>)</em>, Orlando, FL, USA: INFORMS, 2020, pp. 16–29. doi: <a href="https://doi.org/10.1109/WSC48552.2020.9384052">10.1109/WSC48552.2020.9384052</a>.</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="11">
+<li id="fn11"><p><a href="https://github.com/hansdeferrante/Eurotransplant_ETKidney_simulator">https://github.com/hansdeferrante/Eurotransplant_ETKidney_simulator</a><a href="CHetkidneysimulator.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<li id="fn12"><p>In case a multi-organ donor is reported to Eurotransplant,
+the donor’s kidneys may first be accepted by candidates waiting for a combined
+transplantation of a kidney with another organ (heart, lung, pancreas, liver, or intestine).
+These combined transplantations account for 7% of all deceased-donor kidney transplants
+in Eurotransplant <span class="citation"><a href="#ref-statlibrary2152P_AllET_Kidney">[166]</a></span>.<a href="CHetkidneysimulator.html#fnref12" class="footnote-back">↩︎</a></p></li>
+<li id="fn13"><p>The number of balance points awarded is calculated
+by subtracting from each member country’s export balance the export balance of
+the country which is the largest importer (a negative number), and multiplying
+the outcome by the balance weight. This balance weight is currently 30.<a href="CHetkidneysimulator.html#fnref13" class="footnote-back">↩︎</a></p></li>
+<li id="fn14"><p>
+Before March 2021, kidneys which could not be successfully allocated via ESP
+were offered via ETKAS. After March 2021, such kidneys are allocated via non-standard
+ESP allocation.<a href="CHetkidneysimulator.html#fnref14" class="footnote-back">↩︎</a></p></li>
+<li id="fn15"><p>Transplant
+recipients who require dialysis within one year of their initial kidney
+transplant may receive a portion of their previous waiting time back, see
+the Eurotransplant kidney manual <span class="citation"><a href="#ref-manualKidney">[169]</a></span>.<a href="CHetkidneysimulator.html#fnref15" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="CHvpra.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="CHdiscussion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["thesis.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
