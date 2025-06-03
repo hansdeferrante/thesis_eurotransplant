@@ -1,5 +1,5 @@
 book_filename: "thesis"
-output_dir: _book
+output_dir: docs
 delete_merged_file: false
 language:
   ui:

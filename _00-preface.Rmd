@@ -35,6 +35,9 @@ knitr::include_graphics(file.path('figures', 'ch1', 'cover.png')) # show thesis 
 
 *Cover of this thesis*
 
+The online version of this thesis is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. 
+The pdf version of the thesis is available for download on the toolbar above.</p>
+
 This PhD project was conducted under the supervision of Dr. Bart Smeulders and 
 Prof. Dr. Frits Spieksma at Eindhoven University of Technology. 
 
