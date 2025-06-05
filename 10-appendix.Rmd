@@ -747,7 +747,7 @@ if (knitr::is_html_output()) {
 
 `\FloatBarrier`{=latex}
 
-## Step 4.2: matching the patient to a particular patient in the risk set
+## Step 4.2: Matching the patient to a particular patient in the risk set
 
 The aim of step 4.2 in Algorithm B.1 is to match censored patient \(i\) to a single candidate \(k\) from their risk set (\(k\in 
 R_i\)). We do this by inverse transform sampling from the 

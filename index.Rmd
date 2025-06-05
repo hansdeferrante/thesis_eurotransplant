@@ -17,7 +17,7 @@ funder: "the Dutch Research Council"
 
 # Footer
 ISBN: "978-90-386-6419-4"
-printing: "Gildeprint B.V."
+printing: "Gildeprint"
 
 # License & link for thesis.
 thesis_url: "https://hansdeferrante.github.io/thesis_eurotransplant/"

@@ -1,1 +1,175 @@
 # Dankwoord {-}
+
+```{=latex}
+\addcontentsline{toc}{chapter}{Dankwoord}
+\markboth{Dankwoord}{Dankwoord}
+```
+
+Voordat we naar de inhoud gaan, eerst een woord van dank aan alle mensen 
+die het schrijven van dit proefschrift een stuk aangenamer hebben gemaakt.
+
+Dit avontuur begon voor mij ongeveer vijf jaar geleden, toen ik de vacature voor 
+een PhD-positie bij Eurotransplant en de TU/e zag langskomen. Dat voelde meteen 
+goed: de analyse van een complex proces in de gezondheidszorg waarbij ook nog
+eens data beschikbaar is. Om dat te checken belde ik met Roman, die een 
+masterthesis voor de TU/e schreef bij Eurotransplant. Roman,
+veel dank daarvoor: het meest staat me bij dat je zei dat Eurotransplant
+"een beetje de belastingdienst" is. Om die vergelijking kunnen
+de collega's van Eurotransplant gelukkig ook lachen.
+
+Voor het sollicitatiegesprek wilde ik een witte muur als achtergrond,
+dus verbouwde ik mijn studio van twintig vierkante meter in Amsterdam (Covid-19
+bestond toen nog). Het gesprek verliep goed, hoewel 
+het lastig was Serge, Marieke, Bart en Frits te peilen via een scherm. Naderhand
+ging ik naar Cyriel in Rotterdam, met een lege telefoon en zonder oplader. Daardoor
+vernam ik het goede nieuws van Bart pas twee dagen later -- via een voicemail. 
+Gelukkig werd me dat niet nagedragen en is dit proefschrift er gekomen.
+
+Bart, heel veel dank voor je begeleiding en je vertrouwen. In het begin van het
+traject eindigde ik dikwijls in een rabbit hole, en dan spendeerde ik dagen aan
+achteraf vrij futiele zaken. Het was fijn dat jij me daar uit kon trekken. Met je
+scherpe blik wist je ook precies de zwakke plekken in mijn drafts en presentaties
+aan te stippen. Frits, ook jij, heel erg bedankt: ik vond onze samenwerking 
+altijd plezierig. Je commentaar was meestal uitgebreid, en ik moet bekennen dat ik er 
+eenmaal licht gek van werd (toen ik een revisie weg wilde hebben voor mijn vakantie).
+Maar de teksten werden er echt sterker van. Met jullie een PhD doen was een luxepositie!
+
+Beste Edwin van den Heuvel, Minneke Coenraad, Klemens Budde, Joris van de Klundert,
+Eric Spierings, heel veel dank voor het willen beoordelen van dit proefschrift.
+Ik vind het heel speciaal dat jullie het proefschrift vanuit jullie verschillende
+perspectieven hebben willen bekijken.
+
+`\newpage`{=latex}
+
+Marieke, dank voor het mij op sleeptouw nemen binnen Eurotransplant (en de wereld daaromheen).
+Ik keek uit naar ons wekelijks overleg op maandag, waar we niet alleen over serieuze 
+dingen konden praten maar ook grapjes konden maken. Een hoogtepunt was onze
+week bij het ILTS-congres in Houston (waar wij beiden zo rood als een kreeft rondliepen,
+en ik flauwviel bij videobeelden van een hepatectomie bij een levende donor). 
+Serge, ook zonder jou was dit proefschrift er niet gekomen. Wanneer jij een goed 
+woordje voor me deed gingen er vele deuren open.
+
+In het begin van m'n PhD voelde ik me soms -- vrij cliché -- een impostor: wie was ik, als niet-arts, om iets te zeggen over hoe de toewijzing van organen moet verlopen. 
+Dat werd minder dankzij een
+aantal mensen die zeer gul met hun tijd en kennis zijn geweest. Allereerst prof. 
+Nevens, Frederik, heel veel dank voor onze gesprekken over de indicaties voor
+levertransplantatie en uw kritische blik op de leverallocatie. Dankzij u ging het
+zaakje lopen met de BeLIAC, zag ik in dat MELD zo slecht nog niet is, en leerde 
+ik hoe de zaken aan de andere kant van de telefoon verlopen.
+Marieke noemt me soms "een halve hepatoloog", en dat heb ik echt aan u te danken.
+De projecten voor de nier begonnen dankzij het ETRL en Serge, eigenlijk met 
+het doel om het nadeel voor geïmmuniseerde patiënten op te lossen in ETKAS.
+Frans, Sebastiaan, Geert, Marissa, Gonca en Cynthia, veel dank voor het delen van jullie
+kennis over HLA, het AM-programma en eplets. Daar pluk ik nog steeds 
+de vruchten van. 
+
+Het leukst aan een paper schrijven is als die gelezen wordt, of zelfs
+leidt tot een samenwerking. Prof. Martin Wissing, Lissa, 
+ik vind het fijn om met jullie samen te werken voor KARMA, en ben jullie
+zeer erkentelijk voor het delen van jullie perspectief op de allocatie als nefrologen. 
+Ilaria, I thoroughly enjoyed our coffees over benefits-based allocation and meeting 
+at ISCB in Milan. Friedrich, I'm hoping that the DCD simulations are going to
+cause a stir in Germany. Alessandro, Sam, ik waardeerde het dat jullie me betrokken
+bij het DynamITE project. Joris, Francisco, Valentina, I am looking forward to finish some
+of the work we've started. Loren, I'm hopeful that we can 
+realize a transatlantic collaboration at some point.
+
+Ineke, mijn dank aan jou is groot: het is altijd prettig het met jou over 
+de nierallocatie te praten en er zo de ruimte voor te krijgen binnen de ETKAC.
+Jij was de aanstichter van de panelsessie bij de Annual Meeting in 2024 met
+prof. Fischereder en prof. Budde, en ik kijk erop terug als een unaniem belachelijk 
+groot succes. Rocio, ik ben je erg dankbaar voor je analytische blik op
+mijn ETKAC-presentaties en drafts. Ik kijk ernaar uit om het matchability-hoofdstuk
+(wat dit proefschrift helaas niet meer haalde) verder met je uit te werken, 
+maar wel onder de strikte voorwaarde dat je het niet in het holst van de nacht
+van commentaar voorziet. 
+Marit, Mando, Milou, Axel en Agita, jullie zijn fijne collega's, en ik hoop bij
+Eurotransplant ook nog projecten met jullie te mogen ondernemen!
+
+`\newpage`{=latex}
+De andere Eurotransplant-collega's wil ik hier ook bedanken: ondanks
+het onrustige vaarwater van de afgelopen paar jaren heb ik me thuisgevoeld bij 
+jullie. Collega's van de allocatie, veel dank voor de gezellige lunches
+en de bereidheid om mijn vragen over het allocatieproces beantwoorden. Lilian, dank 
+voor de aansporing om een presentatie te geven bij de Eurotransplant news update:
+het was inderdaad een goed idee de collega's eens te vertellen waar ik me 
+mee bezig hield. Sophia en Shivani, heel veel dank voor jullie werk bij de registry. 
+Jullie doen allemaal onmisbaar werk
+voor deze organisatie, en dat wordt niet altijd genoeg gezien.
+
+De collega's van de TU/e ben ik ook dankbaar. Een fun fact is dat 
+Combinatorial Optimization (CO) niet alleen de vakgroep is waarbij ik deze
+thesis schreef, maar ook het enige vak waarvoor ik tweemaal
+een onvoldoende haalde. Dat belette me er niet van een fijne tijd te hebben
+bij CO: de seminars, de PhD week, en vooral de collega's waren zeer aangenaam.
+Danny, ik denk nog regelmatig terug aan onze Canadese koortsdroom. Jasper, ik 
+vond het een ontzettend toffe week in Kopenhagen! Antonina, Nils, Sten, het was
+leuk het HANS-kantoor te zijn, ook al duurde die periode maar kort. Jasper, Sjanne, 
+Cédric, jullie waren ook fijne kantoorgenoten (en ik hou jullie niet verantwoordelijk
+voor jullie voorletters). Ik wil Marieke en NETWORKS ook bedanken: het was mooi zoveel 
+andere PhD'ers te leren kennen tijdens de diners, de board games en het bowlen.
+
+Leuke vrienden maken een promotieonderzoek ook gemakkelijker -- ook al zie je ze
+te weinig. Jorg en Therese, 
+of het nu een verkleedfeestje, extreme kringloping, of de huishoudbeurs is, met 
+jullie zijn is altijd feest. Bo, Nol, Dara, Justin, jullie behoren ook tot de
+crème van de crème de la crème en het is fijn met enige regelmaat met jullie te 
+roddelen. Louise en Robin, mevrouw Keeris en Fleur, ik geniet altijd enorm van 
+onze wandelweekenden (waarop nauwelijks meer gewandeld wordt). Samy, Lyna, Veerle, 
+Maartje, Linda en Laura, ons jaarlijkse vriendinnenweekend wil ik niet missen
+(ongeacht de drama vooraf). Sjoerd, Roderick, Koen, Leon en Jens, het weekendje 
+weg naar een 
+rare uithoek van Nederland is een jaarlijks hoogtepunt (en niet alleen omdat ik 
+meer chips eet dan normaal in een jaar tijd). Lieke en Maureen, jullie waren de
+highlight van econometrie. Kwankwan, oooo my goood, jou zie ik te weinig. Lina,
+Sjoerd, Stefan, wij moeten ook nodig weer eens afspreken. Anne, pingpongen bij
+Pacmed leidde tot niet alleen tot een extreem fijne vriendschap, maar ook een
+racefiets en de marathon. Ooit hoop ik nog bij jouw slechtste marathontijd in 
+de buurt te komen. Purva,
+thanks for forcing me to become friends and not just co-workers. Marit,
+ik waardeer het enorm dat we al vanaf de derde klas bevriend zijn, ondanks dat ik
+jou vanaf dat eerste moment vercorrumpeerd zou hebben. Yeshi, 
+Maarten, Fleur, Leon en Laura, ook met een theetje zijn onze laffe borrels 
+fijn! Dorien, het mag vaker sneeuwen als jij dan langskomt. Nico 
+and Dorien, I loved going spontaneously to DTRH with you last year (I suspect 
+Dorien picks her friends based on character flaws). Daphne en Jesse, ik ben zo 
+dankbaar dat ik jullie heb leren kennen op HKU. Rianna, Savannah, Jesse, spending time with
+you is like spending time with family, even if it's just sitting on a rooftop
+or walking circles in Utrecht. Rianna, I'm so grateful for the truly unhinged
+birthday weekends we have had in Ibiza, Marbella and London, with Savannah, 
+Jesse and Suus, Grace, Michaela, Becky and Ben, Jamie, and Hamza and Ella. It's been
+an absolute blast everytime and I 
+cannot wait to reunite at Glastonbury.
+
+Als laatste dank ik mijn (schoon)familie. Ad en Hermien, het is altijd fijn
+om met jullie te zijn, of we nu ergens een hapje gaan eten of een Sudoku-wedstrijd
+houden. Char en Aldert, Til en Ruud, heel veel dank voor de gezellige weekenden in
+Domburg. Ik vind het heel bijzonder jullie gezinnetjes van dichtbij te zien
+opgroeien. Wat betreft mijn eigen bloed: veel dank gaat uit naar opa en oma, 
+en tante Loet. Jullie waren altijd eindeloos geïnteresseerd in waar Bram, ik, 
+Frits, Pieter en Lieske mee bezig waren, en dat was een enorme stimulans om 
+jezelf breed te ontwikkelen. Bram, Frits, Pieter en Lieske, ik vind het zo
+ontzettend leuk hoe jullie allemaal je eigen pad bewandelen en daardoor zulke
+geweldig leuke mensen met geweldig leuke partners (Huib, Romy, Rico) zijn geworden. 
+
+Lieve Soemintra, jij werd plots uit ons leven gerukt. De term "oppasmoeder" vind
+ik ongemakkelijk, en dat komt omdat jij veel meer was: een tweede
+moeder en een dierbare vriendin. Ik mis je enorm. Pap, mam en Noud, dit 
+alles was zonder jullie niet mogelijk geweest. Het blijft fijn om bij jullie
+thuis te komen, hoe oud je ook wordt. Veel dank voor jullie interesse, het
+meedenken, maar ook de ruimte om je eigen keuzes te maken. Zonder die ruimte
+jezelf te ontplooien had ik niet zo'n leuke siblings gehad. Gestimuleerd om te denken werd er ook: pap, ik herinner me nog goed hoe je ooit aan 
+Bram en mij (toen nog twee kleuters) aan de keukentafel probeerde uit te leggen
+dat een computer 
+alles met enen en nullen opslaat - net alsof je steeds ja of nee antwoordt op vragen. Wij waren sceptisch, dus stelden we heel veel ja/nee-vragen: is het een
+mens? Is het een dier? Ruim vijfentwintig jaar later blijkt dat je met een
+computer inderdaad best wat kunt.
+
+Cyr, lieverd, jou heb ik het niet altijd makkelijk gemaakt. Een slecht moment
+uit dit traject is dat ik je alleen het Nationaal Kustpad liet lopen,
+omdat ik vond dat ik geen tijd had voor vakantie. Dankzij jouw geduld zijn we er
+samen zo gelukkig uit gekomen: ik geniet van ons samenzijn, onze vakanties, onze uitjes, onze weekendrituelen, en het samen wagen van een dansje. Ik kijk heel
+erg uit naar het volgende hoofdstuk op de Nicolaas Ruysch, en ben dankbaar dat je
+doorziet dat
+mijn geplaag en gekibbel ook een uiting van liefde is. Zoals de Duitsers zeggen:
+"Was sich liebt, das neckt sich." En zo is het: ich liebe dich.

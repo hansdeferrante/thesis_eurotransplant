@@ -874,7 +874,7 @@ if (knitr::is_html_output()) {
 
 } else if (knitr::is_latex_output()) {
    d_tab |>
-    kable(format='latex',  booktabs=TRUE, align = 'lcccc') |>
+    kable(format='latex', booktabs=TRUE, align = 'lcccc') |>
     kable_styling(latex_options=c('scale_down', 'hold_position'), font_size=10) |>
     add_header_above(
       c(` ` = 1, `UNOS-MELD` = 2, `DynReMELD` = 2)
