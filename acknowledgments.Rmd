@@ -1,7 +1,6 @@
 # Dankwoord {-}
 
 ```{=latex}
-\addcontentsline{toc}{chapter}{Dankwoord}
 \markboth{Dankwoord}{Dankwoord}
 ```
 

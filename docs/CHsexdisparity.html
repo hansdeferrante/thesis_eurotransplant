@@ -230,7 +230,7 @@ independent of the effect of sex through MELD and candidate body size. We find t
 adjusted waiting list mortality hazard ratios for female sex are insignificant
 (HR = 1.03, 95% CI: 0.88–1.20), which means that we lack indications that MELD
 systematically underestimates the waiting list mortality rates for females.
-transplant rates are estimated to be 25% lower for females than for males in unadjusted
+Transplant rates are estimated to be 25% lower for females than for males in unadjusted
 analyses (HR = 0.74, 95% CI: 0.71–0.77), but hazard ratios become insignificant
 after adjustment for mediators, most importantly candidate height
 and weight (HR = 0.98, 95% CI: 0.93–1.04). Sex disparity in Eurotransplant
@@ -346,61 +346,63 @@ our modeling strategy and communicate visually our causal assumptions
 <h4><span class="header-section-number">4.2.3.1</span> Mediation analysis for the transplant rate<a href="CHsexdisparity.html#CHmediationtxp" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The left-hand side of Figure <a href="CHsexdisparity.html#fig:ch4fig1">4.1</a> shows the DAG for transplantation
 analyses. In this model, sex is the exposure and
-transplantation (TXP) is the outcome. The candidate’s MELD score and body size
-(height or weight) both represent mediators of the relation between sex and transplantation.
-MELD acts as a mediator because sex affects MELD through differences in serum creatinine
-(as proposed by the GFR hypothesis), and MELD is used to prioritize candidates for
-liver transplantation. Body size acts as a mediator, because sex influences height
-and weight, and because having a smaller stature limits a candidate’s access
-to transplantation due to size mismatch (the size mismatch hypothesis).</p>
+transplantation (TXP) is the outcome. Both a candidate’s MELD score and their
+body size mediate the relation between sex and transplantation. MELD is a
+mediator as the GFR hypothesis suggests that sex affects MELD and
+MELD affects a candidate’s transplantation rate. Body size acts as a mediator,
+because sex influences body size, and because the size mismatch hypothesis
+suggests that a small body size limits a candidate’s access to transplantation.</p>
 <p>To identify the controlled direct effect of sex on transplantation, all back-door
-paths from sex to transplantation must be blocked. Adjusting
-for MELD and body size is not sufficient for this, because doing so can open
-back-door paths via common causes of the mediators (MELD / body size)
-and the outcome (transplantation). U1-type variables (see Figure <a href="CHsexdisparity.html#fig:ch4fig1">4.1</a>)
-represent common causes of MELD and the transplant rate. These include
-whether the candidate receives biweekly dialysis, their exception score, their age, and
+paths from sex to transplantation must be blocked. Adjusting for MELD and body
+size is not sufficient to block these paths: conditioning on the mediators
+(MELD or body size) opens up other back-door paths via U1- and U2-type variables,
+which are common causes of MELD and transplantation, and body size and transplantation,
+respectively (see Figure <a href="CHsexdisparity.html#fig:ch4fig1">4.1</a>). To block these back-door paths,
+we also have to adjust for these common causes. Common causes of MELD and
+the candidate’s transplant rate, i.e. U1-type variables, are whether the candidate
+receives biweekly dialysis, their exception score, their age, and
 their disease group, which affect both a candidate’s MELD score and their center’s
-willingness to accept and transplant a liver offer. U2-type variables represent
-common causes of a candidate’s body size and their transplant rate. Two
-important U2-type variables are frailty (which is associated with a lower weight,
-and a possible contraindication for liver transplant) and diabetes (which is
-associated with a higher weight, and a possible contraindication).</p>
+willingness to accept and transplant a liver offer. Common causes of body size
+and the transplant rate, i.e. U2-type variables, are candidate frailty
+(which is associated with a lower weight and can be a contraindication for
+transplantation), as well as diabetes (which is
+associated with a higher weight, and which is also a possible contraindication).</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:ch4fig1"></span>
-<img src="figures/ch4/fig1_plot_causal_models.png" alt="Directed acyclic graphs (DAGs) for mediation analyses of the effect of sex on transplantation (TXP, left) and the effect of sex on pre-transplant mortality rates (MRT, right). Squares indicate the minimal sufficient adjustment set required to identify the controlled direct effect of sex on the outcome. U1, U2, and U3 represent common causes of the mediator-outcome relations. Dotted arrows indicate that sex is allowed to affect U1, U2, and U3; their presence or absence does not impact the identification of the controlled direct effect under our identification strategy." width="100%" />
+<img src="figures/ch4/fig1_plot_causal_models.png" alt="Directed acyclic graphs (DAGs) for mediation analyses of the effect of sex on transplantation (TXP, left) and the effect of sex on pre-transplant mortality rates (MRT, right). Squares indicate the minimal sufficient adjustment set required to identify the controlled direct effect of sex on the outcome. U1, U2, and U3 represent common causes of the mediator-outcome relations. U1-, U2-, and U3-variables are post-exposure confounders
+  if the dotted arrows are present. We note that the direct effect of sex on transplantation and/or MELD can still be identified, regardless of whether U1, U2 and U3 are regular confounders or post-exposure confounders." width="100%" />
 <p class="caption">
-Figure 4.1: Directed acyclic graphs (DAGs) for mediation analyses of the effect of sex on transplantation (TXP, left) and the effect of sex on pre-transplant mortality rates (MRT, right). Squares indicate the minimal sufficient adjustment set required to identify the controlled direct effect of sex on the outcome. U1, U2, and U3 represent common causes of the mediator-outcome relations. Dotted arrows indicate that sex is allowed to affect U1, U2, and U3; their presence or absence does not impact the identification of the controlled direct effect under our identification strategy.
+Figure 4.1: Directed acyclic graphs (DAGs) for mediation analyses of the effect of sex on transplantation (TXP, left) and the effect of sex on pre-transplant mortality rates (MRT, right). Squares indicate the minimal sufficient adjustment set required to identify the controlled direct effect of sex on the outcome. U1, U2, and U3 represent common causes of the mediator-outcome relations. U1-, U2-, and U3-variables are post-exposure confounders
+if the dotted arrows are present. We note that the direct effect of sex on transplantation and/or MELD can still be identified, regardless of whether U1, U2 and U3 are regular confounders or post-exposure confounders.
 </p>
 </div>
-<p>In principle, adjusting for MELD, body size, U1-type variables, and U2-type variables would
-be sufficient to close all back-door paths. Unfortunately, frailty and diabetes (U2-type
-variables) are not reported to Eurotransplant, which makes this adjustment strategy
-infeasible. We instead assume that U2-type variables only affect the transplantation
-rate through candidate eligibility (ELIG) for transplantation. Under this assumption,
-we can alternatively identify the controlled direct effect of sex on transplantation
-by adjusting for U1, MELD, size, and ELIG (time-varying variable).</p>
-<p>We consider this assumption plausible for two reasons. Firstly, our patient
-cohort is restricted to candidates who were actually activated
-on the liver waiting list. Such waiting list activation represents a strong signal
-that the candidate is deemed fit enough for transplantation by their center,
-as frail or overweight candidates would be required to improve their health status
-before waiting list activation (for example in consultation with a dietitian).
-Secondly, in our experience, centers tend to report candidates who are temporarily
-unavailable for transplantation because of a poor health status as non-transplantable
-to Eurotransplant. Temporary non-transplantability (ELIG) is thus a strong proxy
-for U2-type variables that is observed by Eurotransplant, and can be adjusted
-for in our analysis.</p>
+<p></p>
+<p>By controlling for MELD, size, U1- and U2-type variables, we could in principle
+identify the controlled direct effect of sex on the transplant rate. Unfortunately,
+this adjustment strategy is not feasible in our setting, as frailty and diabetes
+(U2-type variables) are not reported to Eurotransplant. Instead, we assume that
+these U2-type variables only affect the transplant rate via candidate eligiblity
+for transplantation (ELIG). With this additional assumption, we can identify
+the controlled direct effect of sex on transplantation by adjusting for U1,
+MELD, size, and ELIG.</p>
+<p>We consider this assumption plausible for two reasons. Firstly, our analysis
+implicitly adjusts for candidate eligibility as our cohort is restricted to
+candidates who were actually activated on the liver waiting list. Such waiting
+list activation represents a strong signal that the candidate is deemed fit
+enough for transplantation by their center, as frail or overweight candidates
+would be required to improve their health status before waiting list activation
+(for example in consultation with a dietitian). Secondly, we can adjust for
+temporarily non-transplantability of a candidate as a time-varying variable
+in our analyses. Centers use such temporary non-transplantability to indicate
+that they temporarily do not want to receive offers for a specific candidate,
+for instance because of a poor health status.</p>
 <p></p>
 <p>To estimate the effects of sex on transplant rates, we use Cox proportional
 hazards models which use time since waiting list activation as the timescale.
 For quantification of the direct effect of sex on the transplant rate, we adjust
-match-MELD, body size (height, weight, or both), and U1-type variables
+for match-MELD, body size (height, weight, or both), and U1-type variables
 (dialysis, type exception received, candidate age, and disease group / cirrhosis
-etiology through stratification). Transplantation eligibility is explicitly controlled for
-by adjusting for whether a candidate is temporarily non-transplantable
-(NT), and implicitly controlled for by only including actively waiting listed
-candidates in the analysis (which signals that the candidate is deemed eligible
-for liver transplantation by the transplant center). In our analyses, we further
+etiology through stratification), and temporarily non-transplantability of
+the candidate (time-varying variable). In our analyses, we further
 adjust for pure predictors of the transplantation
 rate (country of listing through stratification, blood group, time spent non-transplantable).
 The following variables are time-varying: primary disease group,
@@ -424,23 +426,31 @@ the outcome (our second sensitivity check). Another mechanism that
 allows centers to freely choose a living waiting list candidate for transplantation
 are center offers. As the third sensitivity check, we repeat the analysis on candidates listed in
 countries without center offers (Germany and the Netherlands).</p>
+<p></p>
 </div>
 <div id="CHmediationmrt" class="section level4 hasAnchor" number="4.2.3.2">
 <h4><span class="header-section-number">4.2.3.2</span> Mediation analyses for the waiting list mortality rate<a href="CHsexdisparity.html#CHmediationmrt" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The right-hand side of Figure <a href="CHsexdisparity.html#fig:ch4fig1">4.1</a> shows the DAG for mortality analyses.
-Sex is the exposure, and waiting list mortality is the outcome. We are interested in the
-controlled direct effect of sex on the mortality rate, not mediated by lab-MELD.
-This requires control for sex, lab-MELD, and confounders of the relation between
-lab-MELD and mortality (U3-type variables).
-We estimate this direct effect of sex on mortality rates with Cox proportional
-hazards models, with
-adjustment for lab-MELD at listing (UNOS-MELD, MELD-Na, ReMELD-Na, or MELD 3.0) and
-U3-type variables (disease group through
-stratification, biweekly dialysis, candidate age, and type exception). Models are
-additionally stratified by the candidate’s country of listing. Waiting list death is used as the outcome.
-Candidates who died within 90 days of delisting are treated as a waiting list death.
-Candidates still waiting 90 days after waiting list activation are censored,
-as are candidates who were transplanted or delisted within 90 days of listing.</p>
+Sex is the exposure, and waiting list mortality is the outcome. MELD is a mediator
+of sex’s effect on mortality, as the GFR hypothesis suggests that a candidate’s
+sex affects their MELD score. The GFR hypothesis suggests that females face a
+systematically higher mortality rate than males, when at the same MELD score.
+This suggests that there is a controlled direct effect of sex on the mortality rate,
+not mediated by lab-MELD. To identify this effect in the DAG presented in Figure
+<a href="CHsexdisparity.html#fig:ch4fig1">4.1</a>, we must control for lab-MELD, and (post-exposure)
+confounders of the relation between lab-MELD and mortality (U3-type variables).</p>
+<p>We estimate the controlled direct effect of sex on mortality, with
+adjustment for four definitions of the lab-MELD score: UNOS-MELD, MELD-Na,
+ReMELD-Na, and MELD 3.0. To estimate these controlled direct effects,
+we adjust for a candidate’s lab-MELD score, and several common causes of the
+lab-MELD score and mortality: the candidate’s disease group through stratification,
+biweekly dialysis, candidate age, and the type of exception a candidate has
+received. We also stratify models by the candidate’s country of listing.
+Whether the candidate has died on the waiting list death is used as the outcome.
+Candidates who died within 90 days of delisting are treated as a waiting list
+death. Candidates still waiting 90 days after waiting list activation are censored
+administratively. Candidates transplanted or delisted within 90 days of listing
+are also censored.</p>
 <p>Several sensitivity checks are conducted. Firstly, we repeat the analyses in datasets
 where serum sodium and albumin at listing were imputed with multiple imputation (MI).
 Secondly, we compare to using death / removed unfit as a combined outcome.
@@ -456,10 +466,11 @@ we repeat the analysis in Dutch and German candidates only.</p>
 <h4><span class="header-section-number">4.2.3.3</span> Correction for dependent censoring in mortality analyses<a href="CHsexdisparity.html#correction-for-dependent-censoring-in-mortality-analyses" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The standard Cox PH model assumes that censoring is non-informative, which means
 that conditional on covariates, censored candidates have similar expected
-survival as non-censored candidates. In mortality analyses, candidates are censored
-at transplantation while adjustment is for the MELD score reported at listing.
-The non-informative censoring assumption then entails that transplanted candidates
-and not (yet) transplanted candidates with the same MELD score at listing would face
+survival as non-censored candidates. In our mortality analyses, we also censor
+patients at transplantation, while we adjust for a candidate’s MELD score reported
+at listing. The non-informative censoring assumption would entail that
+transplanted candidates and candidates who are not (yet) transplanted
+with the same MELD score at listing would face
 similar mortality risks if they had remained on the waiting list.
 This assumption is implausible for the Eurotransplant liver waiting list, as
 Eurotransplant ranks candidates by their last reported MELD score and
@@ -480,7 +491,7 @@ affects estimates of the direct effects of sex.</p>
 <p>Multiple imputation is used as a sensitivity check in quantifying the direct
 effect of sex on the waiting list mortality rate. For this, we used multiple
 imputation with chained equations (MICE) to impute serum sodium and serum albumin values at
-listing using predictive mean matching, constructing M=10 completed datasets.
+listing using predictive mean matching, constructing M = 10 completed datasets.
 After imputing serum sodium and albumin, MELD-Na, MELD 3.0, and ReMELD-Na were
 calculated using the imputed values. We included the event indicator
 and estimated baseline cumulative hazard in the imputation procedure, as
@@ -505,7 +516,7 @@ Figure 4.2: Flow diagram for how the main study cohort and the subpopulation of 
 </div>
 <p></p>
 <p>Table <a href="CHsexdisparity.html#tab:ch4tab1">4.1</a> describes the baseline characteristics of candidates included in the
-main cohort, of which 6,597 (31%) are female and 14,573 (69%) are male. We
+main cohort, of whom 6,597 (31%) are female and 14,573 (69%) are male. We
 use standardized mean differences (SMD) to compare the distributions of baseline
 variables across sexes, with SMD greater than 0.10 interpreted as meaningful imbalance.
 On average, females are 2 years younger (SMD: 0.19),

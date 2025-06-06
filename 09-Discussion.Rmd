@@ -307,6 +307,7 @@ A growing concern is that several centers within Eurotransplant have stopped
 reporting follow-up information to the Eurotransplant registry. Long-term
 follow-up information is therefore not available for many transplant
 recipients.
+`\newpage`{=latex}
 
 ## We need more constructive dialogue
 
@@ -347,7 +348,7 @@ are offered with priority to candidates weighing less than 55 kg, and immunized 
 priority through mismatch probability points. It can simultaneously be true that these
 mechanisms fall short of realizing equality of opportunity, and Eurotransplant
 should be more open to recognizing this.
-
+`\newpage`{=latex}
 Historically, the main forums to develop new allocation policies in Eurotransplant
 have been the organ advisory committees. With the introduction of legal frameworks
 in the 1990s, national competent authorities now also have a strong say. A source
@@ -357,7 +358,7 @@ this, Eurotransplant should engage these and other stakeholders earlier in polic
 An obstacle to playing such a role is that Eurotransplant has limited capacity 
 for allocation development, employing only two full-time biostatisticians and 
 seven medical doctors who have to spend most of their time on operational duties.
-`\newpage`{=latex}
+
 This stands in stark contrast to other regions where dedicated research 
 departments or organizations have been established that focus exclusively
 on allocation development. Notable is the SRTR in the

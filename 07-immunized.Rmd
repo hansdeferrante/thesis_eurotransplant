@@ -310,13 +310,14 @@ the distribution in vPRA for immunized patients. Although there is
 center-to-center variation in reported vPRAs, most variation in
 vPRA is at the patient level.
 
-```{r ch7tab1, tab.cap=chuck(CH7_TABLE_CAPTIONS, 'TAB1')}
+```{r ch7tab1, tab.cap=chuck(CH7_TABLE_CAPTIONS, 'TAB1'), results='asis'}
 d_tab <- read_excel(
   chuck(CH7_TAB_FILES, 'TAB1')
 ) |>
   janitor::remove_empty(which='rows') 
 
 d_tab$level[13] <- paste0(d_tab$level[13], '%')
+names(d_tab)[3] <- '0%'
 
 d_tab$group <- firstlow(d_tab$group)
 d_tab$level <- firstlow(d_tab$level)
@@ -341,12 +342,15 @@ if (knitr::is_html_output()) {
 
 } else if (knitr::is_latex_output()) {
   
-  names(d_tab)[ncol(d_tab)] <- ' '       
-  
-  d_tab |>
+  names(d_tab)[ncol(d_tab)] <- ' ' 
+  newnames <- unlist(d_tab[1,]) |> imap(~ paste('\\makecell{', .y, '\\\\', tolower(replace_na(.x, '')), '}', sep='')) |> trimws()
+  names(d_tab)[3:6] <- newnames[3:6]
+  hdr <- head(hdr, -1)
+  lines <- d_tab |>
+    filter(row_number()!=1) |>
     mutate(across(where(is.character), replace_na, '')) |>
     select(-group) |>
-    kable(format='latex', booktabs=TRUE, align = 'lccccc') |>
+    kable(format='latex', booktabs=TRUE, align = 'lccccc', escape=FALSE) |>
     kable_styling(latex_options='scale_down') |>
     pack_rows(index=hdr) |>
     plyr::rename(c(level = ' ')) |>
@@ -355,7 +359,26 @@ if (knitr::is_html_output()) {
     ) |>
     add_header_above(
       c(` ` = 1, `by vPRA` = 4, `total` = 1)
-    )
+    ) |>
+    read_lines()
+  
+    which_l <- which(str_detect(lines, fixed('median [Q1'))) |>
+      tail(1)
+  
+    lines[which_l] <- str_replace_all(
+        lines[which_l],
+          fixed('median [Q1-Q3]'),
+          '\\makecell[l]{median\\\\ {[Q1-Q3]}}'
+        ) |>
+        str_replace_all(
+          "([0-9.\\%]+) \\[([^\\]]+)\\]", 
+          "\\\\makecell{\\1\\\\\\\\ \\{[\\2]\\}}"
+      )
+    
+    lines <- lines |> str_replace_all(fixed('%'), '\\%')
+    
+    lines |> paste0(collapse = '\n') |>
+      cat()
 }
 ```
 

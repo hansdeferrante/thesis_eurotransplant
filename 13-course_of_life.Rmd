@@ -1,7 +1,6 @@
 # Course of Life {-}
 
 ```{=latex}
-\addcontentsline{toc}{chapter}{Course of Life}
 \markboth{COURSE OF LIFE}{COURSE OF LIFE}
 ```
 Hans de Ferrante was born on March 20, 1995 in 's-Gravenhage, the Netherlands. He completed his secondary education at St. Odulphus-Lyceum in Tilburg.
@@ -20,7 +19,6 @@ Hans will defend his thesis at Eindhoven University of Technology on July 3rd, 2
 # List of publications {-}
 
 ```{=latex}
-\addcontentsline{toc}{chapter}{Publications}
 \markboth{PUBLICATIONS}{PUBLICATIONS}
 ```
 

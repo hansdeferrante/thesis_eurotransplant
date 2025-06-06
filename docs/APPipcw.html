@@ -270,8 +270,8 @@ and <span class="math inline">\(r\)</span> denote the time elapsed since patient
 Each patient has a waiting list death time (<span class="math inline">\(D_{i}\)</span>), removal or censoring time
 <span class="math inline">\(( C_{i} )\)</span>, and transplantation time <span class="math inline">\(T_{i},\)</span> all defined
 relative to the time origin <span class="math inline">\(R_{i}\)</span>. In general, only one of these events is
-observable to us per patient, i.e., we observe <span class="math inline">\(X_{i} = \min( D_{i},C_{i},T_{i} )\)</span>.</p>
-<p>Note that candidates for transplantation may become (temporarily) non-transplantable.
+observable to us per patient, i.e., we observe <span class="math inline">\(X_{i} = \min( D_{i},C_{i},T_{i} )\)</span>.
+Note that candidates for transplantation may become (temporarily) non-transplantable.
 To account for this, let <span class="math inline">\(A_{i}( r )\)</span> denote whether patient <span class="math inline">\(i\)</span> has an active registration <span class="math inline">\(r\)</span> time units after registration, i.e.,
 <span class="math inline">\(A_{i}( r )\)</span> = 1 only if patient <span class="math inline">\(i\)</span> is eligible
 for transplantation at calendar time <span class="math inline">\(R_{i} + r.\)</span> In addition, updated
@@ -279,8 +279,8 @@ covariate information (for instance, MELD scores) may be reported for patient
 <span class="math inline">\(i\)</span>. Denote with <span class="math inline">\(Z_{i}( r )\)</span> all covariate history reported
 up to <span class="math inline">\(r\)</span> time units after registration for patient <span class="math inline">\({i}\)</span>. Note
 that this covariate history can consist of observed covariates and other
-summaries of treatment eligibility history (<span class="math inline">\(A_{i}( r )\)</span>).</p>
-<p>The key idea in Gong and Schaubel (2013) is to introduce a series
+summaries of treatment eligibility history (<span class="math inline">\(A_{i}( r )\)</span>).
+The key idea in Gong and Schaubel (2013) is to introduce a series
 of cross-section dates (<span class="math inline">\(CS_{1},\ldots CS_{K})\)</span>, and model the mortality
 hazard from each cross-section onwards for patients who have an active
 registration at cross-section date <span class="math inline">\(CS_k\)</span>. These mortality hazard models are partly

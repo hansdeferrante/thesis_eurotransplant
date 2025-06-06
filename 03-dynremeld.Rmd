@@ -431,6 +431,8 @@ df_tab <- read_excel('raw_tables/ch3/table1_dynremeld.xlsx') |>
   mutate(Variable = zoo::na.locf(Variable, na.rm=FALSE)) |>
   mutate_all(replace_na, '')
 
+df_tab$Variable <- str_replace(df_tab$Variable, 'December', 'Dec')
+
 names(df_tab) <- firstlow(names(df_tab))
 
 df_tab$variable <- firstlow(df_tab$variable)
@@ -455,14 +457,17 @@ if (knitr::is_html_output()) {
       )
 } else if (knitr::is_latex_output()) {
   df_tab |>
-    kable(format='latex', caption=CH3_TABLE_CAPTIONS[['TAB1_baseline']], booktabs=TRUE, align='llccl') |>
+    kable(format='latex', caption=paste(CH3_TABLE_CAPTIONS[['TAB1_baseline']], FOOTNOTE_TEXT, sep=' '), booktabs=TRUE, align='llccc') |>
     kable_styling(
       latex_options = c("scale_down", "hold_position"), font_size=10
     ) |>
     collapse_rows(columns = 1, valign = "middle", ) |>
-    insert_footnote_manually(
-      .text = FOOTNOTE_TEXT
+    read_lines() |>
+    str_replace(
+      fixed('autoimmune/cryptogenic'),
+      '\\makecell[l]{autoimmune or\\\\cryptogenic}'
     ) |>
+    paste0(collapse='\n') |>
     cat()
   }
 ```
@@ -478,8 +483,8 @@ were transplanted, delisted, or marked non-transplantable before a cross-section
 was reached (which means they exited the waiting list within at most 7 days of listing). We note that these 509 candidates do not inform revision of
 MELD from cross-section.
 
-Biomarker measurements taken after listing are ignored by the *"from registration"* approach, 
-while these measurements inform revision of MELD with a *"from cross-section"* approach.
+<!-- Biomarker measurements taken after listing are ignored by the *"from registration"* approach,  -->
+<!-- while they can inform revision of MELD with a *"from cross-section"* approach. -->
 Table \@ref(tab:ch3tab1) shows that the number of unique MELD scores
 informing MELD revision increases about sevenfold with a *"from
 cross-section"* approach, from 9,264 to 67,433.
@@ -874,7 +879,7 @@ if (knitr::is_html_output()) {
 
 } else if (knitr::is_latex_output()) {
    d_tab |>
-    kable(format='latex', booktabs=TRUE, align = 'lcccc') |>
+    kable(format='latex', booktabs=TRUE, align = 'ccccc') |>
     kable_styling(latex_options=c('scale_down', 'hold_position'), font_size=10) |>
     add_header_above(
       c(` ` = 1, `UNOS-MELD` = 2, `DynReMELD` = 2)
@@ -917,7 +922,7 @@ if (knitr::is_html_output()) {
 
 } else if (knitr::is_latex_output()) {
    d_tab |>
-    kable(format='latex', booktabs=TRUE) |>
+    kable(format='latex', booktabs=TRUE, align='ccccc') |>
     kable_styling(latex_options=c('scale_down', 'hold_position'), font_size=10) |>
     add_header_above(
       HEADER

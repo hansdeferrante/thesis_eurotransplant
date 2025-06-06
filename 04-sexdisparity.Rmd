@@ -310,6 +310,7 @@ are center offers. As the third sensitivity check, we repeat the analysis on can
 countries without center offers (Germany and the Netherlands).
 
 `\newpage`{=latex}
+
 #### Mediation analyses for the waiting list mortality rate {#CHmediationmrt}
 
 The right-hand side of Figure \@ref(fig:ch4fig1) shows the DAG for mortality analyses.
@@ -726,7 +727,7 @@ if (knitr::is_html_output()) {
       ) |>
     knitr::asis_output()
 } else if (knitr::is_latex_output()) {
-  
+  df_tab$`sensitivity check`[[5]] <- '\\makecell[l]{full cohort,\\\\creatinine $\\geq$ 1.0 mg/dl}'
   df_tab |>
     kable(format='latex', caption=CH4_TABLE_CAPTIONS[[3]], booktabs=TRUE, escape=FALSE, align='lcccc') |>
     kable_styling(

@@ -72,8 +72,8 @@ CH5_TABLE_CAPTIONS <- list(
   TAB8 = "Averages of the simulated number of waiting list exits per vulnerable patient group based on simulation of ELAS between January 1, 2016 and December 31, 2019.",
 TABCOMPRESCUE = "Priority of candidates in cases where a liver was initially accepted but later declined, and then re-allocated to a different recipient through competitive rescue liver allocation between January 1, 2016, and December 31, 2019. The table shows the number of candidates in each priority score category. For MELD scores, separate counts are included for the match-MELD score and lab-MELD score.",
   TAB1_PAT_SIMSTART = 'Characteristics of patients already present on the waiting list on January 1, 2016.',
-  TAB1_PAT_LISTED = 'Characteristics of newly registered patients who were used for simulations',
-  TAB1_DONORS = 'Characteristics of the donors used for simulation.'
+  TAB1_PAT_LISTED = 'Characteristics of patients activated on the waiting list in the simulation period.',
+  TAB1_DONORS = 'Characteristics of the donors reported in the simulation window whose livers were transplanted through ELAS.'
 ) |>
   map(format_dates) |>
   map(escape_latex) 
@@ -1025,16 +1025,14 @@ validation, we refer to Carson [@carsonVerificationValidationConsultants1989].
 
 ### Verification {#sec:elasverification}
 
-To implement liver allocation rules in the ELAS simulator, we have used
-the 2016 functional specifications for ELAS. To verify the correctness
-of our implementation of ELAS allocation rules, we exported ELAS match
-lists for 500 randomly selected donors who were reported between
-January 1, 2016 and December 31, 2019. We constructed unit tests to verify that
+The 2016 functional specifications for ELAS were consulted to implement the
+liver allocation rules. The correctness of our implementation was verified by
+exporting ELAS match lists for 500 donors reported between January 1, 2016 
+and December 31, 2019, and testing whether match codes were correctly constructed
+and whether We constructed unit tests to verify that
 the ELAS simulator correctly generated the match codes for these lists based
 on the reported donor and candidate information. We also constructed unit tests to
-ascertain that the simulator returned candidates in exactly the same order as the exported match lists.
-
-To ensure the correctness of the exception module, we exported (N)SE
+ascertain that the simulator returned candidates in exactly the same order as the exported match lists. To ensure the correctness of the exception module, we exported (N)SE
 exception score definitions directly from the Eurotransplant database.
 For the obligation system module, we used the functional specifications of
 the ELAS obligation system to guide our implementation. These functional
@@ -1050,16 +1048,14 @@ statistics from the same time period
 [@ThompsonXSAM2004; @shechterClinicallyBasedDiscreteEvent2005]. Properties commonly
 validated are the number of transplantations and waiting list deaths,
 typically also stratified by patient groups. We follow this practice to 
-validate the ELAS simulator.
-
-We do not use traditional hypothesis testing (or confidence intervals) to compare
+validate the ELAS simulator. We do not use traditional hypothesis testing (or confidence intervals) to compare
 simulated and actual statistics, as 
 _"traditional hypothesis testing is not appropriate for measuring model validity 
 because the null hypothesis that the true system and model are identical is almost 
 always false"_
 [@shechterClinicallyBasedDiscreteEvent2005]. In fact, any difference
 between actually observed outcomes and simulations can be made
-statistically significant by increasing the number of simulation runs.
+significant by increasing the number of simulation runs.
 Instead, we give insight into the variability of ELAS simulator outputs
 by reporting 95% interquantile ranges (95% IQRs) for simulation runs.
 These interquantile ranges are obtained by simulating liver allocation
@@ -1075,8 +1071,8 @@ The donor input stream consists of all 6,417 donors that were reported in this s
 livers were transplanted after allocation through ELAS. Characteristics of these
 donors are shown in Table \@ref(tab:ch5tab1donors). The candidate input stream
 consists of all patients who had an active waiting list status in the simulation 
-period. In total, these are n=7,137 patients who were activated on the waiting list between
-January 1, 2016, and December 31, 2019 (see Table \@ref(tab:ch5tab1patlisted)),
+period. These consist of n=7,137 patients who were activated on the waiting list in the
+simulation window (see Table \@ref(tab:ch5tab1patlisted)),
 and n=1,831 patients waiting on January 1, 2016 (see Table \@ref(tab:ch5tab1patincumbents)).
 
 ```{r ch5tab1donors, tab.cap=chuck(CH5_TABLE_CAPTIONS, 'TAB1_DONORS'), fig.pos='ht', results='asis'}
@@ -1120,7 +1116,7 @@ df_tab <- df_tab |>
 df_tab$Level <- firstlow(df_tab$Level)
 names(df_tab) <- firstlow(names(df_tab))
 
-FOOTNOTE_TEXT <- "Based on donors reported in the simulation period whose livers were allocated and transplanted via ELAS. CVA, cerebrovascular accident; HB, heartbeating; NHB, nonheartbeating; ET-DRI, ET donor risk index."
+FOOTNOTE_TEXT <- "CVA, cerebrovascular accident; HB, heartbeating; NHB, nonheartbeating; ET-DRI, ET donor risk index."
 
 FOOTNOTE_TEXT_HTML <- FOOTNOTE_TEXT
 
@@ -1174,6 +1170,16 @@ if (knitr::is_html_output()) {
   
   pattern <- "\\[(\\d+\\.\\d+)-(\\d+\\.\\d+)\\]"
 
+  lines <- str_replace_all(
+    lines,
+      fixed('mean [Q1-Q3]'),
+      '\\makecell[l]{mean\\\\ {[Q1-Q3]}}'
+    ) |>
+    str_replace_all(
+      "([0-9.]+) \\[([^\\]]+)\\]", 
+      "\\\\makecell{\\1\\\\\\\\ \\{[\\2]\\}}"
+  )
+  
   # Replace function to round both numbers
   lines <- str_replace_all(lines, pattern, function(m) {
    
@@ -1246,7 +1252,7 @@ df_tab <- df_tab |>
 df_tab$Level <- firstlow(df_tab$Level)
 names(df_tab) <- firstlow(names(df_tab))
 
-FOOTNOTE_TEXT <- "Based on patients activated on the waiting list in the simulation period. (S)ALF, (Sub-)Acute Liver Failure; HCC, hepatocellular carcinoma; (N)SE, (non-)standard exception."
+FOOTNOTE_TEXT <- "(S)ALF, (Sub-)Acute Liver Failure; HCC, hepatocellular carcinoma; (N)SE, (non-)standard exception."
 
 FOOTNOTE_TEXT_HTML <- FOOTNOTE_TEXT
 
@@ -1283,6 +1289,16 @@ if (knitr::is_html_output()) {
       .text = FOOTNOTE_TEXT
     )
   
+  lines <- str_replace_all(
+    lines,
+      fixed('mean [Q1-Q3]'),
+      '\\makecell[l]{mean\\\\ {[Q1-Q3]}}'
+    ) |>
+    str_replace_all(
+      "([0-9.]+) \\[([^\\]]+)\\]", 
+      "\\\\makecell{\\1\\\\\\\\ \\{[\\2]\\}}"
+  )
+  
   lines <- gsub("([A-Za-z]+)\\s*\\(n=([0-9,]+)\\)", "\\\\makecell{\\1\\\\\\\\(n=\\2)}", lines)
   
   lines <- str_replace_all(lines,
@@ -1294,6 +1310,8 @@ if (knitr::is_html_output()) {
     cat()
   }
 ```
+
+`\newpage`{=latex}
 
 
 ```{r ch5tab1patincumbents, tab.cap=chuck(CH5_TABLE_CAPTIONS, 'TAB1_PAT_SIMSTART'), fig.pos='ht', results='asis'}
@@ -1346,8 +1364,7 @@ df_tab[15:16,] <- df_tab[15:16,] |>
 df_tab$Level <- firstlow(df_tab$Level)
 names(df_tab) <- firstlow(names(df_tab))
 
-FOOTNOTE_TEXT <- "Based solely on patients with an active waiting list status between
-January 1, 2016 and December 31, 2019. (S)ALF, (Sub-)Acute Liver Failure; HCC, hepatocellular carcinoma; (N)SE, (non-)standard exception"
+FOOTNOTE_TEXT <- "(S)ALF, (Sub-)Acute Liver Failure; HCC, hepatocellular carcinoma; (N)SE, (non-)standard exception."
 
 FOOTNOTE_TEXT_HTML <- FOOTNOTE_TEXT
 
@@ -1393,7 +1410,17 @@ if (knitr::is_html_output()) {
   # Fix listing age
   lines <- str_replace_all(lines,
                            fixed('listing age (years)'), '\\makecell{listing age\\\\(years)}')
-    
+  
+  lines <- str_replace_all(
+    lines,
+      fixed('mean [Q1-Q3]'),
+      '\\makecell[l]{mean\\\\ {[Q1-Q3]}}'
+    ) |>
+    str_replace_all(
+      "([0-9.]+) \\[([^\\]]+)\\]", 
+      "\\\\makecell{\\1\\\\\\\\ \\{[\\2]\\}}"
+  )
+  
   lines |>
     cat()
   }
@@ -1549,7 +1576,6 @@ if (knitr::is_html_output()) {
     scale_factor=1
   ) |> 
     read_lines()
-  
   
   lines |> 
     append('\\small', after = 2) |>

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.2.11)  18 MAR 2025 21:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.3.20)  6 JUN 2025 08:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -10,7 +10,7 @@ L3 programming layer <2025-01-18>
 Document Class: standalone 2022/10/10 v1.3b Class to compile TeX sub-files stan
 dalone
 (C:\Users\s130463\AppData\Roaming\MiKTeX\tex/latex/tools\shellesc.sty
-Package: shellesc 2019/11/08 v1.0c unified shell escape interface for LaTeX
+Package: shellesc 2023/07/08 v1.0d unified shell escape interface for LaTeX
 Package shellesc Info: Restricted shell escape enabled on input line 77.
 )
 (C:\Program Files\MiKTeX\tex/generic/iftex\ifluatex.sty
@@ -340,7 +340,7 @@ File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \sa@box=\box63
 )
 (C:\Users\s130463\AppData\Roaming\MiKTeX\tex/latex/enumitem\enumitem.sty
-Package: enumitem 2019/06/20 v3.9 Customized lists
+Package: enumitem 2025/02/06 v3.11 Customized lists
 \enitkv@toks@=\toks31
 \labelindent=\skip51
 \enit@outerparindent=\dimen194
@@ -451,10 +451,10 @@ L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 14228 strings out of 473602
- 306398 string characters out of 5726961
- 668690 words of memory out of 5000000
- 37148 multiletter control sequences out of 15000+600000
+ 14227 strings out of 473529
+ 306370 string characters out of 5724788
+ 671560 words of memory out of 5000000
+ 37220 multiletter control sequences out of 15000+600000
  560660 words of font info for 42 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  117i,7n,121p,407b,604s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -464,7 +464,7 @@ X/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX/fonts/type1
 /public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfo
 nts/cm/cmr5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pf
 b><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb>
-Output written on figures/appendix//gong_schaubel_ipcw.pdf (1 page, 71383 bytes
+Output written on figures/appendix//gong_schaubel_ipcw.pdf (1 page, 71374 bytes
 ).
 PDF statistics:
  44 PDF objects out of 1000 (max. 8388607)

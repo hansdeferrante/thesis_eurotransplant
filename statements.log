@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (MiKTeX 24.4) (preloaded format=xelatex 2025.3.20)  27 MAY 2025 17:03
+This is XeTeX, Version 3.141592653-2.6-0.999996 (MiKTeX 24.4) (preloaded format=xelatex 2025.3.20)  5 JUN 2025 18:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -278,9 +278,14 @@ Package fontspec Info:
 
 
 
-Overfull \hbox (6.051pt too wide) in paragraph at lines 40--41
-[]\TU/PTSans(0)/m/n/12 Ranking transplant candidates by their counterfactual ou
-tcomes cannot deliver equal-
+Underfull \hbox (badness 2538) in paragraph at lines 40--41
+[]\TU/PTSans(0)/m/n/12 , because whether there is equality of opportunity is
+ []
+
+
+Underfull \hbox (badness 5970) in paragraph at lines 42--43
+[]\TU/PTSans(0)/m/n/12 The Cox proportional hazards model offers many flexibili
+ties, which are
  []
 
 
@@ -288,9 +293,20 @@ tcomes cannot deliver equal-
 [1
 
 ]
+Underfull \hbox (badness 1331) in paragraph at lines 66--67
+[]\TU/PTSans(0)/m/n/12 Eurotransplant draait net zo goed om de uitwisseling van
+ kennis tussen de
+ []
+
+
 Overfull \hbox (6.0486pt too wide) in paragraph at lines 67--68
 \TU/PTSans(0)/m/n/12 patiënt staat op gespannen voet met kansengelijkheid, omda
 t kansengelijkheid draait
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--74
+
  []
 
 

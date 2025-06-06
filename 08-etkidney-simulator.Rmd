@@ -32,7 +32,7 @@ CH8_FIG_LIST <- c(
   )
 
 CH8_FIG_CAPTIONS <- list(
-  FIG1="Flow chart illustrating how Eurotransplant offers kidneys for kidney-only transplantation. The percentages shown represent the proportion of kidney-only transplantations performed through each mechanism between 2014 and 2023. Kidneys declined by all candidates in ESP were re-allocated via ETKAS until March 2021. Since March 2021, such kidneys are instead offered via extended ESP allocation, in which non-local candidates and those aged below 65 can participate since March 2021.",
+  FIG1="Flow chart on how Eurotransplant offers kidneys for kidney-only transplantation. The percentages represent the fraction of kidney-only transplantations performed per mechanism between 2014 and 2023. Kidneys declined by all candidates in ESP were re-allocated via ETKAS until March 2021. Since March 2021, such kidneys are offered via extended ESP allocation, in which non-local candidates and those aged below 65 can participate since March 2021.",
   FIG2="Event handling flowchart for the ETKidney simulator. Inputs and parameters are represented using parallelograms. If a kidney is declined by all candidates, simulation settings determine whether a discard is recorded or a candidate is forced to accept the kidney for transplantation. FES, Future Event Set.",
   FIG3="Flow chart summarizing how the ETKidney simulator approximates the graft offering process.",
   FIG4="Relations between the relative transplant rate and the vPRA in ETKAS, estimated on ETKidney simulator outcomes. These relations were estimated with a Cox proportional hazards model, using a spline transformation for the vPRA.",
@@ -74,7 +74,7 @@ and after the introduction of the virtual crossmatch on January 24, 2023.",
   STAB2 = "Input-output validation of the number of transplantations with ESP donors in
 candidates under the age of 65, by recipient country of listing.",
 TAB1_PAT_SIMSTART = "Characteristics of patients already present on the waiting list on April 1, 2021.",
-  TAB1_PAT_LISTED = "Characteristics of newly registered patients who were used for simulations.",
+  TAB1_PAT_LISTED = "Characteristics of patients activated during the simulation period.",
   TAB1_DONORS = "Characteristics of the donors used for simulation."
 ) |>
   map(format_dates) |>
@@ -274,8 +274,7 @@ meet the program's eligibility and filtering criteria. In extended allocation,
 centers are allowed to select candidates from the *unfiltered match list*, 
 which means that candidates only have to meet the program's eligibility criteria. 
 In rescue allocation, centers can also propose other candidates 
-for transplantation, including those with
-non-identical ABO blood groups.
+for transplantation, including those with non-identical ABO blood groups.
 
 ## Purpose and design of the ETKidney Simulator {#sec:etkidneydesign}
 
@@ -805,19 +804,15 @@ decisions as well as post-transplant survival.
 
 ### Validation of the ETKidney simulator {#sec:etkidneyvalidation}
 
-To ensure face validity of the model, medical doctors from
-Eurotransplant were actively involved in the development and conceptual
-design of the simulator. We also had meetings with ETKAC and the ETRL on
-various occasions in which the ETKidney simulator was discussed. Moreover,
-the model was presented at the 2024 Eurotransplant Annual Meeting to
-collect feedback from additional major stakeholders,
-such as medical doctors and transplantation coordinators affiliated with the
-transplant centers.
+To ensure face validity of the model, the conceptual design of the ETKidney simulator
+was discussed with ETKAC and ETRL. The model was also presented at the 2024 Eurotransplant 
+Annual Meeting to collect feedback from additional stakeholders, such doctors 
+and transplantation coordinators affiliated with the transplant centers.
 
 We assess the operational validity of the model using input-output validation. 
 For this, we simulate ETKAS and ESP kidney
 allocation between April 1, 2021, and January 1, 2024 under the actual allocation
-rules used within this simulation window. The simulation start date of April 1, 2021 
+rules. The simulation start date of April 1, 2021 
 was chosen because the allocation of ESP donors changed in March 2021.
 For the donor input stream, we
 used all 4,326 donors reported in the simulation window 
@@ -884,6 +879,10 @@ if (knitr::is_html_output()) {
     cat() 
   cat('</div>\n')
 } else if (knitr::is_latex_output()) {
+  df_tab$variable <- recode(df_tab$variable, age = 'age (years)')
+  df_tab$level <- str_remove(df_tab$level, '\\syears')
+  
+  
   names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws()
   lines <- df_tab |>
     filter(row_number() != 1) |>
@@ -951,11 +950,12 @@ df_tab <- filter(df_tab, Variable != 'sex')
 df_tab$Level <- firstlow(df_tab$Level)
 names(df_tab) <- firstlow(names(df_tab))
 
-FOOTNOTE_TEXT <- "Based on patients listed in ETKAS or ESP between Apr 1, 2021 and December 31, 2024, with at least one active status in this period."
+FOOTNOTE_TEXT <- "Based on patients activated in ETKAS or ESP between April 1, 2021 and December 31, 2024."
 FOOTNOTE_TEXT_HTML <- FOOTNOTE_TEXT
 
 if (knitr::is_html_output()) {
   df_tab$level <- recode(df_tab$level, `mean [Q1-Q3]` = 'mean<br>[Q1-Q3]')
+  
   
   cat('<div class="table-scroll">\n')
   names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws() |>     str_replace('\\s', '<br>')
@@ -970,6 +970,10 @@ if (knitr::is_html_output()) {
     cat()
   cat('</div>')
 } else if (knitr::is_latex_output()) {
+  df_tab$variable <- recode(df_tab$variable, age = 'age (years)')
+  df_tab$level <- str_remove(df_tab$level, '\\syears')
+  df_tab$level <- recode(df_tab$level, `on dialysis` = 'yes', `preemptive` = 'no')
+  
   names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws()
   lines <- df_tab |>
     filter(row_number() != 1) |>
@@ -979,10 +983,20 @@ if (knitr::is_html_output()) {
     ) |>
     column_spec(1, width = "6em") %>%
     collapse_rows(columns = 1, valign = "middle") |>
-    insert_footnote_manually(.text = FOOTNOTE_TEXT)
+    read_lines()
+    #insert_footnote_manually(.text = FOOTNOTE_TEXT)
   lines <- gsub("([A-Za-z]+)\\s*\\(n=([0-9,]+)\\)", "\\\\makecell{\\1\\\\\\\\(n=\\2)}", lines)
   lines <- str_replace_all(lines,
                            'dial\\. time at listing', '\\\\makecell\\{dial\\. time\\\\\\\\at listing\\}')
+  lines <- str_replace_all(
+    lines,
+      fixed('mean [Q1-Q3]'),
+      '\\makecell{mean\\\\ {[Q1-Q3]}}'
+    ) |>
+    str_replace_all(
+      "([0-9.]+) \\[([^\\]]+)\\]", 
+      "\\\\makecell{\\1\\\\\\\\ \\{[\\2]\\}}"
+  )
   
   lines |> cat()
 }
@@ -1033,7 +1047,7 @@ df_tab$Level <- firstlow(df_tab$Level)
 names(df_tab) <- firstlow(names(df_tab))
 
 
-FOOTNOTE_TEXT <- "Based on patients listed in ETKAS or ESP before Apr 1, 2024, with at least one active status in this period."
+FOOTNOTE_TEXT <- "Based on patients listed in ETKAS or ESP before April 1, 2024, with at least one active status in this period."
 FOOTNOTE_TEXT_HTML <- FOOTNOTE_TEXT
 
 if (knitr::is_html_output()) {
@@ -1053,6 +1067,7 @@ if (knitr::is_html_output()) {
   cat('</div>')
 } else if (knitr::is_latex_output()) {
   names(df_tab) <- unlist(df_tab[1,]) |> imap(~ paste(.y, tolower(.x), sep=' ')) |> trimws()
+  df_tab$level <- recode(df_tab$level, `on dialysis` = 'yes', `preemptive` = 'no')
   lines <- df_tab |>
     filter(row_number() != 1) |>
     kable(format='latex', caption=chuck(CH8_TABLE_CAPTIONS, TAB_NAME), booktabs=TRUE, align='ccccccccc') |>
@@ -1061,12 +1076,32 @@ if (knitr::is_html_output()) {
     ) |>
     column_spec(1, width = "6em") %>%
     collapse_rows(columns = 1, valign = "middle") |>
-    insert_footnote_manually(.text = FOOTNOTE_TEXT)
+    read_lines()
+    #insert_footnote_manually(.text = FOOTNOTE_TEXT)
   lines <- gsub("([A-Za-z]+)\\s*\\(n=([0-9,]+)\\)", "\\\\makecell{\\1\\\\\\\\(n=\\2)}", lines)
   
-    # Force date on newline
-  lines <- str_replace_all(lines, "((dial\\.\\s)?[\\)\\(\\w\\\\\\-]+?)\\s*(\\(Apr 1, 2021\\))", "\\\\makecell\\{\\1\\\\\\\\\\2\\}")
+  makecellify <- function(x) {
+    # Match: X (Date)
+    str_replace_all(
+      x,
+      "(dial\\. years|age|status) \\(([^)]+)\\)",
+      "\\\\makecell{\\1\\\\\\\\(\\2)}"
+    )
+  }
   
+  # Force date on newline
+  lines <- makecellify(
+    lines
+  )
+  lines <- str_replace_all(
+    lines,
+      fixed('mean [Q1-Q3]'),
+      '\\makecell{mean\\\\ {[Q1-Q3]}}'
+    ) |>
+    str_replace_all(
+      "([0-9.]+) \\[([^\\]]+)\\]", 
+      "\\\\makecell{\\1\\\\\\\\ \\{[\\2]\\}}"
+  )
   
   lines |> cat()
 }
