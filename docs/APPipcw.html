@@ -226,7 +226,12 @@ adapted to a “<em>from registration</em>” approach.</p>
 <div id="definition-of-ipcw-weights" class="section level2 unnumbered hasAnchor">
 <h2>Definition of IPCW weights<a href="APPipcw.html#definition-of-ipcw-weights" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>A graphical summary of how the inverse probability censoring weights are
-defined is shown in Figure <a href="APPipcw.html#fig:appfig1">A.1</a>.</p>
+defined is shown in Figure <a href="APPipcw.html#fig:appfig1">A.1</a>. Let <span class="math inline">\(R_{i}\)</span> denote the registration date in calendar time for patient <span class="math inline">\(i\)</span>,
+and <span class="math inline">\(r\)</span> denote the time elapsed since patient <span class="math inline">\(i\)</span>’s registration time <span class="math inline">\(R_{i}\)</span>.
+Each patient has a waiting list death time (<span class="math inline">\(D_{i}\)</span>), removal or censoring time
+<span class="math inline">\(( C_{i} )\)</span>, and transplantation time <span class="math inline">\(T_{i},\)</span> all defined
+relative to the time origin <span class="math inline">\(R_{i}\)</span>. In general, only one of these events is
+observable to us per patient, i.e., we observe <span class="math inline">\(X_{i} = \min( D_{i},C_{i},T_{i} )\)</span>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:appfig1"></span>
 <img src="figures/appendix/gong_schaubel_ipcw.svg" alt="Figure demonstrating how inverse probability censoring
 weights (IPCW) are calculated for a subject $i$. Subject $i$ is
@@ -265,14 +270,8 @@ comparable subjects in cross-section <span class="math inline">\(k\)</span> expe
 information <span class="math inline">\(Z( S_{ik} )\)</span>.
 </p>
 </div>
-<p>Let <span class="math inline">\(R_{i}\)</span> denote the registration date in calendar time for patient <span class="math inline">\(i\)</span>,
-and <span class="math inline">\(r\)</span> denote the time elapsed since patient <span class="math inline">\(i\)</span>’s registration time <span class="math inline">\(R_{i}\)</span>.
-Each patient has a waiting list death time (<span class="math inline">\(D_{i}\)</span>), removal or censoring time
-<span class="math inline">\(( C_{i} )\)</span>, and transplantation time <span class="math inline">\(T_{i},\)</span> all defined
-relative to the time origin <span class="math inline">\(R_{i}\)</span>. In general, only one of these events is
-observable to us per patient, i.e., we observe <span class="math inline">\(X_{i} = \min( D_{i},C_{i},T_{i} )\)</span>.
-Note that candidates for transplantation may become (temporarily) non-transplantable.
-To account for this, let <span class="math inline">\(A_{i}( r )\)</span> denote whether patient <span class="math inline">\(i\)</span> has an active registration <span class="math inline">\(r\)</span> time units after registration, i.e.,
+<p></p>
+<p>Note that candidates for transplantation may become (temporarily) non-transplantable. To account for this, let <span class="math inline">\(A_{i}( r )\)</span> denote whether patient <span class="math inline">\(i\)</span> has an active registration <span class="math inline">\(r\)</span> time units after registration, i.e.,
 <span class="math inline">\(A_{i}( r )\)</span> = 1 only if patient <span class="math inline">\(i\)</span> is eligible
 for transplantation at calendar time <span class="math inline">\(R_{i} + r.\)</span> In addition, updated
 covariate information (for instance, MELD scores) may be reported for patient
@@ -280,14 +279,13 @@ covariate information (for instance, MELD scores) may be reported for patient
 up to <span class="math inline">\(r\)</span> time units after registration for patient <span class="math inline">\({i}\)</span>. Note
 that this covariate history can consist of observed covariates and other
 summaries of treatment eligibility history (<span class="math inline">\(A_{i}( r )\)</span>).
-The key idea in Gong and Schaubel (2013) is to introduce a series
+The key idea in Gong and Schaubel (2013) is to use a series
 of cross-section dates (<span class="math inline">\(CS_{1},\ldots CS_{K})\)</span>, and model the mortality
-hazard from each cross-section onwards for patients who have an active
-registration at cross-section date <span class="math inline">\(CS_k\)</span>. These mortality hazard models are partly
+hazard from each cross-section onwards for patients actively waiting at cross-section date <span class="math inline">\(CS_k\)</span>. These mortality hazard models are partly
 conditional, which means they adjust only for covariate history observed prior to
-<span class="math inline">\(CS_{k}\)</span>. The timescale the models use is the time elapsed since the cross-section
+<span class="math inline">\(CS_{k}\)</span>. The timescale used is the time elapsed since the cross-section
 date <span class="math inline">\(CS_{k}\)</span>, which we denote by <span class="math inline">\(\text{s}\)</span>. For notational
-convenience, it is helpful to define the time registered for patient <span class="math inline">\(i\)</span>
+convenience, it helps to define the time registered for patient <span class="math inline">\(i\)</span>
 until cross-section <span class="math inline">\(k\)</span> by <span class="math inline">\(S_{ik}\)</span>, i.e.
 <span class="math inline">\(S_{ik} = CS_{k} - R_{i}.\)</span> Gong and Schaubel’s approach can then be
 represented with the following hazard model</p>
@@ -305,13 +303,12 @@ after cross-section date <span class="math inline">\(CS_{K}\)</span> may still a
 transplantation and waiting list mortality after <span class="math inline">\(CS_{k}\)</span>. To correct for
 this, Gong and Schaubel propose weighing spells observed from cross
 section <span class="math inline">\(CS_{k}\)</span> to time <span class="math inline">\(r\)</span> by the inverse conditional probability of
-remaining on the waiting list up to time <span class="math inline">\(r\)</span>, i.e.</p>
-<p><span class="math display">\[W_{\text{ik}}\left( r \right) = \left\lbrack P\left( T_{i} &gt; r \middle| T_{i} &gt; S_{\text{ik}},Z_{i}\left( t \right),t \leq r \right) \right\rbrack^{- 1} = \left\lbrack \frac{P\left( T_{i} &gt; r \middle| Z_{i}\left( t \right),t \leq r \right)}{P\left( T_{i} &gt; S_{\text{ik}} \middle| Z_{i}\left( t \right),t \leq S_{\text{ik}} \right)} \right\rbrack^{- 1}.\]</span></p>
+remaining on the waiting list up to time <span class="math inline">\(r\)</span>, i.e.
+<span class="math display">\[W_{\text{ik}}\left( r \right) = \left\lbrack P\left( T_{i} &gt; r \middle| T_{i} &gt; S_{\text{ik}},Z_{i}\left( t \right),t \leq r \right) \right\rbrack^{- 1} = \left\lbrack \frac{P\left( T_{i} &gt; r \middle| Z_{i}\left( t \right),t \leq r \right)}{P\left( T_{i} &gt; S_{\text{ik}} \middle| Z_{i}\left( t \right),t \leq S_{\text{ik}} \right)} \right\rbrack^{- 1}.\]</span></p>
 <p>Gong and Schaubel refer to this weight as the “type A” weight. Note that
 this weight is only defined as if the conditional probability of being
 transplanted between the cross-section and <span class="math inline">\(r\)</span> is strictly larger than
-0. This assumption is known as positivity.</p>
-<p>If we additionally assume that there is no unmeasured confounding of the
+0. This assumption is known as positivity. If we additionally assume that there is no unmeasured confounding of the
 relation between transplantation and survival, IPCW can be used to
 construct a “pseudo-population”, which would have been observed if transplantation
 had not existed. This means that under these assumptions, we can consistently
